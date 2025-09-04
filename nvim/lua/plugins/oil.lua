@@ -3,10 +3,12 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     require("oil").setup{
-      show_hidden = true,
+      keymaps = {
+        ["h"] = "actions.toggle_hidden",
+      },
       devicons = {
         icons = require("nvim-web-devicons").get_icons(),
-      }
+      },
     }
 
     vim.keymap.set("n", "<Leader>t", require("oil").open, { desc = "Open oil" })
