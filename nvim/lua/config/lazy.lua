@@ -15,8 +15,7 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require("config.general_keymaps").setup()
-require("config.opts").setup()
+require("config.options")
 require("lazy").setup("plugins", {
   checker = { enabled = true },
 })
