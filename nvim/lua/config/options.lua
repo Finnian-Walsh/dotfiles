@@ -12,10 +12,11 @@ vim.g.maplocalleader = ","
 vim.keymap.set("n", "<leader>e", ":Ex<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<M-j>", ":resize +1<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<M-k>", ":resize +1<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<M-l>", ":vertical resize +1<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<M-h>", ":vertical resize -1<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<M-Up>", ":resize +1<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<M-Down>", ":resize -1<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<M-Right>", ":vertical resize +1<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<M-Left>", ":vertical resize -1<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<M-=>", ":wincmd =<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "rust",
