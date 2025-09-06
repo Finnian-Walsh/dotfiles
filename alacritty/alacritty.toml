@@ -6,7 +6,7 @@ background = "#1e1e2e"
 foreground = "#d8dee9"
 
 [font]
-size = 20
+size = 14
 
 [window]
 decorations = "full"
