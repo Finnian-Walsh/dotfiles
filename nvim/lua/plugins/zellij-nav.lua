@@ -9,4 +9,5 @@ return {
     { "<c-l>", "<cmd>ZellijNavigateRightTab<cr>", { silent = true, desc = "navigate right or tab" } },
   },
   opts = {},
+  auto_lock = true,
 }
