@@ -18,10 +18,10 @@ vim.keymap.set("n", "<C-Right>", ":vertical resize +1<CR>", { noremap = true, si
 vim.keymap.set("n", "<C-Left>", ":vertical resize -1<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
 
--- vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
--- vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
--- vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { noremap = true, silent = true })
--- vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "rust",
