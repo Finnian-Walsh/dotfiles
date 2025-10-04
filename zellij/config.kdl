@@ -1,3 +1,4 @@
+pane_frames false
 
 keybinds clear-defaults=true {
     locked {
@@ -93,7 +94,7 @@ keybinds clear-defaults=true {
         bind "c" { SearchToggleOption "CaseSensitivity"; }
         bind "n" { Search "down"; }
         bind "o" { SearchToggleOption "WholeWord"; }
-        bind "p" { Search "up"; }
+        bind "N" { Search "up"; }
         bind "w" { SearchToggleOption "Wrap"; }
     }
     session {
@@ -147,7 +148,6 @@ keybinds clear-defaults=true {
         bind "Ctrl j" { MoveFocus "down"; }
         bind "Ctrl k" { MoveFocus "up"; }
         bind "Ctrl l" { MoveFocusOrTab "right"; }
-        bind "Alt n" { NewPane; }
         bind "Alt o" { MoveTab "right"; }
         bind "Alt p" { TogglePaneInGroup; }
         bind "Alt Shift p" { ToggleGroupMarking; }
