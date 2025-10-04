@@ -4,7 +4,7 @@ return {
   config = function()
     require("oil").setup{
       keymaps = {
-        ["h"] = "actions.toggle_hidden",
+        ["H"] = "actions.toggle_hidden",
         ["<C-h>"] = false,
         ["<C-l>"] = false,
       },
