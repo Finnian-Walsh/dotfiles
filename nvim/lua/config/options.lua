@@ -9,8 +9,12 @@ vim.opt.cursorline = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
-vim.keymap.set("n", "<leader>e", ":Ex<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
+
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-Up>", ":resize -5<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-Down>", ":resize +5<CR>", { noremap = true, silent = true })
