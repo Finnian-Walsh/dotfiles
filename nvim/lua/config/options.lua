@@ -31,12 +31,6 @@ vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "rust",
   callback = function()
-    vim.keymap.set("n", "<LocalLeader>c", ":!cargo check<CR>", { buffer = 0, desc = "Cargo check command (debug)" })
-    vim.keymap.set("n", "<LocalLeader>cr", ":!cargo check --release<CR>", { buffer = 0, desc = "Cargo check command (release)" })
-    vim.keymap.set("n", "<LocalLeader>b", ":!cargo build<CR>", { buffer = 0, desc = "Cargo build command (debug)" })
-    vim.keymap.set("n", "<LocalLeader>br", ":!cargo build --release<CR>", { buffer = 0, desc = "Cargo build command (release)" })
-    vim.keymap.set("n", "<LocalLeader>r", ":!cargo run<CR>", { buffer = 0, desc = "Cargo run command (debug)" })
-    vim.keymap.set("n", "<LocalLeader>rr", ":!cargo run --release<CR>", { buffer = 0, desc = "Cargo run command (release)" })
     vim.keymap.set("n", "<LocalLeader>fmt", function()
       if vim.api.nvim_buf_get_option(0, "modified") then
         error("Open files have changes")
@@ -45,6 +39,8 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.cmd("!cargo fmt")
       vim.cmd("edit")
     end, { noremap = true, silent = true })
+
+    vim.keymap.set("n", "<leader>c", function() vim.cmd("e Cargo.toml") end)
   end,
 })
 
