@@ -9,6 +9,7 @@ vim.opt.cursorline = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
@@ -40,7 +41,7 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.cmd("edit")
     end, { noremap = true, silent = true })
 
-    vim.keymap.set("n", "<leader>c", function() vim.cmd("e Cargo.toml") end)
+    vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end)
   end,
 })
 
