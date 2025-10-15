@@ -11,7 +11,8 @@ return {
                 ensure_installed = { "rust_analyzer", "lua_ls", },
             }
         end,
-    }, {
+    },
+    {
         "neovim/nvim-lspconfig",
         config = function()
             vim.lsp.config("rust_analyzer", {
