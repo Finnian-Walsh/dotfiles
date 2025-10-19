@@ -22,7 +22,7 @@ vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "rust",
   callback = function()
-    vim.keymap.set("n", "<LocalLeader>fmt", function()
+    vim.keymap.set("n", "<localleader>fmt", function()
       if vim.api.nvim_buf_get_option(0, "modified") then
         error("Open files have changes")
       end
