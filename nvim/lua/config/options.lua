@@ -20,26 +20,53 @@ vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "rust",
-  callback = function()
-    vim.keymap.set("n", "<localleader>fmt", function()
-      if vim.api.nvim_buf_get_option(0, "modified") then
-        error("Open files have changes")
-      end
+    pattern = "rust",
+    callback = function()
+        vim.lsp.config("rust_analyzer", {
+            settings = {
+                ["rust-analyzer"] = {
+                    cargo = { allFeatures = true },
+                    checkOnSave = true,
+                    check = { command = "clippy" },
+                },
+            }
+        })
 
-      vim.cmd("!cargo fmt")
-      vim.cmd("edit")
-    end, { noremap = true, silent = true })
+        vim.keymap.set("n", "<localleader>fmt", function()
+            if vim.api.nvim_buf_get_option(0, "modified") then
+                error("Open files have changes")
+            end
 
-    vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end)
-  end,
+            vim.cmd("!cargo fmt")
+            vim.cmd("edit")
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end)
+    end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "lua",
     callback = function()
-
+        vim.lsp.config("lua_ls", {
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = {
+                            "vim",
+                        }
+                    }
+                }
+            }
+        })
     end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "java",
+    callback = function()
+        vim.lsp.config("jdtls", {})
+    end
 })
 
 vim.api.nvim_create_autocmd("FileType", {
