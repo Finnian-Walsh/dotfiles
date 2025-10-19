@@ -18,6 +18,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'catppuccin/vim', {'as': 'catppuccin'}
+Plug 'vim-airline/vim-airline'
 
 call plug#end()
 
