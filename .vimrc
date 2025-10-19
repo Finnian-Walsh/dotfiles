@@ -19,6 +19,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'catppuccin/vim', {'as': 'catppuccin'}
 Plug 'vim-airline/vim-airline'
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
