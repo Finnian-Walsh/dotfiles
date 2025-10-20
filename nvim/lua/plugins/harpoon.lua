@@ -2,23 +2,7 @@ return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
-    keys = {
-        "<leader>a",
-        "<leader>h",
-        "<leader>1",
-        "<leader>2",
-        "<leader>3",
-        "<leader>4",
-        "<leader>5",
-        "<leader>6",
-        "<leader>7",
-        "<leader>8",
-        "<leader>9",
-        "<leader>0",
-        "<leader>-",
-        "<leader>=",
-        "<leader><BS>",
-    },
+    event = "VeryLazy",
     config = function()
         local harpoon = require("harpoon")
         harpoon:setup{
@@ -29,7 +13,10 @@ return {
             }
         }
 
-        vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+        vim.keymap.set("n", "<leader>a", function()
+            vim.fn.setreg('"', vim.fn.expand("%") .. '\n')
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+        end)
         vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 
         vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
@@ -42,10 +29,22 @@ return {
         vim.keymap.set("n", "<leader>8", function() harpoon:list():select(8) end)
         vim.keymap.set("n", "<leader>9", function() harpoon:list():select(9) end)
         vim.keymap.set("n", "<leader>0", function() harpoon:list():select(10) end)
-
         vim.keymap.set("n", "<leader>-", function() harpoon:list():select(11) end)
         vim.keymap.set("n", "<leader>=", function() harpoon:list():select(12) end)
         vim.keymap.set("n", "<leader><BS>", function() harpoon:list():select(13) end)
+
+        vim.keymap.set("n", "<leader>!", function() harpoon:list():select(14) end)
+        vim.keymap.set("n", "<leader>\"", function() harpoon:list():select(15) end)
+        vim.keymap.set("n", "<leader>£", function() harpoon:list():select(16) end)
+        vim.keymap.set("n", "<leader>$", function() harpoon:list():select(17) end)
+        vim.keymap.set("n", "<leader>%", function() harpoon:list():select(18) end)
+        vim.keymap.set("n", "<leader>^", function() harpoon:list():select(19) end)
+        vim.keymap.set("n", "<leader>&", function() harpoon:list():select(20) end)
+        vim.keymap.set("n", "<leader>*", function() harpoon:list():select(21) end)
+        vim.keymap.set("n", "<leader>(", function() harpoon:list():select(22) end)
+        vim.keymap.set("n", "<leader>)", function() harpoon:list():select(23) end)
+        vim.keymap.set("n", "<leader>_", function() harpoon:list():select(24) end)
+        vim.keymap.set("n", "<leader>+", function() harpoon:list():select(25) end)
+        vim.keymap.set("n", "<leader><S-BS>", function() harpoon:list():select(26) end)
     end,
-    lazy = true,
 }
