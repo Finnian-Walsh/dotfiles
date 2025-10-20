@@ -1,3 +1,6 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 2
@@ -6,9 +9,6 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
-
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
@@ -16,7 +16,6 @@ vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
-
 vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -32,16 +31,43 @@ vim.api.nvim_create_autocmd("FileType", {
             }
         })
 
-        vim.keymap.set("n", "<localleader>fmt", function()
+        vim.keymap.set("n", "<localleader>rf", function()
             if vim.api.nvim_buf_get_option(0, "modified") then
-                error("Open files have changes")
+                vim.api.nvim_echo({{"The current file has changes", "ErrorMsg" }}, true, {})
+                return
+            end
+
+            vim.cmd("!rustfmt " .. vim.fn.expand("%"))
+            vim.cmd("edit");
+        end)
+
+        vim.keymap.set("n", "<localleader>gf", function()
+            local file_changes = {{ "Open files have changes:", "ErrorMsg" }}
+            for _, buf in ipairs(vim.fn.getbufinfo{ buflisted = 1}) do
+                if vim.api.nvim_buf_get_option(buf.bufnr, "modified") then
+                    table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(buf.name, ":."), "Normal" })
+                end
+            end
+
+            if #file_changes > 1 then
+                if #file_changes == 2 then
+                    if vim.api.nvim_buf_get_option(0, "modified") then
+                        file_changes[1][1] = "The current file has changes"
+                        file_changes[2] = nil
+                    else
+                        file_changes[1][1] = "An open file has changes:"
+                    end
+                end
+
+                vim.api.nvim_echo(file_changes, true, {})
+                return
             end
 
             vim.cmd("!cargo fmt")
             vim.cmd("edit")
         end, { noremap = true, silent = true })
 
-        vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end)
+        vim.keymap.set("n", "<localleader>`", function() vim.cmd("e Cargo.toml") end)
     end,
 })
 
@@ -67,11 +93,4 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function()
         vim.lsp.config("jdtls", {})
     end
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "*",
-    callback = function()
-        vim.opt.formatoptions:remove({"o"})
-    end,
 })
