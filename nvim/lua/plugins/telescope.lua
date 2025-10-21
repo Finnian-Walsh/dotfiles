@@ -3,11 +3,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     event = "VeryLazy",
     config = function()
-        require("telescope").setup{
-            defaults = {
-
-            }
-        }
+        require("telescope").setup{ defaults = { } }
 
         if vim.fn.executable("rg") == 0 then
             print("Warning: ripgrep is not available, so live grep will not work")
