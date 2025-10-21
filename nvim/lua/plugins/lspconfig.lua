@@ -1,11 +1,13 @@
 return {
     {
         "williamboman/mason.nvim",
+        event = "VeryLazy",
         config = function()
             require("mason").setup{}
         end,
     }, {
         "williamboman/mason-lspconfig.nvim",
+        event = "VeryLazy",
         config = function()
             require("mason-lspconfig").setup{
                 ensure_installed = { "rust_analyzer", "lua_ls", "jdtls", },

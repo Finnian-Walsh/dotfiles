@@ -1,5 +1,6 @@
 return {
     "pogyomo/winresize.nvim",
+    event = "VeryLazy",
     config = function()
         local winresize = require("winresize")
         local resize = winresize.resize
