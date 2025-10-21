@@ -19,6 +19,13 @@ vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function()
+        vim.opt.formatoptions:remove({"o"})
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function()
         vim.lsp.config("rust_analyzer", {
