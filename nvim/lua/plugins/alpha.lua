@@ -18,120 +18,148 @@ local function fit_text(text_objects)
     end
 end
 
-return {
-    "goolord/alpha-nvim",
-    -- dependencies = { 'echasnovski/mini.icons' },
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-        local button_values = {
-            new_file = " New file",
-            find_files = "󰭎 Find files",
-            harpoon = "󱡅 Harpoon",
-            config = " Config",
-            quit = "󰈆 Quit",
-        }
+local function config()
+    -- #33D5C1 very neon
+    -- #33D5C1 too dark
+    -- #33D7BE lighter
+    -- #33D0C3 pretty nice
+    vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#33D0C3", bold = true })
 
-        fit_text(button_values)
+    local header = {
+        type = "text",
+        val = {
+            [[        The best code editor of all time!        ]],
+            [[                               __                ]],
+            [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
+            [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
+            [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
+            [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
+            [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
+        },
+        opts = {
+            position = "center",
+            hl = "AlphaHeader",
+        },
+    }
 
-        local actions = {
-            find_files = function() vim.cmd("Telescope live_grep") end,
-            harpoon = function()
-                local harpoon = require("harpoon")
-                harpoon.ui:toggle_quick_menu(harpoon:list())
-            end,
-            new_file = function()
-                vim.cmd("enew")
-                vim.cmd("startinsert")
-            end,
-            config = function()
-                vim.api.nvim_set_current_dir(vim.fn.stdpath("config"))
-                vim.cmd("edit .")
-            end,
-            quit = function() vim.cmd("quit") end
-        }
+    local button_values = {
+        new_file = " New file",
+        oil = "󱏒 Oil",
+        harpoon = "󱡅 Harpoon",
+        find_files = "󰭎 Find files",
+        quit = "󰈆 Quit",
+    }
 
-        local header = {
-            type = "text",
-            val = {
-                [[        The best code editor of all time!        ]],
-                [[                               __                ]],
-                [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
-                [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
-                [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
-                [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
-                [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
-            },
-            opts = {
-                position = "center",
-                hl = "Type",
-            },
-        }
+    fit_text(button_values)
 
-        local buttons_val = { {
-            on_press = actions.new_file,
+    local actions = {
+        new_file_fn = function()
+            vim.cmd("enew")
+            vim.cmd("startinsert")
+        end,
+        new_file_cmd = "<cmd>enew | startinsert<CR>",
+        oil = function() vim.cmd("Oil") end,
+        oil_cmd = "<cmd>Oil<CR>",
+        harpoon = function()
+            local harpoon = require("harpoon")
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        find_files_fn = function() vim.cmd("Telescope live_grep") end,
+        find_files_cmd = "<cmd>Telescope live_grep<CR>",
+        quit_fn = function() vim.cmd("quit") end,
+        quit_cmd = "<cmd>quit<CR>",
+    }
+
+    local buttons_val = {
+        {
+            on_press = actions.new_file_fn,
             opts = {
                 position = "center",
                 shortcut = "[e] ",
                 cursor = 1,
-                keymap = { "n", "e", actions.new_file },
+                keymap = { "n", "e", actions.new_file_cmd },
             },
             type = "button",
             val = button_values.new_file,
         }, create_padding(1), {
-                on_press = actions.find_files,
-                opts = {
-                    position = "center",
-                    shortcut = "[f] ",
-                    cursor = 1,
-                    keymap = { "n", "f", actions.find_files },
-                },
-                type = "button",
-                val = button_values.find_files,
-            }, create_padding(1), {
-                on_press = actions.harpoon,
-                opts = {
-                    position = "center",
-                    shortcut = "[h] ",
-                    cursor = 1,
-                    keymap = { "n", "h", actions.harpoon }
-                },
-                type = "button",
-                val = button_values.harpoon,
-            }, create_padding(1), {
-                on_press = actions.config,
-                opts = {
-                    position = "center",
-                    shortcut = "[c] ",
-                    cursor = 1,
-                    keymap = { "n", "c", actions.config },
-                },
-                type = "button",
-                val = button_values.config,
-            }, create_padding(1), {
-                on_press = actions.quit,
-                opts = {
-                    position = "center",
-                    shortcut = "[q] ",
-                    cursor = 1,
-                    keymap = { "n", "q", actions.quit },
-                },
-                type = "button",
-                val = button_values.quit,
-            }
-        }
-
-        local layout = {
-            create_padding(5),
-            header,
-            create_padding(),
-            {
-                type = "group",
-                val = buttons_val,
+            on_press = actions.oil,
+            opts = {
+                position = "center",
+                shortcut = "[t] ",
+                cursor = 1,
+                keymap = { "n", "t", actions.oil_cmd },
             },
-            create_padding(),
+            type = "button",
+            val = button_values.oil,
+        }, create_padding(1), {
+            on_press = actions.harpoon,
+            opts = {
+                position = "center",
+                shortcut = "[h] ",
+                cursor = 1,
+                keymap = { "n", "h", actions.harpoon }
+            },
+            type = "button",
+            val = button_values.harpoon,
+        }, create_padding(1), {
+            on_press = actions.find_files_fn,
+            opts = {
+                position = "center",
+                shortcut = "[f] ",
+                cursor = 1,
+                keymap = { "n", "f", actions.find_files_cmd },
+            },
+            type = "button",
+            val = button_values.find_files,
+        }, create_padding(1), {
+            on_press = actions.quit_fn,
+            opts = {
+                position = "center",
+                shortcut = "[q] ",
+                cursor = 1,
+                keymap = { "n", "q", actions.quit_cmd },
+            },
+            type = "button",
+            val = button_values.quit,
         }
+    }
 
-        local theme = { layout = layout }
-        require("alpha").setup(theme)
-    end,
+    vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
+
+    local ferris = {
+        type = "text",
+        val = {
+            [[█ █         █ █]],
+            [[▀█  ▄█████▄  █▀]],
+            [[ ▀▄███▀█▀███▄▀ ]],
+            [[ ▄▀███▀▀▀███▀▄ ]],
+            [[ █ ▄▀▀▀▀▀▀▀▄ █ ]],
+        },
+        opts = {
+            position = "center",
+            hl = "Ferris",
+        }
+    }
+
+    local layout = {
+        create_padding(5),
+        header,
+        create_padding(3),
+        {
+            type = "group",
+            val = buttons_val,
+        },
+        create_padding(3),
+        ferris,
+    }
+
+    local theme = { layout = layout }
+    require("alpha").setup(theme)
+end
+
+return {
+    "goolord/alpha-nvim",
+    -- dependencies = { 'echasnovski/mini.icons' },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = config,
 }
