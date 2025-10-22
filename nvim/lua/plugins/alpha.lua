@@ -45,6 +45,7 @@ local function config()
     local button_values = {
         new_file = " New file",
         oil = "󱏒 Oil",
+        lazy = "󰒲 Lazy",
         harpoon = "󱡅 Harpoon",
         find_files = "󰭎 Find files",
         quit = "󰈆 Quit",
@@ -60,6 +61,8 @@ local function config()
         new_file_cmd = "<cmd>enew | startinsert<CR>",
         oil = function() vim.cmd("Oil") end,
         oil_cmd = "<cmd>Oil<CR>",
+        lazy_cmd = "<cmd>Lazy<CR>",
+        lazy_fn = function() vim.cmd("Lazy") end,
         harpoon = function()
             local harpoon = require("harpoon")
             harpoon.ui:toggle_quick_menu(harpoon:list())
@@ -91,6 +94,16 @@ local function config()
             },
             type = "button",
             val = button_values.oil,
+        }, create_padding(1), {
+            on_press = actions.lazy_fn,
+            opts = {
+                position = "center",
+                shortcut = "[l] ",
+                cursor = 1,
+                keymap = { "n", "l", actions.lazy_cmd },
+            },
+            type = "button",
+            val = button_values.lazy,
         }, create_padding(1), {
             on_press = actions.harpoon,
             opts = {
