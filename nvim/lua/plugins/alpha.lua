@@ -1,21 +1,65 @@
-local function create_padding(padding)
-    return { type = "padding", val = padding or 2 }
+local function create_padding(value)
+    return { type = "padding", val = value or 2 }
 end
 
-local function fit_text(text_objects)
-    local max_width = 0
-    for _, text in pairs(text_objects) do
-        local width = vim.fn.strdisplaywidth(text)
+local CenteredButtons = {}
+CenteredButtons.__index = CenteredButtons
 
-        if width > max_width then
-            max_width = width
-        end
+function CenteredButtons.new(opts)
+    opts = opts or {}
+    return setmetatable({
+        _padding = create_padding(opts.padding),
+        _buttons = {},
+        _max_name_width = 0,
+    }, CenteredButtons)
+end
+
+function CenteredButtons:add(name, key, fn)
+    local name_width = vim.fn.strdisplaywidth(name)
+
+    if name_width > self._max_name_width then
+        self._max_name_width = name_width
     end
 
-    for k, text in pairs(text_objects) do
-        local extended_text = text .. string.rep(' ', max_width - vim.fn.strdisplaywidth(text))
-        text_objects[k] = extended_text
+    table.insert(self._buttons, {
+        name = name,
+        name_width = name_width,
+        key = key,
+        fn = fn,
+    })
+end
+
+function CenteredButtons:add_all(buttons)
+    for _, button in ipairs(buttons) do
+        self:add(table.unpack(button))
     end
+end
+
+function CenteredButtons:build()
+    local value = {}
+    local padding = self._padding
+    local max_name_width = self._max_name_width
+
+    for _, button in ipairs(self._buttons) do
+        local fn = button.fn
+        table.insert(value, {
+            on_press = fn,
+            opts = {
+                position = "center",
+                shortcut = "[" .. button.key .. "] ",
+                cursor = 1,
+                keymap = { "n", button.key, fn },
+            },
+            type = "button",
+            val = button.name .. string.rep(" ", max_name_width - button.name_width),
+        })
+        table.insert(value, padding)
+    end
+
+    return {
+        type = "group",
+        val = value,
+    }
 end
 
 local function config()
@@ -42,100 +86,26 @@ local function config()
         },
     }
 
-    local button_values = {
-        new_file = " New file",
-        oil = "󱏒 Oil",
-        lazy = "󰒲 Lazy",
-        harpoon = "󱡅 Harpoon",
-        find_files = "󰭎 Find files",
-        quit = "󰈆 Quit",
-    }
+    local buttons = CenteredButtons.new({ padding = 1 })
 
-    fit_text(button_values)
+    buttons:add(" New file", "e", function()
+        vim.cmd("enew | startinsert")
+    end)
 
-    local actions = {
-        new_file_fn = function()
-            vim.cmd("enew")
-            vim.cmd("startinsert")
-        end,
-        new_file_cmd = "<cmd>enew | startinsert<CR>",
-        oil = function() vim.cmd("Oil") end,
-        oil_cmd = "<cmd>Oil<CR>",
-        lazy_cmd = "<cmd>Lazy<CR>",
-        lazy_fn = function() vim.cmd("Lazy") end,
-        harpoon = function()
-            local harpoon = require("harpoon")
-            harpoon.ui:toggle_quick_menu(harpoon:list())
-        end,
-        find_files_fn = function() vim.cmd("Telescope live_grep") end,
-        find_files_cmd = "<cmd>Telescope live_grep<CR>",
-        quit_fn = function() vim.cmd("quit") end,
-        quit_cmd = "<cmd>quit<CR>",
-    }
+    buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
-    local buttons_val = {
-        {
-            on_press = actions.new_file_fn,
-            opts = {
-                position = "center",
-                shortcut = "[e] ",
-                cursor = 1,
-                keymap = { "n", "e", actions.new_file_cmd },
-            },
-            type = "button",
-            val = button_values.new_file,
-        }, create_padding(1), {
-            on_press = actions.oil,
-            opts = {
-                position = "center",
-                shortcut = "[t] ",
-                cursor = 1,
-                keymap = { "n", "t", actions.oil_cmd },
-            },
-            type = "button",
-            val = button_values.oil,
-        }, create_padding(1), {
-            on_press = actions.lazy_fn,
-            opts = {
-                position = "center",
-                shortcut = "[l] ",
-                cursor = 1,
-                keymap = { "n", "l", actions.lazy_cmd },
-            },
-            type = "button",
-            val = button_values.lazy,
-        }, create_padding(1), {
-            on_press = actions.harpoon,
-            opts = {
-                position = "center",
-                shortcut = "[h] ",
-                cursor = 1,
-                keymap = { "n", "h", actions.harpoon }
-            },
-            type = "button",
-            val = button_values.harpoon,
-        }, create_padding(1), {
-            on_press = actions.find_files_fn,
-            opts = {
-                position = "center",
-                shortcut = "[f] ",
-                cursor = 1,
-                keymap = { "n", "f", actions.find_files_cmd },
-            },
-            type = "button",
-            val = button_values.find_files,
-        }, create_padding(1), {
-            on_press = actions.quit_fn,
-            opts = {
-                position = "center",
-                shortcut = "[q] ",
-                cursor = 1,
-                keymap = { "n", "q", actions.quit_cmd },
-            },
-            type = "button",
-            val = button_values.quit,
-        }
-    }
+    buttons:add("󰭎 Find files", "f", function() vim.cmd("Telescope live_grep") end)
+
+    buttons:add("󰒲 Lazy", "l", function() vim.cmd("Lazy") end)
+
+    buttons:add("󰢛 Mason", "m", function() vim.cmd("Mason") end)
+
+    buttons:add("󱡅 Harpoon", "h", function()
+        local harpoon = require("harpoon")
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+    end)
+
+    buttons:add("󰈆 Quit", "q", function() vim.cmd("quit") end)
 
     vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
 
@@ -158,10 +128,7 @@ local function config()
         create_padding(5),
         header,
         create_padding(3),
-        {
-            type = "group",
-            val = buttons_val,
-        },
+        buttons:build(),
         create_padding(3),
         ferris,
     }
