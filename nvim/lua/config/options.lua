@@ -75,7 +75,7 @@ vim.api.nvim_create_autocmd("FileType", {
             vim.cmd("edit")
         end, { noremap = true, silent = true })
 
-        vim.keymap.set("n", "<localleader>`", function() vim.cmd("e Cargo.toml") end)
+        vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end)
     end,
 })
 
