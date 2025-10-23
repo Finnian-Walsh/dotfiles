@@ -1,12 +1,14 @@
 return {
-    "nvim-telescope/telescope.nvim", tag = "0.1.8",
+    "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     event = "VeryLazy",
     config = function()
         require("telescope").setup{ defaults = { } }
 
         if vim.fn.executable("rg") == 0 then
-            print("Warning: ripgrep is not available, so live grep will not work")
+            vim.schedule(function()
+                vim.api.nvim_echo({{"Warning: ripgrep is not available, so live grep will not work", "WarningMsg"}}, true, {})
+            end)
         end
 
         local builtin = require("telescope.builtin")
