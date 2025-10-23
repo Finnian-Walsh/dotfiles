@@ -14,7 +14,7 @@ return {
             },
         }
 
-        vim.keymap.set("n", "<leader>t", require("oil").open, { desc = "Open oil" })
+        vim.keymap.set("n", "<leader>t", require("oil").open, { desc = "Open oil file tree" })
     end,
     lazy = false,
 }
