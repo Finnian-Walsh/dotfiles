@@ -11,6 +11,7 @@ vim.opt.cursorline = true
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>q", ":bd<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
