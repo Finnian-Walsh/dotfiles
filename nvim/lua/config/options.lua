@@ -15,6 +15,8 @@ vim.keymap.set("n", "<leader>q", ":bd<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>k", ":bprev<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
