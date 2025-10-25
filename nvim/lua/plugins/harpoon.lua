@@ -16,7 +16,14 @@ return {
         }
 
         vim.keymap.set("n", "<leader>a", function()
-            vim.fn.setreg('"', vim.fn.expand("%") .. '\n')
+            local file = vim.fn.expand("%")
+            local cwd = vim.loop.cwd()
+
+            if file:sub(1, #cwd) == cwd then
+                file = file:sub(#cwd + 2)
+            end
+
+            vim.fn.setreg('"', file)
             harpoon.ui:toggle_quick_menu(harpoon:list())
         end)
         vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
