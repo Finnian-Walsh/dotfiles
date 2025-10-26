@@ -4,6 +4,7 @@ set cursorline
 
 let mapleader = "\<Space>"
 nnoremap <Leader>t :Ex<CR>
+nnoremap <Leader>m :if exists("g:syntax_on") | syntax off | else | syntax enable | endif<CR>
 
 if has('termguicolors')
     set termguicolors
