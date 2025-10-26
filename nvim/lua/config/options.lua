@@ -15,6 +15,13 @@ vim.keymap.set("n", "<leader>q", ":bd<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>m", function()
+    if vim.g.syntax_on then
+        vim.cmd("syntax off")
+    else
+        vim.cmd("syntax enable")
+    end
+end, { noremap = true, silent = true, desc = "Toggle monochrome" })
 vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>k", ":bprev<CR>", { noremap = true, silent = true })
 
