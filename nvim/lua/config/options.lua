@@ -18,8 +18,10 @@ end, { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>m", function()
     if vim.g.syntax_on then
         vim.cmd("syntax off")
+        vim.treesitter.stop()
     else
         vim.cmd("syntax enable")
+        vim.treesitter.start()
     end
 end, { noremap = true, silent = true, desc = "Toggle monochrome" })
 vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true })
