@@ -10,11 +10,11 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
-vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>q", ":bd<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true, desc = "Turn highlight off" })
+vim.keymap.set("n", "<leader>c", ":bd<CR>", { noremap = true, silent = true, desc = "Close buffer"})
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = "Toggle bufferline" })
 vim.keymap.set("n", "<leader>m", function()
     if vim.g.syntax_on then
         vim.cmd("syntax off")
@@ -24,14 +24,14 @@ vim.keymap.set("n", "<leader>m", function()
         vim.treesitter.start()
     end
 end, { noremap = true, silent = true, desc = "Toggle monochrome" })
-vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>k", ":bprev<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
+vim.keymap.set("n", "<leader>k", ":bprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
 
-vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true, desc = "Move to window left" })
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true, desc = "Move to window below" })
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { noremap = true, silent = true, desc = "Move to window above" })
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { noremap = true, silent = true, desc = "Move to window right" })
+vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true, desc = "Equalize windows" })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
