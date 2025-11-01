@@ -12,6 +12,8 @@ vim.opt.cursorline = true
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true, desc = "Turn highlight off" })
 vim.keymap.set("n", "<leader>c", ":bd<CR>", { noremap = true, silent = true, desc = "Close buffer"})
+vim.keymap.set("n", "<leader>C", ":bufdo bd<CR>", { noremap = true, silent = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>q", ":q<CR>", { noremap = true, silent = true, desc = "Quit" })
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, silent = true, desc = "Toggle bufferline" })
@@ -36,7 +38,7 @@ vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true, d
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function()
-        vim.opt.formatoptions:remove({"o"})
+        vim.opt.formatoptions:remove({"r"})
     end,
 })
 
