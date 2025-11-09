@@ -3,7 +3,15 @@ set number
 set cursorline
 
 let mapleader = "\<Space>"
+
 nnoremap <Leader>t :Ex<CR>
+nnoremap <Leader>c :bd<CR>
+nnoremap <Leader>j :bn<CR>
+nnoremap <Leader>k :bp<CR>
+nnoremap <C-h> :wincmd h<CR>
+nnoremap <C-j> :wincmd j<CR>
+nnoremap <C-k> :wincmd k<CR>
+nnoremap <C-l> :wincmd l<CR>
 
 if has('termguicolors')
     set termguicolors
@@ -20,6 +28,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'catppuccin/vim', {'as': 'catppuccin'}
 Plug 'vim-airline/vim-airline'
 Plug 'ryanoasis/vim-devicons'
+Plug 'bling/vim-bufferline'
 
 call plug#end()
 
