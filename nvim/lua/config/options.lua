@@ -54,6 +54,8 @@ vim.api.nvim_create_autocmd("FileType", {
             }
         })
 
+        local opts = { silent = true, buffer = true }
+
         vim.keymap.set("n", "<localleader>rf", function()
             if vim.api.nvim_buf_get_option(0, "modified") then
                 vim.api.nvim_echo({{"The current file has changes", "ErrorMsg" }}, true, {})
@@ -62,7 +64,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
             vim.cmd("!rustfmt " .. vim.fn.expand("%"))
             vim.cmd("edit");
-        end)
+        end, opts)
 
         vim.keymap.set("n", "<localleader>gf", function()
             local file_changes = {{ "Open files have changes:", "ErrorMsg" }}
@@ -88,9 +90,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
             vim.cmd("!cargo fmt")
             vim.cmd("edit")
-        end, { noremap = true, silent = true })
+        end, opts)
 
-        vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end)
+        vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end, opts)
+        vim.keymap.set("n", "<leader><leader>`", function() vim.cmd("e Cargo.lock") end, opts)
     end,
 })
 
