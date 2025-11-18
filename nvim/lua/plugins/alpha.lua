@@ -92,7 +92,11 @@ local function config()
 
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
-    buttons:add("󰭎 Find files", "f", function() vim.cmd("Telescope live_grep") end)
+    buttons:add("󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end)
+
+    buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files initial_mode=normal") end)
+
+    buttons:add(" Resume telescope", "r", function() vim.cmd("Telescope resume") end)
 
     buttons:add("󰒲 Lazy", "l", function() vim.cmd("Lazy") end)
 
