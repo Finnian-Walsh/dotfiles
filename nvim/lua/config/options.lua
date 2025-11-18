@@ -24,7 +24,7 @@ vim.keymap.set("n", "<leader>m", function()
         vim.cmd("syntax enable")
         vim.treesitter.start()
     end
-end, { noremap = true, silent = true, desc = "Toggle monochrome" })
+end, { noremap = true, silent = true, desc = "Toggle Linus syntax highlighting" })
 vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
 vim.keymap.set("n", "<leader>k", ":bprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
 
