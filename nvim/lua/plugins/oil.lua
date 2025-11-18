@@ -4,9 +4,9 @@ return {
     config = function()
         require("oil").setup{
             keymaps = {
-                ["<C-h>"] = "actions.toggle_hidden",
+                ["<localleader>h"] = "actions.toggle_hidden",
                 ["<C-l>"] = false,
-                ["<leader>r"] = "actions.refresh",
+                ["<localleader>r"] = "actions.refresh",
             },
             devicons = {
                 icons = require("nvim-web-devicons").get_icons(),
