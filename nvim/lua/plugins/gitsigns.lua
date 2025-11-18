@@ -2,7 +2,8 @@ return {
     "lewis6991/gitsigns.nvim",
 
     config = function()
-        require('gitsigns').setup {
+        local gitsigns = require('gitsigns')
+        gitsigns.setup {
             signs = {
                 add          = { text = '┃' },
                 change       = { text = '┃' },
@@ -33,7 +34,7 @@ return {
             current_line_blame_opts = {
                 virt_text = true,
                 virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-                delay = 1000,
+                delay = 50,
                 ignore_whitespace = false,
                 virt_text_priority = 100,
                 use_focus = true,
@@ -51,5 +52,8 @@ return {
                 col = 1
             },
         }
+
+        vim.keymap.set("n", "<leader>d", gitsigns.diffthis, { desc = "See the git diff for the current file "})
+        vim.keymap.set("n", "<leader>B", gitsigns.toggle_current_line_blame, { desc = "Toggle the gitsigns current line blame" })
     end
 }
