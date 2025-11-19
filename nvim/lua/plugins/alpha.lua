@@ -88,7 +88,7 @@ local function config()
 
     local buttons = CenteredButtons.new({ padding = 1 })
 
-    buttons:add(" New file", "e", function() vim.cmd("enew") end)
+    buttons:add(" New file", "e", function() vim.cmd("enew | startinsert") end)
 
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
