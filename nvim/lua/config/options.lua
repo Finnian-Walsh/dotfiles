@@ -120,3 +120,10 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.lsp.config("jdtls", {})
     end
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "norg",
+    callback = function()
+        vim.b.completion = false
+    end
+})
