@@ -10,11 +10,16 @@ return {
                 ["core.dirman"] = {
                     config = {
                         workspaces = {
-                            sparx = "~/school/sparx",
+                            notes = "~/notes",
+                            school = "~/notes/school",
+                            sparx = "~/notes/school/sparx",
                         },
                     },
                 },
             }
         }
+
+        vim.keymap.set("n", "<localleader>nw", ":Neorg workspace ")
+        vim.keymap.set("n", "<localleader>nr", ":Neorg return<CR>", { silent = true })
     end,
 }
