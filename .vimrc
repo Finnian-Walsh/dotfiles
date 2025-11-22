@@ -8,10 +8,10 @@ nnoremap <silent> <leader>t :Ex<CR>
 nnoremap <silent> <leader>c :bd<CR>
 nnoremap <silent> <leader>j :bn<CR>
 nnoremap <silent> <leader>k :bp<CR>
-nnoremap <silent> <C-h> : wincmd h<CR>
-nnoremap <silent> <C-j> : wincmd j<CR>
-nnoremap <silent> <C-k> : wincmd k<CR>
-nnoremap <silent> <C-l> : wincmd l<CR>
+nnoremap <silent> <C-h> :wincmd h<CR>
+nnoremap <silent> <C-j> :wincmd j<CR>
+nnoremap <silent> <C-k> :wincmd k<CR>
+nnoremap <silent> <C-l> :wincmd l<CR>
 
 if has('termguicolors')
     set termguicolors
