@@ -53,7 +53,7 @@ return {
             },
         }
 
-        vim.keymap.set("n", "<leader>d", gitsigns.diffthis, { desc = "See the git diff for the current file "})
-        vim.keymap.set("n", "<leader>B", gitsigns.toggle_current_line_blame, { desc = "Toggle the gitsigns current line blame" })
+        vim.keymap.set("n", "<leader>gd", gitsigns.diffthis, { desc = "See the git diff for the current file "})
+        vim.keymap.set("n", "<leader>gb", gitsigns.toggle_current_line_blame, { desc = "Toggle the gitsigns current line blame" })
     end
 }
