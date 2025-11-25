@@ -56,7 +56,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
         local opts = { silent = true, buffer = true }
 
-        vim.keymap.set("n", "<localleader>rf", function()
+        vim.keymap.set("n", "<localleader>ff", function()
             if vim.api.nvim_buf_get_option(0, "modified") then
                 vim.api.nvim_echo({{"The current file has changes", "ErrorMsg" }}, true, {})
                 return
