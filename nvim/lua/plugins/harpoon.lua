@@ -1,3 +1,11 @@
+local function trim_path(path, dir)
+    if path:sub(1, #dir) == dir then
+        return path:sub(#dir + 1)
+    end
+
+    return path
+end
+
 return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
@@ -9,23 +17,49 @@ return {
         local harpoon = require("harpoon")
         harpoon:setup{
             settings = {
-                save_on_toggle = true,
+            save_on_toggle = true,
                 save_on_change = true,
                 sync_on_ui_close = true,
             }
         }
 
         vim.keymap.set("n", "<leader>a", function()
-            local file = vim.fn.expand("%")
-            local cwd = vim.uv.cwd()
+            local dir = require("oil").get_current_dir()
+            local cwd = vim.fn.fnamemodify(vim.uv.cwd(), ":p")
 
-            if file:sub(1, #cwd) == cwd then
-                file = file:sub(#cwd + 2)
+            if dir then
+                local local_dir = trim_path(dir, cwd)
+
+                local fd = vim.uv.fs_scandir(dir)
+                if not fd then
+                    vim.api.nvim_echo({{
+                        "The current directory (" .. dir .. ") does not exist", "WarningMsg"
+                    }}, true, {})
+                    return
+                end
+
+                local files = {}
+
+                while true do
+                    local name, ft = vim.uv.fs_scandir_next(fd)
+                    if not name then
+                        break
+                    end
+
+                    if ft == "file" then
+                        table.insert(files, local_dir .. name)
+                    end
+                end
+
+                local files_str = table.concat(files, "\n")
+                vim.fn.setreg('"', files_str)
+            else
+                local file = trim_path(vim.fn.expand("%"), cwd)
+                vim.fn.setreg('"', file)
             end
 
-            vim.fn.setreg('"', file)
             harpoon.ui:toggle_quick_menu(harpoon:list())
-        end)
+        end, { desc = "Add file(s) to harpoon" })
 
         vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Open Harpoon" })
 
