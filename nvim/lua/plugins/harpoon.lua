@@ -17,7 +17,7 @@ return {
 
         vim.keymap.set("n", "<leader>a", function()
             local file = vim.fn.expand("%")
-            local cwd = vim.loop.cwd()
+            local cwd = vim.uv.cwd()
 
             if file:sub(1, #cwd) == cwd then
                 file = file:sub(#cwd + 2)
