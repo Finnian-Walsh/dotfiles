@@ -10,7 +10,7 @@ return {
         event = "VeryLazy",
         config = function()
             require("mason-lspconfig").setup{
-                ensure_installed = { "rust_analyzer", "lua_ls", "jdtls", },
+                ensure_installed = { "rust_analyzer", "lua_ls", },
             }
         end,
     },
