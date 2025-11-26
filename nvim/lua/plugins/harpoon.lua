@@ -26,6 +26,7 @@ return {
         vim.keymap.set("n", "<leader>a", function()
             local dir = require("oil").get_current_dir()
             local cwd = vim.fn.fnamemodify(vim.uv.cwd(), ":p")
+            local harpoon_text
 
             if dir then
                 local local_dir = trim_path(dir, cwd)
@@ -51,13 +52,12 @@ return {
                     end
                 end
 
-                local files_str = table.concat(files, "\n")
-                vim.fn.setreg('"', files_str)
+                harpoon_text = table.concat(files, "\n")
             else
-                local file = trim_path(vim.fn.expand("%"), cwd)
-                vim.fn.setreg('"', file)
+                harpoon_text = trim_path(vim.fn.expand("%"), cwd)
             end
 
+            vim.fn.setreg('"', harpoon_text)
             harpoon.ui:toggle_quick_menu(harpoon:list())
         end, { desc = "Add file(s) to harpoon" })
 
