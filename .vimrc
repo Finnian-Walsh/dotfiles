@@ -6,8 +6,8 @@ let mapleader = "\<Space>"
 
 nnoremap <silent> <leader>t :Ex<CR>
 nnoremap <silent> <leader>c :bd<CR>
-nnoremap <silent> <leader>j :bn<CR>
-nnoremap <silent> <leader>k :bp<CR>
+nnoremap <silent> <leader>n :bn<CR>
+nnoremap <silent> <leader>N :bp<CR>
 nnoremap <silent> <C-h> :wincmd h<CR>
 nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
