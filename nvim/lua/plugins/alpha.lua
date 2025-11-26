@@ -2,6 +2,10 @@ local function create_padding(value)
     return { type = "padding", val = value or 2 }
 end
 
+local function unset_padding()
+    return { type = "padding" }
+end
+
 local CenteredButtons = {}
 CenteredButtons.__index = CenteredButtons
 
@@ -72,7 +76,6 @@ local function config()
     local header = {
         type = "text",
         val = {
-            [[        The best code editor of all time!        ]],
             [[                               __                ]],
             [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
             [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
@@ -126,12 +129,46 @@ local function config()
         }
     }
 
+    local padding_values = {
+        top = unset_padding(),
+        header = unset_padding(),
+        buttons = unset_padding(),
+    }
+
+    local function update_padding_values()
+        local lines = vim.o.lines
+
+        if lines > 44 then
+            padding_values.top.val = 4
+            padding_values.header.val = 3
+            padding_values.buttons.val = 3
+        elseif lines > 24 then
+            padding_values.top.val = 1
+            padding_values.header.val = 3
+            padding_values.buttons.val = 1
+        else
+            padding_values.top.val = 0
+            padding_values.header.val = 1
+            padding_values.buttons.val = 0
+        end
+
+    end
+
+    update_padding_values()
+
+    vim.api.nvim_create_autocmd("VimResized", {
+        callback = function()
+            update_padding_values()
+            vim.cmd("AlphaRedraw")
+        end,
+    })
+
     local layout = {
-        create_padding(5),
+        padding_values.top,
         header,
-        create_padding(3),
+        padding_values.header,
         buttons:build(),
-        create_padding(3),
+        padding_values.buttons,
         ferris,
     }
 
@@ -141,7 +178,6 @@ end
 
 return {
     "goolord/alpha-nvim",
-    -- dependencies = { 'echasnovski/mini.icons' },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = config,
 }
