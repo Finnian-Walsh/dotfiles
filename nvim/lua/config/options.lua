@@ -11,11 +11,23 @@ vim.opt.cursorline = true
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true, desc = "Turn highlight off" })
-vim.keymap.set("n", "<leader>c", ":bd<CR>", { noremap = true, silent = true, desc = "Close buffer"})
-vim.keymap.set("n", "<leader>C", ":bufdo bd<CR>", { noremap = true, silent = true, desc = "Close all buffers"})
+
+
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, silent = true, desc = "Toggle bufferline" })
+vim.keymap.set("n", "<leader>n", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
+vim.keymap.set("n", "<leader>p", ":bprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
+vim.keymap.set("n", "<leader>c", ":bd<CR>", { noremap = true, silent = true, desc = "Close buffer"})
+vim.keymap.set("n", "<leader><leader>c", ":bufdo bd<CR>", { noremap = true, silent = true, desc = "Close buffer"})
+
+vim.keymap.set("n", "<leader>o", ":tabnew<CR>", { noremap = true, silent = true, desc = "Open a new tab" })
+vim.keymap.set("n", "<leader>N", ":tabnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
+vim.keymap.set("n", "<leader>P", ":tabprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
+vim.keymap.set("n", "<leader>C", ":tabclose<CR>", { noremap = true, silent = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader><leader>C", ":tabonly<CR>", { noremap = true, silent = true, desc = "Close all buffers"})
+
+vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { silent = true, desc = "Open neo-tree" })
 vim.keymap.set("n", "<leader>m", function()
     if vim.g.syntax_on then
         vim.cmd("syntax off")
@@ -25,8 +37,6 @@ vim.keymap.set("n", "<leader>m", function()
         vim.treesitter.start()
     end
 end, { noremap = true, silent = true, desc = "Toggle Linus syntax highlighting" })
-vim.keymap.set("n", "<leader>n", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
-vim.keymap.set("n", "<leader>N", ":bprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
 
 vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true, desc = "Move to window left" })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true, desc = "Move to window below" })
