@@ -66,12 +66,131 @@ function CenteredButtons:build()
     }
 end
 
+local CycleSystem = {}
+CycleSystem.__index = CycleSystem
+
+function CycleSystem.new(items, interval, reset, fn)
+    return setmetatable({
+        items = items,
+        reset = reset,
+        fn = fn,
+        _running = false,
+        _index = 1,
+        _last_used = 0,
+        _interval = interval,
+        _extended_interval = interval + 1,
+    }, CycleSystem)
+end
+
+function CycleSystem:is_running()
+    return self._running
+end
+
+function CycleSystem:start()
+    if self._running or self._last_used + self._extended_interval > os.time() * 1000 then
+        return
+    end
+
+    self._running = true
+    self:_next()
+end
+
+function CycleSystem:_next()
+    if not self._running then
+        return
+    end
+
+    local new_index = self._index % #self.items + 1
+    self._index = new_index
+    self.fn(self.items[new_index])
+
+    vim.defer_fn(function()
+        self:_next()
+    end, self._interval)
+end
+
+function CycleSystem:stop()
+    if not self._running then
+        return
+    end
+
+    self._running = false
+    self._last_used = os.time() * 1000
+
+    vim.defer_fn(function()
+        self.reset()
+    end, self._extended_interval)
+end
+
+function CycleSystem:toggle()
+    if self._running then
+        self:stop()
+    else
+        self:start()
+    end
+end
+
 local function config()
     -- #33D5C1 very neon
     -- #33D5C1 too dark
     -- #33D7BE lighter
     -- #33D0C3 pretty nice
-    vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#33D0C3", bold = true })
+
+    local function reset_header()
+        vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#33D0C3", bold = true })
+    end
+
+    reset_header()
+
+    local header_cycle_system = CycleSystem.new(
+        {
+            "#33D0C3",
+            "#250ECF",
+            "#FFA0A0",
+            "#CF0E0E",
+            "#FCBA03",
+            "#14FC03",
+            "#DB34EB",
+            "#D60DA7",
+        },
+        350,
+        reset_header,
+        function(color)
+            vim.api.nvim_set_hl(0, "AlphaHeader", { fg = color, bold = true })
+        end
+    )
+
+    vim.api.nvim_create_user_command("HeaderColor", function(opts)
+        local arg = opts.args
+
+        if arg == "" then
+            header_cycle_system:toggle()
+        elseif arg == "?" then
+            vim.notify(header_cycle_system:is_running() and "switching" or "", vim.log.levels.INFO)
+        else
+            vim.api.nvim_echo({
+                { "Unknown option: " .. arg, "ErrorMsg" },
+            }, true, {})
+        end
+    end, { nargs = "?" })
+
+    vim.api.nvim_create_autocmd("BufLeave", {
+        callback = function()
+            vim.schedule(function()
+                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(bufnr) then
+                        local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+
+                        if ft == "alpha" then
+                            return
+                        end
+                    end
+                end
+
+                header_cycle_system:stop()
+            end)
+        end
+    })
 
     local header = {
         type = "text",
@@ -92,6 +211,8 @@ local function config()
     local buttons = CenteredButtons.new({ padding = 1 })
 
     buttons:add(" New file", "e", function() vim.cmd("enew | startinsert") end)
+
+    buttons:add(" Header coloring", "c", function() vim.cmd("HeaderColor") end)
 
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
@@ -144,14 +265,13 @@ local function config()
             padding_values.buttons.val = 3
         elseif lines > 24 then
             padding_values.top.val = 1
-            padding_values.header.val = 3
+            padding_values.header.val = 2
             padding_values.buttons.val = 1
         else
             padding_values.top.val = 0
             padding_values.header.val = 1
             padding_values.buttons.val = 0
         end
-
     end
 
     update_padding_values()
