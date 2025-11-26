@@ -25,8 +25,8 @@ vim.keymap.set("n", "<leader>m", function()
         vim.treesitter.start()
     end
 end, { noremap = true, silent = true, desc = "Toggle Linus syntax highlighting" })
-vim.keymap.set("n", "<leader>j", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
-vim.keymap.set("n", "<leader>k", ":bprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
+vim.keymap.set("n", "<leader>n", ":bnext<CR>", { noremap = true, silent = true, desc = "Next buffer " })
+vim.keymap.set("n", "<leader>N", ":bprev<CR>", { noremap = true, silent = true, desc = "Previous buffer "})
 
 vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { noremap = true, silent = true, desc = "Move to window left" })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { noremap = true, silent = true, desc = "Move to window below" })
