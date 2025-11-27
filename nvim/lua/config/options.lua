@@ -47,7 +47,7 @@ vim.keymap.set("n", "<C-`>", ":wincmd =<CR>", { noremap = true, silent = true, d
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function()
-        vim.opt.formatoptions:remove({"r"})
+        vim.opt.formatoptions:remove({"o"})
     end,
 })
 
