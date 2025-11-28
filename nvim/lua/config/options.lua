@@ -13,7 +13,11 @@ vim.opt.mouse = ""
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true, desc = "Turn highlight off" })
 
+vim.keymap.set("n", "<leader>q", ":q<CR>", { silent = true, desc = "Quit" })
+vim.keymap.set("n", "<leader>w", ":w<CR>", { silent = true, desc = "Write" })
+
 vim.keymap.set("n", "<leader>A", ":Alpha<CR>", { silent = true, desc = "Toggle Alpha" })
+
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, silent = true, desc = "Toggle bufferline" })
