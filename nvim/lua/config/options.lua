@@ -17,6 +17,8 @@ vim.keymap.set("n", "<leader>q", ":q<CR>", { silent = true, desc = "Quit" })
 vim.keymap.set("n", "<leader>w", ":w<CR>", { silent = true, desc = "Write" })
 
 vim.keymap.set("n", "<leader>A", ":Alpha<CR>", { silent = true, desc = "Toggle Alpha" })
+vim.keymap.set("n", "<leader>L", ":Lazy<CR>", { silent = true, desc = "Open Lazy" })
+vim.keymap.set("n", "<leader>M", ":Mason<CR>", { silent = true, desc = "Open Mason" })
 
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0

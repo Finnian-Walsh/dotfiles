@@ -223,11 +223,11 @@ local function config()
 
     buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files initial_mode=normal") end)
 
-    buttons:add(" Resume telescope", "r", function() vim.cmd("Telescope resume") end)
+    buttons:add(" Resume telescope", "R", function() vim.cmd("Telescope resume") end)
 
-    buttons:add("󰒲 Lazy", "l", function() vim.cmd("Lazy") end)
+    buttons:add("󰒲 Lazy", "L", function() vim.cmd("Lazy") end)
 
-    buttons:add("󰢛 Mason", "m", function() vim.cmd("Mason") end)
+    buttons:add("󰢛 Mason", "M", function() vim.cmd("Mason") end)
 
     buttons:add("󱡅 Harpoon", "h", function()
         local harpoon = require("harpoon")
