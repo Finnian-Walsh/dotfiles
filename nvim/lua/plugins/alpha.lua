@@ -130,6 +130,17 @@ function CycleSystem:toggle()
     end
 end
 
+local function loaded_alpha_buffers()
+    return coroutine.wrap(function()
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_loaded(buf)
+                and vim.bo[buf].filetype == "alpha" then
+                coroutine.yield(buf)
+            end
+        end
+    end)
+end
+
 local function config()
     -- #33D5C1 very neon
     -- #33D5C1 too dark
@@ -166,7 +177,7 @@ local function config()
         if arg == "" then
             header_cycle_system:toggle()
         elseif arg == "?" then
-            vim.notify(header_cycle_system:is_running() and "switching" or "", vim.log.levels.INFO)
+            vim.notify(header_cycle_system:is_running() and "active" or "inactive", vim.log.levels.INFO)
         else
             vim.api.nvim_echo({
                 { "Unknown option: " .. arg, "ErrorMsg" },
@@ -177,17 +188,9 @@ local function config()
     vim.api.nvim_create_autocmd("BufLeave", {
         callback = function()
             vim.schedule(function()
-                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-                    if vim.api.nvim_buf_is_loaded(bufnr) then
-                        local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
-
-                        if ft == "alpha" then
-                            return
-                        end
-                    end
+                if not loaded_alpha_buffers() then
+                    header_cycle_system:stop()
                 end
-
-                header_cycle_system:stop()
             end)
         end
     })
@@ -257,14 +260,18 @@ local function config()
     }
 
     local function update_padding_values()
-        local lines = vim.o.lines
+        local screen_lines = vim.o.lines -- vim.fn.line('w$') - vim.fn.line('w0') + 1
 
-        if lines > 44 then
-            padding_values.top.val = 4
+        if screen_lines > 44 then
+            padding_values.top.val = 3
             padding_values.header.val = 3
             padding_values.buttons.val = 3
-        elseif lines > 24 then
+        elseif screen_lines >= 40 then
             padding_values.top.val = 1
+            padding_values.header.val = 2
+            padding_values.buttons.val = 2
+        elseif screen_lines >= 36 then
+            padding_values.top.val = 0
             padding_values.header.val = 2
             padding_values.buttons.val = 1
         else
