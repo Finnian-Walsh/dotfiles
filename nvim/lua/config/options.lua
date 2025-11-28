@@ -118,7 +118,7 @@ vim.api.nvim_create_autocmd("BufHidden", {
     callback = function(args)
         local buf = args.buf
 
-        if vim.api.nvim_buf_get_name(buf) ~= "" then
+        if vim.api.nvim_buf_get_name(buf) ~= "" or vim.bo[buf].filetype ~= "" then
             return
         end
 
