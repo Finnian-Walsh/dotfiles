@@ -8,6 +8,7 @@ vim.opt.expandtab = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
+vim.opt.mouse = ""
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true, desc = "Turn highlight off" })
@@ -102,7 +103,7 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "<localleader>gf", function()
             local file_changes = {{ "Open files have changes:", "ErrorMsg" }}
             for _, buf in ipairs(vim.fn.getbufinfo{ buflisted = 1}) do
-                if vim.api.nvim_buf_get_option(buf.bufnr, "modified") then
+                if vim.api.nvim_buf_get_option(buf.buf, "modified") then
                     table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(buf.name, ":."), "Normal" })
                 end
             end
