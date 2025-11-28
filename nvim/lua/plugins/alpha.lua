@@ -229,8 +229,9 @@ local function config()
 
     buttons:add("󰢛 Mason", "M", function() vim.cmd("Mason") end)
 
+    local harpoon
     buttons:add("󱡅 Harpoon", "h", function()
-        local harpoon = require("harpoon")
+        harpoon = harpoon or require("harpoon")
         harpoon.ui:toggle_quick_menu(harpoon:list())
     end)
 
