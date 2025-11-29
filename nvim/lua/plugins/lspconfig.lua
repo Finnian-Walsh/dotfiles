@@ -22,6 +22,9 @@ return {
             vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to lsp declaration" })
             vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Open diagnostic" })
             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename a variable" })
+
+            local capabilities = require("blink-cmp").get_lsp_capabilities()
+            vim.lsp.config("lua_ls", { capabilities = capabilities })
         end,
     },
 }
