@@ -18,15 +18,33 @@ vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
 
+local function find_listed_buffer()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buflisted then
+            return buf
+        end
+    end
+end
+
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, desc = "Toggle bufferline" })
 vim.keymap.set("n", "<leader>n", function()
-    vim.cmd("bnext " .. vim.v.count1)
+    if find_listed_buffer() then
+        vim.cmd("bnext " .. vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
 end, { noremap = true, desc = "Next buffer " })
+
 vim.keymap.set("n", "<leader>p", function()
-    vim.cmd("bprev " .. vim.v.count1)
+    if find_listed_buffer() then
+        vim.cmd("bprev " .. vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
 end, { noremap = true, desc = "Previous buffer "})
+
 vim.keymap.set("n", "<leader>c", "<cmd>bd<CR>", { noremap = true, desc = "Close buffer"})
 vim.keymap.set("n", "<leader>C", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close buffer"})
 
