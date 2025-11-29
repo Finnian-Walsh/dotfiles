@@ -24,7 +24,7 @@ return {
             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename a variable" })
 
             local capabilities = require("blink-cmp").get_lsp_capabilities()
-            vim.lsp.config("lua_ls", { capabilities = capabilities })
+            vim.lsp.config("*", { capabilities = capabilities })
         end,
     },
 }
