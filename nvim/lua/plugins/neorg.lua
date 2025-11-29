@@ -20,6 +20,6 @@ return {
         }
 
         vim.keymap.set("n", "<localleader>nw", ":Neorg workspace ")
-        vim.keymap.set("n", "<localleader>nr", ":Neorg return<CR>", { silent = true })
+        vim.keymap.set("n", "<localleader>nr", "<cmd>Neorg return<CR>")
     end,
 }
