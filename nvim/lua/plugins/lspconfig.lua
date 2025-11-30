@@ -10,7 +10,7 @@ return {
         event = "VeryLazy",
         config = function()
             require("mason-lspconfig").setup{
-                ensure_installed = { "rust_analyzer", "lua_ls", },
+                ensure_installed = { "rust_analyzer", "lua_ls", "pyright", },
             }
         end,
     },
@@ -25,6 +25,29 @@ return {
 
             local capabilities = require("blink-cmp").get_lsp_capabilities()
             vim.lsp.config("*", { capabilities = capabilities })
+
+            vim.lsp.config("lua_ls", {
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = "LuaJIT",
+                            -- path = vim.split(package.path, ";"),
+                        },
+                        diagnostics = {
+                            globals = {
+                                "vim",
+                            }
+                        },
+                    --     workspace = {
+                    --         library = vim.api.nvim_get_runtime_file("", true),
+                    --         checkThirdParty = false,
+                    --     },
+                    --     telemetry = {
+                    --         enable = false,
+                    --     },
+                    }
+                }
+            })
         end,
     },
 }
