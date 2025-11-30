@@ -57,7 +57,7 @@ return {
                 harpoon_text = trim_path(vim.fn.expand("%"), cwd)
             end
 
-            vim.fn.setreg('"', harpoon_text)
+            vim.api.nvim_set_reg('"', harpoon_text, "a")
             harpoon.ui:toggle_quick_menu(harpoon:list())
         end, { desc = "Add file(s) to harpoon" })
 
