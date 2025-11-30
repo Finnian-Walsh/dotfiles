@@ -45,8 +45,8 @@ vim.keymap.set("n", "<leader>p", function()
     end
 end, { noremap = true, desc = "Previous buffer "})
 
-vim.keymap.set("n", "<leader>c", "<cmd>bd<CR>", { noremap = true, desc = "Close buffer"})
-vim.keymap.set("n", "<leader>C", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close buffer"})
+vim.keymap.set("n", "<leader>cb", "<cmd>bd<CR>", { noremap = true, desc = "Close buffer"})
+vim.keymap.set("n", "<leader>cB", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close buffer"})
 
 vim.keymap.set("n", "<leader><Right>", function()
     for _ = 1, vim.v.count1 do
@@ -72,19 +72,19 @@ vim.keymap.set("n", "<leader>O", function()
     end
 end, { noremap = true, desc = "Open a new tab" })
 
-vim.keymap.set("n", "<leader><leader>n", function()
+vim.keymap.set("n", "<leader>N", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnext")
     end
 end, { noremap = true, desc = "Next tab " })
-vim.keymap.set("n", "<leader><leader>p", function()
+vim.keymap.set("n", "<leader>P", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabprev")
     end
 end, { noremap = true, desc = "Previous tab "})
 
-vim.keymap.set("n", "<leader><leader>c", "<cmd>tabclose<CR>", { noremap = true, desc = "Close all buffers"})
-vim.keymap.set("n", "<leader><leader>C", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>ct", "<cmd>tabclose<CR>", { noremap = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>cT", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all buffers"})
 
 local function current_tab_can_move(count)
     local tabs = vim.api.nvim_list_tabpages()
@@ -103,7 +103,7 @@ local function current_tab_can_move(count)
     return position >= 1 and position <= #tabs
 end
 
-vim.keymap.set("n", "<leader><leader><Right>", function()
+vim.keymap.set("n", "<leader><S-Right>", function()
     local count = vim.v.count1
     if current_tab_can_move(count) then
         vim.cmd("tabmove +" .. count)
@@ -112,7 +112,7 @@ vim.keymap.set("n", "<leader><leader><Right>", function()
     end
 end, { desc = "Move the tab right" })
 
-vim.keymap.set("n", "<leader><leader><Left>", function()
+vim.keymap.set("n", "<leader><S-Left>", function()
     local count = vim.v.count1
     if current_tab_can_move(-count) then
         vim.cmd("tabmove -" .. count)
@@ -121,53 +121,54 @@ vim.keymap.set("n", "<leader><leader><Left>", function()
     end
 end, { desc = "Move the tab left" })
 
-vim.keymap.set("n", "<leader>z", function()
-    local count = vim.v.count1
-    print(count)
-end, { desc = "Test keymap" })
-
 _G.nav_keys = {
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
     "!", "\"", "£", "$", "%", "^", "&", "*", "(", ")"
 }
 
 for i = 1, 20 do
-    vim.keymap.set("n", "<leader><leader>" .. nav_keys[i], "<cmd>tabnext " .. i .. "<CR>", { noremap = true, desc = "Go to tab " .. i})
+    local command = "<cmd>tabnext " .. i .. "<CR>"
+    local opts = { noremap = true, desc = "Go to tab " .. i}
+    local navigation_key = nav_keys[i]
+    vim.keymap.set("n", "<leader>." .. navigation_key, command, opts)
+end
+
+local function auto_buffer_delete(buf)
+    if vim.api.nvim_buf_get_name(buf) ~= "" or vim.bo[buf].filetype ~= "" then
+        return
+    end
+
+    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+    if #lines > 1 or lines[1] ~= "" then
+        return
+    end
+
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == buf
+            and vim.api.nvim_win_get_config(win).relative ~= "" then
+            return
+        end
+    end
+
+    vim.schedule(function()
+        vim.api.nvim_buf_delete(buf, { force = true })
+    end)
 end
 
 vim.api.nvim_create_autocmd("BufHidden", {
     callback = function(args)
-        local buf = args.buf
-
-        if vim.api.nvim_buf_get_name(buf) ~= "" or vim.bo[buf].filetype ~= "" then
-            return
-        end
-
-        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-        if #lines > 1 or lines[1] ~= "" then
-            return
-        end
-
-        for _, win in ipairs(vim.api.nvim_list_wins()) do
-            if vim.api.nvim_win_get_buf(win) == buf then
-                if vim.api.nvim_win_get_config(win).relative ~= "" then -- buffer in a floating window
-                    return
-                end
-            end
-        end
-
-        vim.schedule(function()
-            vim.api.nvim_buf_delete(buf, { force = true })
-        end)
-    end
+        auto_buffer_delete(args.buf)
+    end,
 })
 
+local function schedule_tabline_redraw()
+    vim.schedule(function()
+        vim.cmd("redrawtabline")
+    end)
+end
+
 vim.api.nvim_create_autocmd("BufLeave", {
-    callback = function()
-        vim.schedule(function()
-            vim.cmd("redrawtabline")
-        end)
-    end
+    callback = schedule_tabline_redraw,
 })
 
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Open neo-tree" })
