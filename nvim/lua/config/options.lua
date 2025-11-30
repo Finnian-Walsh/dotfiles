@@ -29,6 +29,7 @@ end
 vim.keymap.set("n", "<leader>b", function()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end, { noremap = true, desc = "Toggle bufferline" })
+
 vim.keymap.set("n", "<leader>n", function()
     if find_listed_buffer() then
         vim.cmd("bnext " .. vim.v.count1)
@@ -45,8 +46,13 @@ vim.keymap.set("n", "<leader>p", function()
     end
 end, { noremap = true, desc = "Previous buffer "})
 
-vim.keymap.set("n", "<leader>cb", "<cmd>bd<CR>", { noremap = true, desc = "Close buffer"})
-vim.keymap.set("n", "<leader>cB", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close buffer"})
+vim.keymap.set("n", "<leader>cb", function()
+    for _ = 1, vim.v.count1 do
+        vim.cmd("bd")
+    end
+end, { noremap = true, desc = "Close buffer"})
+
+vim.keymap.set("n", "<leader>cB", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
 
 vim.keymap.set("n", "<leader><Right>", function()
     for _ = 1, vim.v.count1 do
@@ -83,8 +89,13 @@ vim.keymap.set("n", "<leader>P", function()
     end
 end, { noremap = true, desc = "Previous tab "})
 
-vim.keymap.set("n", "<leader>ct", "<cmd>tabclose<CR>", { noremap = true, desc = "Close all buffers"})
-vim.keymap.set("n", "<leader>cT", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>ct", function()
+    for _ = 1, vim.v.count1 do
+        vim.cmd("tabclose")
+    end
+end, { noremap = true, desc = "Close tab"})
+
+vim.keymap.set("n", "<leader>cT", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
 
 local function current_tab_can_move(count)
     local tabs = vim.api.nvim_list_tabpages()
@@ -222,8 +233,9 @@ vim.api.nvim_create_autocmd("FileType", {
 
         vim.keymap.set("n", "<localleader>gf", function()
             local file_changes = {{ "Open files have changes:", "ErrorMsg" }}
-            for _, buf in ipairs(vim.fn.getbufinfo{ buflisted = 1}) do
-                if vim.api.nvim_buf_get_option(buf.buf, "modified") then
+
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_get_option(buf, "modified") then
                     table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(buf.name, ":."), "Normal" })
                 end
             end
@@ -249,30 +261,6 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end, opts)
         vim.keymap.set("n", "<leader><leader>`", function() vim.cmd("e Cargo.lock") end, opts)
     end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "lua",
-    callback = function()
-        vim.lsp.config("lua_ls", {
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = {
-                            "vim",
-                        }
-                    }
-                }
-            }
-        })
-    end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "java",
-    callback = function()
-        vim.lsp.config("jdtls", {})
-    end
 })
 
 vim.api.nvim_create_autocmd("FileType", {
