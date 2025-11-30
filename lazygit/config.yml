@@ -1,9 +1,7 @@
 gui:
-  editor: 'nvim'
-
   theme:
     activeBorderColor:
-      - '#cba6f7'
+      - '#f38ba8'
       - bold
     inactiveBorderColor:
       - '#a6adc8'
@@ -14,7 +12,7 @@ gui:
     cherryPickedCommitBgColor:
       - '#45475a'
     cherryPickedCommitFgColor:
-      - '#cba6f7'
+      - '#f38ba8'
     unstagedChangesColor:
       - '#f38ba8'
     defaultFgColor:
@@ -23,6 +21,4 @@ gui:
       - '#f9e2af'
 
   authorColors:
-    'finnian*': '#42f58d'
-    'Finnian*': '#42f58d'
     '*': '#b4befe'
