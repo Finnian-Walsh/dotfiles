@@ -26,9 +26,13 @@ local function find_listed_buffer()
     end
 end
 
-vim.keymap.set("n", "<leader>b", function()
+local function toggle_bufferline()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
-end, { noremap = true, desc = "Toggle bufferline" })
+end
+
+vim.keymap.set("n", "<leader>b", toggle_bufferline, { noremap = true, desc = "Toggle bufferline" })
+
+vim.api.nvim_create_user_command("ToggleBufferline", toggle_bufferline, { desc = "Toggle bufferline" })
 
 vim.keymap.set("n", "<leader>n", function()
     if find_listed_buffer() then
