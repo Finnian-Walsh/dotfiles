@@ -26,28 +26,32 @@ return {
             local capabilities = require("blink-cmp").get_lsp_capabilities()
             vim.lsp.config("*", { capabilities = capabilities })
 
+            vim.lsp.config("rust_analyzer", {
+                settings = {
+                    ["rust-analyzer"] = {
+                        cargo = { allFeatures = true },
+                        checkOnSave = true,
+                        check = { command = "clippy" },
+                    },
+                }
+            })
+
             vim.lsp.config("lua_ls", {
                 settings = {
                     Lua = {
                         runtime = {
                             version = "LuaJIT",
-                            -- path = vim.split(package.path, ";"),
                         },
                         diagnostics = {
                             globals = {
                                 "vim",
                             }
                         },
-                    --     workspace = {
-                    --         library = vim.api.nvim_get_runtime_file("", true),
-                    --         checkThirdParty = false,
-                    --     },
-                    --     telemetry = {
-                    --         enable = false,
-                    --     },
                     }
                 }
             })
+
+            vim.lsp.config("pyright", {})
         end,
     },
 }
