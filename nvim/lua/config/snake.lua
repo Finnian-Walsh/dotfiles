@@ -165,7 +165,5 @@ local function snake(opts)
     math.randomseed(os.time())
 end
 
-vim.api.nvim_create_user_command("Snake", snake, {
-    nargs = "*",
-})
+vim.api.nvim_create_user_command("Snake", snake, { desc = "Play snake", nargs = "*" })
 
