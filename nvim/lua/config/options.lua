@@ -213,15 +213,6 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function()
-        vim.lsp.config("rust_analyzer", {
-            settings = {
-                ["rust-analyzer"] = {
-                    cargo = { allFeatures = true },
-                    checkOnSave = true,
-                    check = { command = "clippy" },
-                },
-            }
-        })
 
         local opts = { buffer = true }
 
@@ -263,7 +254,6 @@ vim.api.nvim_create_autocmd("FileType", {
         end, opts)
 
         vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end, opts)
-        vim.keymap.set("n", "<leader><leader>`", function() vim.cmd("e Cargo.lock") end, opts)
     end,
 })
 
