@@ -134,20 +134,16 @@ local function snake(opts)
         direction = Direction.Right
     end
 
-    vim.keymap.set("n", "h", turn_left, buffer_local)
-    vim.keymap.set("n", "j", turn_down, buffer_local)
-    vim.keymap.set("n", "k", turn_up, buffer_local)
-    vim.keymap.set("n", "l", turn_right, buffer_local)
-
-    vim.keymap.set("n", "a", turn_left, buffer_local)
-    vim.keymap.set("n", "s", turn_down, buffer_local)
-    vim.keymap.set("n", "w", turn_up, buffer_local)
-    vim.keymap.set("n", "d", turn_right, buffer_local)
-
-    vim.keymap.set("n", "<Left>", turn_left, buffer_local)
-    vim.keymap.set("n", "<Down>", turn_down, buffer_local)
-    vim.keymap.set("n", "<Up>", turn_up, buffer_local)
-    vim.keymap.set("n", "<Right>", turn_right, buffer_local)
+    for _, keys in ipairs({
+        { "h", "j", "k", "l", },
+        { "a", "s", "w", "d", },
+        { "<Left>", "<Down>", "<Up>", "<Right>", },
+    }) do
+        vim.keymap.set("n", keys[1], turn_left, buffer_local)
+        vim.keymap.set("n", keys[2], turn_down, buffer_local)
+        vim.keymap.set("n", keys[3], turn_up, buffer_local)
+        vim.keymap.set("n", keys[4], turn_right, buffer_local)
+    end
 
     local BODY_LENGTH = 3
 
