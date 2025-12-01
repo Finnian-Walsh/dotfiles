@@ -219,7 +219,7 @@ local function config()
 
     buttons:add("󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end)
 
-    buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files initial_mode=normal") end)
+    buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files") end)
 
     buttons:add(" Resume telescope", "R", function() vim.cmd("Telescope resume") end)
 
