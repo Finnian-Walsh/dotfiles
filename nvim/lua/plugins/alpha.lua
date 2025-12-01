@@ -183,7 +183,7 @@ local function config()
                 { "Unknown option: " .. arg, "ErrorMsg" },
             }, true, {})
         end
-    end, { nargs = "?" })
+    end, { desc = "Toggle the header color changing", nargs = "?" })
 
     vim.api.nvim_create_autocmd("BufLeave", {
         callback = function()
@@ -213,17 +213,17 @@ local function config()
 
     local buttons = CenteredButtons.new({ padding = 1 })
 
-    buttons:add(" New file", "e", function() vim.cmd("enew | startinsert") end)
-
-    buttons:add(" Header coloring", "c", function() vim.cmd("HeaderColor") end)
-
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
+
+    buttons:add(" Bufferline", "b", function() vim.cmd("ToggleBufferline") end)
 
     buttons:add("󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end)
 
     buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files initial_mode=normal") end)
 
     buttons:add(" Resume telescope", "R", function() vim.cmd("Telescope resume") end)
+
+    buttons:add(" Header coloring", "c", function() vim.cmd("HeaderColor") end)
 
     buttons:add("󰒲 Lazy", "L", function() vim.cmd("Lazy") end)
 
