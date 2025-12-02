@@ -10,7 +10,8 @@ return {
         event = "VeryLazy",
         config = function()
             require("mason-lspconfig").setup{
-                ensure_installed = { "rust_analyzer", "lua_ls", "pyright", },
+                ensure_installed = vim.uv.os_getenv("TERMUX_VERSION") and {}
+                    or { "rust_analyzer", "lua_ls", "pyright", },
             }
         end,
     },
