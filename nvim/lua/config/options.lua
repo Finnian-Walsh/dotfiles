@@ -50,13 +50,13 @@ vim.keymap.set("n", "<leader>p", function()
     end
 end, { noremap = true, desc = "Previous buffer "})
 
-vim.keymap.set("n", "<leader>cb", function()
+vim.keymap.set("n", "<leader>db", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("bd")
     end
 end, { noremap = true, desc = "Close buffer"})
 
-vim.keymap.set("n", "<leader>cB", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>dB", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
 
 vim.keymap.set("n", "<leader><Right>", function()
     for _ = 1, vim.v.count1 do
@@ -87,19 +87,20 @@ vim.keymap.set("n", "<leader>N", function()
         vim.cmd("tabnext")
     end
 end, { noremap = true, desc = "Next tab " })
+
 vim.keymap.set("n", "<leader>P", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabprev")
     end
 end, { noremap = true, desc = "Previous tab "})
 
-vim.keymap.set("n", "<leader>ct", function()
+vim.keymap.set("n", "<leader>dt", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabclose")
     end
 end, { noremap = true, desc = "Close tab"})
 
-vim.keymap.set("n", "<leader>cT", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
+vim.keymap.set("n", "<leader>dT", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
 
 local function current_tab_can_move(count)
     local tabs = vim.api.nvim_list_tabpages()
