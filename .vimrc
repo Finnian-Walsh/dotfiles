@@ -1,13 +1,25 @@
 set relativenumber
 set number
 set cursorline
+set mouse=
 
 let mapleader = "\<Space>"
 
 nnoremap <silent> <leader>t :Ex<CR>
-nnoremap <silent> <leader>c :bd<CR>
+
+nnoremap <silent> <leader>db :bd<CR>
+nnoremap <silent> <leader>dB :bufdo bd<CR>
 nnoremap <silent> <leader>n :bn<CR>
-nnoremap <silent> <leader>N :bp<CR>
+nnoremap <silent> <leader>p :bp<CR>
+
+nnoremap <silent> <leader>o :tabnew<CR>
+nnoremap <silent> <leader>O :tabnew<CR>:tabmove -1<CR>
+
+nnoremap <silent> <leader>dt :tabclose<CR>
+nnoremap <silent> <leader>dT :tabonly<CR>
+nnoremap <silent> <leader>N :tabn<CR>
+nnoremap <silent> <leader>P :tabp<CR>
+
 nnoremap <silent> <C-h> :wincmd h<CR>
 nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
@@ -28,7 +40,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'catppuccin/vim', {'as': 'catppuccin'}
 Plug 'vim-airline/vim-airline'
 Plug 'ryanoasis/vim-devicons'
-Plug 'bling/vim-bufferline'
 
 call plug#end()
 
