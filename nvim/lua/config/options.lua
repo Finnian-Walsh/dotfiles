@@ -214,20 +214,19 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function()
-
         local opts = { buffer = true }
 
-        vim.keymap.set("n", "<localleader>ff", function()
+        vim.keymap.set("n", "<leader>lf", function()
             if vim.api.nvim_buf_get_option(0, "modified") then
                 vim.api.nvim_echo({{"The current file has changes", "ErrorMsg" }}, true, {})
                 return
             end
 
-            vim.cmd("!rustfmt " .. vim.fn.expand("%"))
+            vim.lsp.buf.format{ async = true }
             vim.cmd("edit");
         end, opts)
 
-        vim.keymap.set("n", "<localleader>gf", function()
+        vim.keymap.set("n", "<leader>gf", function()
             local file_changes = {{ "Open files have changes:", "ErrorMsg" }}
 
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -250,7 +249,15 @@ vim.api.nvim_create_autocmd("FileType", {
                 return
             end
 
-            vim.cmd("!cargo fmt")
+            vim.fn.jobstart({"cargo", "fmt"}, {
+                on_exit = function(_, code, _)
+                    if code ~= 0 then
+                        vim.api.nvim_echo({
+                            { "Failed to format all files: " .. code, "ErrorMsg" },
+                        }, true, {})
+                    end
+                end
+            })
             vim.cmd("edit")
         end, opts)
 
