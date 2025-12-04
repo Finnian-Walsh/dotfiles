@@ -30,11 +30,11 @@ local function toggle_bufferline()
     vim.opt.showtabline = vim.opt.showtabline:get() == 0 and 2 or 0
 end
 
-vim.keymap.set("n", "<leader>b", toggle_bufferline, { noremap = true, desc = "Toggle bufferline" })
+vim.keymap.set("n", "<leader>B", toggle_bufferline, { noremap = true, desc = "Toggle bufferline" })
 
 vim.api.nvim_create_user_command("ToggleBufferline", toggle_bufferline, { desc = "Toggle bufferline" })
 
-vim.keymap.set("n", "<leader>n", function()
+vim.keymap.set("n", "<leader>]", function()
     if find_listed_buffer() then
         vim.cmd("bnext " .. vim.v.count1)
     else
@@ -42,7 +42,7 @@ vim.keymap.set("n", "<leader>n", function()
     end
 end, { noremap = true, desc = "Next buffer " })
 
-vim.keymap.set("n", "<leader>p", function()
+vim.keymap.set("n", "<leader>[", function()
     if find_listed_buffer() then
         vim.cmd("bprev " .. vim.v.count1)
     else
@@ -50,13 +50,13 @@ vim.keymap.set("n", "<leader>p", function()
     end
 end, { noremap = true, desc = "Previous buffer "})
 
-vim.keymap.set("n", "<leader>db", function()
+vim.keymap.set("n", "<leader>bd", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("bd")
     end
 end, { noremap = true, desc = "Close buffer"})
 
-vim.keymap.set("n", "<leader>dB", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>bD", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
 
 vim.keymap.set("n", "<leader><Right>", function()
     for _ = 1, vim.v.count1 do
@@ -70,37 +70,37 @@ vim.keymap.set("n", "<leader><Left>", function()
     end
 end, { desc = "Move the buffer left" })
 
-vim.keymap.set("n", "<leader>o", function()
+vim.keymap.set("n", "<leader><Tab>n", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnew")
     end
 end, { noremap = true, desc = "Open a new tab" })
 
-vim.keymap.set("n", "<leader>O", function()
+vim.keymap.set("n", "<leader><Tab>N", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnew | tabmove -1")
     end
 end, { noremap = true, desc = "Open a new tab" })
 
-vim.keymap.set("n", "<leader>N", function()
+vim.keymap.set("n", "<leader>}", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnext")
     end
 end, { noremap = true, desc = "Next tab " })
 
-vim.keymap.set("n", "<leader>P", function()
+vim.keymap.set("n", "<leader>{", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabprev")
     end
 end, { noremap = true, desc = "Previous tab "})
 
-vim.keymap.set("n", "<leader>dt", function()
+vim.keymap.set("n", "<leader><Tab>d", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabclose")
     end
 end, { noremap = true, desc = "Close tab"})
 
-vim.keymap.set("n", "<leader>dT", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
+vim.keymap.set("n", "<leader><Tab>D", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
 
 local function current_tab_can_move(count)
     local tabs = vim.api.nvim_list_tabpages()
@@ -146,7 +146,7 @@ for i = 1, 20 do
     local command = "<cmd>tabnext " .. i .. "<CR>"
     local opts = { noremap = true, desc = "Go to tab " .. i}
     local navigation_key = nav_keys[i]
-    vim.keymap.set("n", "<leader>." .. navigation_key, command, opts)
+    vim.keymap.set("n", "<leader><Tab>" .. navigation_key, command, opts)
 end
 
 local function auto_buffer_delete(buf)
@@ -217,13 +217,7 @@ vim.api.nvim_create_autocmd("FileType", {
         local opts = { buffer = true }
 
         vim.keymap.set("n", "<leader>lf", function()
-            if vim.api.nvim_buf_get_option(0, "modified") then
-                vim.api.nvim_echo({{"The current file has changes", "ErrorMsg" }}, true, {})
-                return
-            end
-
             vim.lsp.buf.format{ async = true }
-            vim.cmd("edit");
         end, opts)
 
         vim.keymap.set("n", "<leader>gf", function()
@@ -231,7 +225,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
                 if vim.api.nvim_buf_get_option(buf, "modified") then
-                    table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(buf.name, ":."), "Normal" })
+                    table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), "Normal" })
                 end
             end
 
@@ -249,15 +243,7 @@ vim.api.nvim_create_autocmd("FileType", {
                 return
             end
 
-            vim.fn.jobstart({"cargo", "fmt"}, {
-                on_exit = function(_, code, _)
-                    if code ~= 0 then
-                        vim.api.nvim_echo({
-                            { "Failed to format all files: " .. code, "ErrorMsg" },
-                        }, true, {})
-                    end
-                end
-            })
+            vim.fn.system{"cargo", "fmt"}
             vim.cmd("edit")
         end, opts)
 
