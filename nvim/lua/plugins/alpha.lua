@@ -215,7 +215,7 @@ local function config()
 
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
-    buttons:add(" Bufferline", "b", function() vim.cmd("ToggleBufferline") end)
+    buttons:add(" Bufferline", "B", function() vim.cmd("ToggleBufferline") end)
 
     buttons:add("󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end)
 
