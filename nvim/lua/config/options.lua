@@ -17,9 +17,20 @@ vim.diagnostic.config{
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
 
+-- vim.keymap.set("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit neovim" })
+
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
+
+vim.keymap.set("n", "<leader>cc", "<cmd>colorscheme catppuccin<CR>", { desc = "Set colorscheme to catppuccin" })
+vim.keymap.set("n", "<leader>cg", "<cmd>colorscheme gruvbox<CR>", { desc = "Set colorscheme to gruvbox" })
+vim.keymap.set("n", "<leader>ch", "<cmd>colorscheme habamax<CR>", { desc = "Set colorscheme to habamax" })
+
+vim.keymap.set("n", "<Left>", "<Nop>", { desc = "No operation" })
+vim.keymap.set("n", "<Down>", "<Nop>", { desc = "No operation" })
+vim.keymap.set("n", "<Up>", "<Nop>", { desc = "No operation" })
+vim.keymap.set("n", "<Right>", "<Nop>", { desc = "No operation" })
 
 local function find_listed_buffer()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
