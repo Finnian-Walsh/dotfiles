@@ -2,7 +2,7 @@ local function create_padding(value)
     return { type = "padding", val = value or 2 }
 end
 
-local function unset_padding()
+local function uninitialized_padding()
     return { type = "padding" }
 end
 
@@ -147,26 +147,30 @@ local function config()
     -- #33D7BE lighter
     -- #33D0C3 pretty nice
 
+    local header_colors = {
+        "#33D0C3",
+        "#250ECF",
+        "#FFA0A0",
+        "#CF0E0E",
+        "#FCBA03",
+        "#14FC03",
+        "#DB34EB",
+        "#D60DA7",
+    }
+
+    local default_color = header_colors[1]
+    local current_color = default_color
+
     local function reset_header()
-        vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#33D0C3", bold = true })
+        vim.api.nvim_set_hl(0, "AlphaHeader", { fg = default_color, bold = true })
     end
 
-    reset_header()
-
     local header_cycle_system = CycleSystem.new(
-        {
-            "#33D0C3",
-            "#250ECF",
-            "#FFA0A0",
-            "#CF0E0E",
-            "#FCBA03",
-            "#14FC03",
-            "#DB34EB",
-            "#D60DA7",
-        },
+        header_colors,
         350,
         reset_header,
         function(color)
+            current_color = color
             vim.api.nvim_set_hl(0, "AlphaHeader", { fg = color, bold = true })
         end
     )
@@ -237,8 +241,6 @@ local function config()
 
     buttons:add("󰈆 Quit", "q", function() vim.cmd("quit") end)
 
-    vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
-
     local ferris = {
         type = "text",
         val = {
@@ -254,10 +256,21 @@ local function config()
         }
     }
 
+    local function set_highlights()
+        reset_header()
+        vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
+    end
+
+    set_highlights()
+
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = set_highlights,
+    })
+
     local padding_values = {
-        top = unset_padding(),
-        header = unset_padding(),
-        buttons = unset_padding(),
+        top = uninitialized_padding(),
+        header = uninitialized_padding(),
+        buttons = uninitialized_padding(),
     }
 
     local function update_padding_values()
