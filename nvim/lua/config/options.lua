@@ -12,7 +12,6 @@ vim.opt.mouse = ""
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
-vim.keymap.set("n", "<leader>s", "<cmd>source<CR>", { desc = "Source Neovim config" })
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
