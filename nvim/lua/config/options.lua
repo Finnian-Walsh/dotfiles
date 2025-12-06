@@ -80,7 +80,7 @@ vim.keymap.set("n", "<leader><Tab>N", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnew | tabmove -1")
     end
-end, { noremap = true, desc = "Open a new tab" })
+end, { noremap = true, desc = "Open a new tab to the left" })
 
 vim.keymap.set("n", "<leader>}", function()
     for _ = 1, vim.v.count1 do
