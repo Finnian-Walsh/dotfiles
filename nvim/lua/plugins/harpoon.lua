@@ -67,6 +67,16 @@ return {
             vim.keymap.set("n", "<leader>" .. nav_keys[i], function()
                 harpoon:list():select(i)
             end, { desc = "Harpoon " .. i})
+
+            vim.keymap.set("n", "<leader>n" .. nav_keys[i], function()
+                vim.cmd("vs | wincmd l")
+                harpoon:list():select(i)
+            end, { desc = "Harpoon " .. i .. " (vertical split)"})
+
+            vim.keymap.set("n", "<leader>N" .. nav_keys[i], function()
+                vim.cmd("sp | wincmd j")
+                harpoon:list():select(i)
+            end, { desc = "Harpoon " .. i .. " (horizontal split)"})
         end
     end,
 }
