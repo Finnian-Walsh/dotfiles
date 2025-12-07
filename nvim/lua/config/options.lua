@@ -23,69 +23,14 @@ vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
 
-vim.keymap.set("n", "<leader>cc", "<cmd>colorscheme catppuccin<CR>", { desc = "Set colorscheme to catppuccin" })
-vim.keymap.set("n", "<leader>cg", "<cmd>colorscheme gruvbox<CR>", { desc = "Set colorscheme to gruvbox" })
-vim.keymap.set("n", "<leader>ch", "<cmd>colorscheme habamax<CR>", { desc = "Set colorscheme to habamax" })
+vim.keymap.set("n", "<leader>Cc", "<cmd>colorscheme catppuccin<CR>", { desc = "Set colorscheme to catppuccin" })
+vim.keymap.set("n", "<leader>Cg", "<cmd>colorscheme gruvbox<CR>", { desc = "Set colorscheme to gruvbox" })
+vim.keymap.set("n", "<leader>Ch", "<cmd>colorscheme habamax<CR>", { desc = "Set colorscheme to habamax" })
 
---[[
---------------------------------------------------------
-    Arrow keymaps
---------------------------------------------------------
-]]
-
-local arrow_cd = false
-
-vim.keymap.set("n", "<Left>", function()
-    if arrow_cd then
-        return
-    end
-
-    arrow_cd = true
-
-    vim.defer_fn(function()
-        vim.api.nvim_feedkeys("h", "n", false)
-        arrow_cd = false
-    end, 300)
-end, { desc = "No operation" })
-
-vim.keymap.set("n", "<Down>", function()
-    if arrow_cd then
-        return
-    end
-
-    arrow_cd = true
-
-    vim.defer_fn(function()
-        vim.api.nvim_feedkeys("j", "n", false)
-        arrow_cd = false
-    end, 300)
-end, { desc = "No operation" })
-
-vim.keymap.set("n", "<Up>", function()
-    if arrow_cd then
-        return
-    end
-
-    arrow_cd = true
-
-    vim.defer_fn(function()
-        vim.api.nvim_feedkeys("k", "n", false)
-        arrow_cd = false
-    end, 300)
-end, { desc = "No operation" })
-
-vim.keymap.set("n", "<Right>", function()
-    if arrow_cd then
-        return
-    end
-
-    arrow_cd = true
-
-    vim.defer_fn(function()
-        vim.api.nvim_feedkeys("l", "n", false)
-        arrow_cd = false
-    end, 300)
-end, { desc = "No operation" })
+vim.keymap.set("n", "<leader>Cts", "<cmd>colorscheme tokyonight-storm<CR>", { desc = "Set colorscheme to tokyonight-storm" })
+vim.keymap.set("n", "<leader>Ctn", "<cmd>colorscheme tokyonight-night<CR>", { desc = "Set colorscheme to tokyonight-night" })
+vim.keymap.set("n", "<leader>Ctm", "<cmd>colorscheme tokyonight-moon<CR>", { desc = "Set colorscheme to tokyonight-moon" })
+vim.keymap.set("n", "<leader>Ctd", "<cmd>colorscheme tokyonight-day<CR>", { desc = "Set colorscheme to tokyonight-day" })
 
 --[[
 --------------------------------------------------------
