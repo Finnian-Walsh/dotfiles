@@ -19,7 +19,7 @@ return {
             }
         }
 
-        vim.keymap.set("n", "<localleader>nw", ":Neorg workspace ")
-        vim.keymap.set("n", "<localleader>nr", "<cmd>Neorg return<CR>")
+        vim.keymap.set("n", "<localleader>nw", ":Neorg workspace ", { desc = "[neorg] Enter workspace"})
+        vim.keymap.set("n", "<localleader>nr", "<cmd>Neorg return<CR>", { desc = "[neorg] Return" })
     end,
 }
