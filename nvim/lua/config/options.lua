@@ -27,6 +27,12 @@ vim.keymap.set("n", "<leader>cc", "<cmd>colorscheme catppuccin<CR>", { desc = "S
 vim.keymap.set("n", "<leader>cg", "<cmd>colorscheme gruvbox<CR>", { desc = "Set colorscheme to gruvbox" })
 vim.keymap.set("n", "<leader>ch", "<cmd>colorscheme habamax<CR>", { desc = "Set colorscheme to habamax" })
 
+--[[
+--------------------------------------------------------
+    Arrow keymaps
+--------------------------------------------------------
+]]
+
 local arrow_cd = false
 
 vim.keymap.set("n", "<Left>", function()
@@ -81,13 +87,11 @@ vim.keymap.set("n", "<Right>", function()
     end, 300)
 end, { desc = "No operation" })
 
-local function find_listed_buffer()
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.bo[buf].buflisted then
-            return buf
-        end
-    end
-end
+--[[
+--------------------------------------------------------
+    Bufferline keymap
+--------------------------------------------------------
+]]
 
 local function show_tabline()
     vim.o.showtabline = 2
@@ -109,41 +113,40 @@ vim.keymap.set("n", "<leader>B", toggle_bufferline, { noremap = true, desc = "To
 
 vim.api.nvim_create_user_command("ToggleBufferline", toggle_bufferline, { desc = "Toggle bufferline" })
 
-vim.keymap.set("n", "<leader>]", function()
-    if find_listed_buffer() then
-        vim.cmd("bnext " .. vim.v.count1)
-    else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+--[[
+--------------------------------------------------------
+    Buffer navigation
+--------------------------------------------------------
+]]
+
+local function repeat_cmd(cmd, count)
+    for _ = 1, count do
+        vim.cmd(cmd)
     end
-end, { noremap = true, desc = "Next buffer " })
+end
+
+local function find_listed_buffer()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buflisted then
+            return buf
+        end
+    end
+end
+
+-- previous buffer keymaps
 
 vim.keymap.set("n", "<leader>[", function()
     if find_listed_buffer() then
-        vim.cmd("bprev " .. vim.v.count1)
+        repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
     end
 end, { noremap = true, desc = "Previous buffer "})
 
-vim.keymap.set("n", "<leader>n]", function()
-    if find_listed_buffer() then
-        vim.cmd("vs | wincmd l | bnext " .. vim.v.count1)
-    else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
-    end
-end, { noremap = true, desc = "Next buffer " })
-
-vim.keymap.set("n", "<leader>N]", function()
-    if find_listed_buffer() then
-        vim.cmd("sp | wincmd j | bnext " .. vim.v.count1)
-    else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
-    end
-end, { noremap = true, desc = "Next buffer " })
-
 vim.keymap.set("n", "<leader>n[", function()
     if find_listed_buffer() then
-        vim.cmd("vs | wincmd l | bprev " .. vim.v.count1)
+        vim.cmd("vs | wincmd l")
+        repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
     end
@@ -151,13 +154,49 @@ end, { noremap = true, desc = "Previous buffer "})
 
 vim.keymap.set("n", "<leader>N[", function()
     if find_listed_buffer() then
-        vim.cmd("sp | wincmd j | bprev " .. vim.v.count1)
+        vim.cmd("sp | wincmd j")
+        repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
     end
 end, { noremap = true, desc = "Previous buffer "})
 
+-- next buffer keymaps
+
+vim.keymap.set("n", "<leader>]", function()
+    if find_listed_buffer() then
+        repeat_cmd("BufferLineCycleNext", vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Next buffer " })
+
+vim.keymap.set("n", "<leader>n]", function()
+    if find_listed_buffer() then
+        vim.cmd("vs | wincmd l")
+        repeat_cmd("BufferLineCycleNext", vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Next buffer " })
+
+vim.keymap.set("n", "<leader>N]", function()
+    if find_listed_buffer() then
+        vim.cmd("sp | wincmd j")
+        repeat_cmd("BufferLineCycleNext", vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Next buffer " })
+
+
 vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Open a new empty buffer" })
+
+--[[
+--------------------------------------------------------
+    Buffer deletion
+--------------------------------------------------------
+]]
 
 vim.keymap.set("n", "<leader>bd", function()
     for _ = 1, vim.v.count1 do
@@ -221,6 +260,8 @@ end, { desc = "Force delete other buffers"})
 vim.keymap.set("n", "<leader>bD", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
 vim.keymap.set("n", "<leader>b!D", "<cmd>bufdo bd!<CR>", { noremap = true, desc = "Close all buffers"})
 
+-- Buffer moving
+
 vim.keymap.set("n", "<leader><Right>", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("BufferLineMoveNext")
@@ -232,6 +273,12 @@ vim.keymap.set("n", "<leader><Left>", function()
         vim.cmd("BufferLineMovePrev")
     end
 end, { desc = "Move the buffer left" })
+
+--[[
+--------------------------------------------------------
+    Tab keymaps
+--------------------------------------------------------
+]]
 
 vim.keymap.set("n", "<leader><Tab>n", function()
     for _ = 1, vim.v.count1 do
@@ -256,6 +303,8 @@ vim.keymap.set("n", "<leader><Tab>d", function()
 end, { noremap = true, desc = "Close tab"})
 
 vim.keymap.set("n", "<leader><Tab>o", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
+
+-- Tab movement
 
 local function current_tab_can_move(count)
     local tabs = vim.api.nvim_list_tabpages()
@@ -292,6 +341,8 @@ vim.keymap.set("n", "<leader><S-Left>", function()
     end
 end, { desc = "Move the tab left" })
 
+-- Tab switching
+
 _G.nav_keys = {
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
     "!", "\"", "£", "$", "%", "^", "&", "*", "(", ")"
@@ -303,6 +354,8 @@ for i = 1, 20 do
     local navigation_key = nav_keys[i]
     vim.keymap.set("n", "<leader><Tab>" .. navigation_key, command, opts)
 end
+
+-- Automatic empty buffer deletion
 
 local function auto_buffer_delete(buf)
     if vim.api.nvim_buf_get_name(buf) ~= "" or vim.bo[buf].filetype ~= "" then
@@ -332,6 +385,8 @@ vim.api.nvim_create_autocmd("BufHidden", {
     end,
 })
 
+-- Automatic tabline updation
+
 local function schedule_tabline_redraw()
     vim.schedule(function()
         vim.cmd("redrawtabline")
@@ -341,6 +396,8 @@ end
 vim.api.nvim_create_autocmd("BufLeave", {
     callback = schedule_tabline_redraw,
 })
+
+-- Miscellaneous keymaps
 
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Open neo-tree" })
 vim.keymap.set("n", "<leader>m", function()
@@ -359,6 +416,8 @@ vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
+
+-- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function()
