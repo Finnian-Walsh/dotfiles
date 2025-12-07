@@ -159,10 +159,14 @@ local function config()
     }
 
     local default_color = header_colors[1]
-    local current_color = default_color
+    local current_header_color = default_color
+
+    local function set_header_color(color)
+        vim.api.nvim_set_hl(0, "AlphaHeader", { fg = color, bold = true })
+    end
 
     local function reset_header()
-        vim.api.nvim_set_hl(0, "AlphaHeader", { fg = default_color, bold = true })
+        set_header_color(default_color)
     end
 
     local header_cycle_system = CycleSystem.new(
@@ -170,8 +174,8 @@ local function config()
         350,
         reset_header,
         function(color)
-            current_color = color
-            vim.api.nvim_set_hl(0, "AlphaHeader", { fg = color, bold = true })
+            current_header_color = color
+            set_header_color(color)
         end
     )
 
@@ -257,7 +261,7 @@ local function config()
     }
 
     local function set_highlights()
-        reset_header()
+        set_header_color(current_header_color)
         vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
     end
 
