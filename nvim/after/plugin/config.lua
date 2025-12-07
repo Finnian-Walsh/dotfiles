@@ -81,3 +81,5 @@ vim.keymap.set("n", "<Up>", function() reset_colorscheme(true) end, { desc = "Re
 vim.keymap.set("n", "<Down>", function() reset_colorscheme(true) end, { desc = "Reset daily colorscheme" })
 
 reset_colorscheme()
+
+vim.keymap.set("n", "<leader>S", "<cmd>LetItSnow<CR>", { desc = "Let it snow!" })
