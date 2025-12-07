@@ -23,15 +23,6 @@ vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
 
-vim.keymap.set("n", "<leader>Cc", "<cmd>colorscheme catppuccin<CR>", { desc = "Set colorscheme to catppuccin" })
-vim.keymap.set("n", "<leader>Cg", "<cmd>colorscheme gruvbox<CR>", { desc = "Set colorscheme to gruvbox" })
-vim.keymap.set("n", "<leader>Ch", "<cmd>colorscheme habamax<CR>", { desc = "Set colorscheme to habamax" })
-
-vim.keymap.set("n", "<leader>Cts", "<cmd>colorscheme tokyonight-storm<CR>", { desc = "Set colorscheme to tokyonight-storm" })
-vim.keymap.set("n", "<leader>Ctn", "<cmd>colorscheme tokyonight-night<CR>", { desc = "Set colorscheme to tokyonight-night" })
-vim.keymap.set("n", "<leader>Ctm", "<cmd>colorscheme tokyonight-moon<CR>", { desc = "Set colorscheme to tokyonight-moon" })
-vim.keymap.set("n", "<leader>Ctd", "<cmd>colorscheme tokyonight-day<CR>", { desc = "Set colorscheme to tokyonight-day" })
-
 --[[
 --------------------------------------------------------
     Bufferline keymap
