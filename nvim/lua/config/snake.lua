@@ -1,5 +1,3 @@
-local unpack = table.unpack or unpack
-
 local DirectionValue = {}
 
 function DirectionValue.new(identifier, advance, invert)
@@ -113,7 +111,7 @@ local function snake(opts)
 
     local buffer_width, buffer_height = game_width, game_height + 1
     local buf = vim.api.nvim_create_buf(false, true) -- listed, scratch
-    local win = vim.api.nvim_open_win(buf, true, {
+    vim.api.nvim_open_win(buf, true, {
         relative = "editor",
         width = buffer_width,
         height = buffer_height,
@@ -184,20 +182,10 @@ local function snake(opts)
 
     local game_active = true
 
-    local function confirm_quit()
-        print("Are you sure you would like to quit? (Enter y/n): ")
-        local char = string.char(vim.fn.getchar()):lower()
-
-        if char == "y" then
-            vim.api.nvim_win_close(win, false)
-            game_active = false
-        elseif char == "n" then
-            return
-        end
-    end
-
-    vim.keymap.set("n", "q", confirm_quit, buffer_local)
-    vim.keymap.set("n", "<Esc>", confirm_quit, buffer_local)
+    vim.keymap.set("n", "<Esc>", function()
+        game_active = false
+        vim.cmd("quit")
+    end, buffer_local)
 
     local BODY_LENGTH = 3
 
@@ -245,6 +233,8 @@ local function snake(opts)
     end
 
     update_game()
+
+    vim.print("waiting time: ", waiting_time_ms)
 end
 
 local difficulties = {"easy", "normal", "hard"}
