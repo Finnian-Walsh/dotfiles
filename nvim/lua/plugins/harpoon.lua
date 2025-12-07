@@ -64,19 +64,31 @@ return {
         vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Open Harpoon" })
 
         for i = 1, 20 do
-            vim.keymap.set("n", "<leader>" .. nav_keys[i], function()
+            local navigation_key = nav_keys[i]
+
+            vim.keymap.set("n", "<leader>" .. navigation_key, function()
                 harpoon:list():select(i)
             end, { desc = "Harpoon " .. i})
 
-            vim.keymap.set("n", "<leader>n" .. nav_keys[i], function()
+            vim.keymap.set("n", "<leader>n" .. navigation_key, function()
                 vim.cmd("vs | wincmd l")
                 harpoon:list():select(i)
             end, { desc = "Harpoon " .. i .. " (vertical split)"})
 
-            vim.keymap.set("n", "<leader>N" .. nav_keys[i], function()
+            vim.keymap.set("n", "<leader>N" .. navigation_key, function()
                 vim.cmd("sp | wincmd j")
                 harpoon:list():select(i)
             end, { desc = "Harpoon " .. i .. " (horizontal split)"})
+
+            vim.keymap.set("n", "<leader>o" .. navigation_key, function()
+                harpoon:list():select(i)
+                vim.cmd("BufOnly")
+            end)
+
+            vim.keymap.set("n", "<leader>O" .. navigation_key, function()
+                harpoon:list():select(i)
+                vim.cmd("BufCurrentOnly")
+            end)
         end
     end,
 }
