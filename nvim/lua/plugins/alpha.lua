@@ -275,10 +275,12 @@ local function config()
         top = uninitialized_padding(),
         header = uninitialized_padding(),
         buttons = uninitialized_padding(),
+        bottom = uninitialized_padding(),
     }
 
     local function update_padding_values()
         local screen_lines = vim.o.lines -- vim.fn.line('w$') - vim.fn.line('w0') + 1
+        padding_values.bottom.val = screen_lines
 
         if screen_lines > 44 then
             padding_values.top.val = 3
@@ -315,6 +317,7 @@ local function config()
         buttons:build(),
         padding_values.buttons,
         ferris,
+        padding_values.bottom,
     }
 
     local theme = { layout = layout }
