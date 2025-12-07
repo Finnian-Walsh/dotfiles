@@ -15,5 +15,6 @@ return {
         vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Live grep with telescope" })
         vim.keymap.set("n", "<leader>f", "<cmd>Telescope find_files<CR>", { desc = "Find files with telescope"})
         vim.keymap.set("n", "<leader>R", builtin.resume, { desc = "Resume previous telescope action" })
+        vim.keymap.set("n", "<leader>D", builtin.diagnostics, { desc = "View diagnostics" })
     end,
 }
