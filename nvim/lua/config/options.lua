@@ -251,11 +251,19 @@ vim.keymap.set("n", "<leader>b!o", function()
     delete_undisplayed_buffers(true)
 end, { noremap = true, desc = "Force delete undisplayed buffers"})
 
+vim.api.nvim_create_user_command("BufOnly", function(opts)
+    delete_undisplayed_buffers(opts.bang)
+end, { desc = "Delete undisplayed buffers", bang = true })
+
 vim.keymap.set("n", "<leader>bO", delete_other_buffers, { desc = "Delete other buffers"})
 
 vim.keymap.set("n", "<leader>b!O", function()
     delete_other_buffers(true)
 end, { desc = "Force delete other buffers"})
+
+vim.api.nvim_create_user_command("BufCurrentOnly", function(opts)
+    delete_other_buffers(opts.bang)
+end, { desc = "Delete all other windows and buffers", bang = true })
 
 vim.keymap.set("n", "<leader>bD", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
 vim.keymap.set("n", "<leader>b!D", "<cmd>bufdo bd!<CR>", { noremap = true, desc = "Close all buffers"})
