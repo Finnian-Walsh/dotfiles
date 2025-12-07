@@ -384,6 +384,10 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function()
+        if tonumber(os.date("%m")) == 12 then
+            vim.cmd("LetItSnow")
+        end
+
         local opts = { buffer = true }
 
         vim.keymap.set("n", "<leader>lf", function()
