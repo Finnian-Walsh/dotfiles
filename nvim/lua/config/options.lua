@@ -135,6 +135,9 @@ end
 
 -- previous buffer keymaps
 
+local move_new_vert_split = "vs | wincmd l"
+local move_new_horizontal_split = "sp | wincmd j"
+
 vim.keymap.set("n", "<leader>[", function()
     if find_listed_buffer() then
         repeat_cmd("BufferLineCyclePrev", vim.v.count1)
@@ -145,7 +148,7 @@ end, { noremap = true, desc = "Previous buffer "})
 
 vim.keymap.set("n", "<leader>n[", function()
     if find_listed_buffer() then
-        vim.cmd("vs | wincmd l")
+        vim.cmd(move_new_vert_split)
         repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
@@ -154,7 +157,7 @@ end, { noremap = true, desc = "Previous buffer "})
 
 vim.keymap.set("n", "<leader>N[", function()
     if find_listed_buffer() then
-        vim.cmd("sp | wincmd j")
+        vim.cmd(move_new_horizontal_split)
         repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
@@ -173,7 +176,7 @@ end, { noremap = true, desc = "Next buffer " })
 
 vim.keymap.set("n", "<leader>n]", function()
     if find_listed_buffer() then
-        vim.cmd("vs | wincmd l")
+        vim.cmd(move_new_vert_split)
         repeat_cmd("BufferLineCycleNext", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
@@ -182,7 +185,7 @@ end, { noremap = true, desc = "Next buffer " })
 
 vim.keymap.set("n", "<leader>N]", function()
     if find_listed_buffer() then
-        vim.cmd("sp | wincmd j")
+        vim.cmd(move_new_horizontal_split)
         repeat_cmd("BufferLineCycleNext", vim.v.count1)
     else
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
