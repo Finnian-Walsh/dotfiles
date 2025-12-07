@@ -27,10 +27,59 @@ vim.keymap.set("n", "<leader>cc", "<cmd>colorscheme catppuccin<CR>", { desc = "S
 vim.keymap.set("n", "<leader>cg", "<cmd>colorscheme gruvbox<CR>", { desc = "Set colorscheme to gruvbox" })
 vim.keymap.set("n", "<leader>ch", "<cmd>colorscheme habamax<CR>", { desc = "Set colorscheme to habamax" })
 
-vim.keymap.set("n", "<Left>", "<Nop>", { desc = "No operation" })
-vim.keymap.set("n", "<Down>", "<Nop>", { desc = "No operation" })
-vim.keymap.set("n", "<Up>", "<Nop>", { desc = "No operation" })
-vim.keymap.set("n", "<Right>", "<Nop>", { desc = "No operation" })
+local arrow_cd = false
+
+vim.keymap.set("n", "<Left>", function()
+    if arrow_cd then
+        return
+    end
+
+    arrow_cd = true
+
+    vim.defer_fn(function()
+        vim.api.nvim_feedkeys("h", "n", false)
+        arrow_cd = false
+    end, 300)
+end, { desc = "No operation" })
+
+vim.keymap.set("n", "<Down>", function()
+    if arrow_cd then
+        return
+    end
+
+    arrow_cd = true
+
+    vim.defer_fn(function()
+        vim.api.nvim_feedkeys("j", "n", false)
+        arrow_cd = false
+    end, 300)
+end, { desc = "No operation" })
+
+vim.keymap.set("n", "<Up>", function()
+    if arrow_cd then
+        return
+    end
+
+    arrow_cd = true
+
+    vim.defer_fn(function()
+        vim.api.nvim_feedkeys("k", "n", false)
+        arrow_cd = false
+    end, 300)
+end, { desc = "No operation" })
+
+vim.keymap.set("n", "<Right>", function()
+    if arrow_cd then
+        return
+    end
+
+    arrow_cd = true
+
+    vim.defer_fn(function()
+        vim.api.nvim_feedkeys("l", "n", false)
+        arrow_cd = false
+    end, 300)
+end, { desc = "No operation" })
 
 local function find_listed_buffer()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -40,8 +89,20 @@ local function find_listed_buffer()
     end
 end
 
+local function show_tabline()
+    vim.o.showtabline = 2
+end
+
+local function hide_tabline()
+    vim.o.showtabline = 0
+end
+
 local function toggle_bufferline()
-    vim.o.showtabline = vim.o.showtabline == 0 and 2 or 0
+    if vim.o.showtabline < 2 then
+        show_tabline()
+    else
+        hide_tabline()
+    end
 end
 
 vim.keymap.set("n", "<leader>B", toggle_bufferline, { noremap = true, desc = "Toggle bufferline" })
@@ -64,6 +125,8 @@ vim.keymap.set("n", "<leader>[", function()
     end
 end, { noremap = true, desc = "Previous buffer "})
 
+vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Open a new empty buffer" })
+
 vim.keymap.set("n", "<leader>bd", function()
     for _ = 1, vim.v.count1 do
         vim.api.nvim_buf_delete(0, {})
@@ -76,23 +139,52 @@ vim.keymap.set("n", "<leader>b!d", function()
     end
 end, { noremap = true, desc = "Close buffer"})
 
-vim.keymap.set("n", "<leader>bo", function()
-    local current = vim.api.nvim_get_current_buf()
+local function delete_undisplayed_buffers(force)
+    local displayed = {}
+
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        displayed[vim.api.nvim_win_get_buf(win)] = true
+    end
+
+    local opts = {force = force}
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if buf ~= current then
-            vim.api.nvim_buf_delete(buf, {})
+        if not displayed[buf] then
+            vim.api.nvim_buf_delete(buf, opts)
         end
     end
-end, { noremap = true, desc = "Close all buffers"})
+end
+
+local function delete_other_buffers(force)
+    local current_buf = vim.api.nvim_get_current_buf()
+    local current_win = vim.api.nvim_get_current_win()
+
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if win ~= current_win then
+            vim.api.nvim_win_close(win, force)
+        end
+    end
+
+    local opts = {force = force}
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if buf ~= current_buf then
+            vim.api.nvim_buf_delete(buf, opts)
+        end
+    end
+
+end
+
+vim.keymap.set("n", "<leader>bo", delete_undisplayed_buffers, { noremap = true, desc = "Delete undisplayed buffers"})
 
 vim.keymap.set("n", "<leader>b!o", function()
-    local current = vim.api.nvim_get_current_buf()
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if buf ~= current then
-            vim.api.nvim_buf_delete(buf, { force = true })
-        end
-    end
-end, { noremap = true, desc = "Close all buffers"})
+    delete_undisplayed_buffers(true)
+end, { noremap = true, desc = "Force delete undisplayed buffers"})
+
+vim.keymap.set("n", "<leader>bO", delete_other_buffers, { desc = "Delete other buffers"})
+
+vim.keymap.set("n", "<leader>b!O", function()
+    delete_other_buffers(true)
+end, { desc = "Force delete other buffers"})
 
 vim.keymap.set("n", "<leader>bD", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
 vim.keymap.set("n", "<leader>b!D", "<cmd>bufdo bd!<CR>", { noremap = true, desc = "Close all buffers"})
