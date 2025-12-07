@@ -125,6 +125,38 @@ vim.keymap.set("n", "<leader>[", function()
     end
 end, { noremap = true, desc = "Previous buffer "})
 
+vim.keymap.set("n", "<leader>n]", function()
+    if find_listed_buffer() then
+        vim.cmd("vs | wincmd l | bnext " .. vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Next buffer " })
+
+vim.keymap.set("n", "<leader>N]", function()
+    if find_listed_buffer() then
+        vim.cmd("sp | wincmd j | bnext " .. vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Next buffer " })
+
+vim.keymap.set("n", "<leader>n[", function()
+    if find_listed_buffer() then
+        vim.cmd("vs | wincmd l | bprev " .. vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Previous buffer "})
+
+vim.keymap.set("n", "<leader>N[", function()
+    if find_listed_buffer() then
+        vim.cmd("sp | wincmd j | bprev " .. vim.v.count1)
+    else
+        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+    end
+end, { noremap = true, desc = "Previous buffer "})
+
 vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Open a new empty buffer" })
 
 vim.keymap.set("n", "<leader>bd", function()
