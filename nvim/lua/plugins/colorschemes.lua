@@ -1,4 +1,13 @@
 return {
+    { "EdenEast/nightfox.nvim" },
+    {
+        "everviolet/nvim",
+        name = "evergarden",
+    },
+    {
+        "ChaseRensberger/christmas.nvim",
+        name = "christmas",
+    },
     { "folke/tokyonight.nvim", },
     {
         "catppuccin/nvim",
@@ -9,8 +18,6 @@ return {
     },
     {
         "ellisonleao/gruvbox.nvim",
-        config = function()
-            require("gruvbox").setup()
-        end,
+        opts = {},
     },
 }
