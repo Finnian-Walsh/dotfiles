@@ -1,5 +1,7 @@
 return {
     "marcussimonsen/let-it-snow.nvim",
     cmd = "LetItSnow",
-    opts = {},
+    opts = {
+        delay = 100,
+    },
 }
