@@ -12,7 +12,99 @@ vim.opt.mouse = ""
 
 vim.diagnostic.config{
     virtual_text = true,
+    update_in_insert = true,
 }
+
+local function A_Z_a_z_char_set()
+    local char_set = {}
+
+    for byte = string.byte('A'), string.byte('Z') do
+        char_set[string.char(byte)] = true
+    end
+
+    for byte = string.byte('a'), string.byte('z') do
+        char_set[string.char(byte)] = true
+    end
+
+    return char_set
+end
+
+local function matched_keys(mode, regular_expression)
+    return coroutine.wrap(function()
+        local keymaps = vim.api.nvim_get_keymap(mode)
+
+        for _, map in ipairs(keymaps) do
+            local result = map.lhs:match(regular_expression)
+            if result then
+                coroutine.yield(result, map)
+            end
+        end
+    end)
+end
+
+-- command for checking unused global leader keymaps:
+vim.keymap.set("n", "<leader>k?", function()
+    local chars = A_Z_a_z_char_set()
+
+    for key in matched_keys("n", "^" .. vim.g.mapleader .. "(%a)") do
+        chars[key] = nil
+    end
+
+    local unused_keys = {}
+
+    for key, _ in pairs(chars) do
+        table.insert(unused_keys, key)
+    end
+
+    table.sort(unused_keys)
+    local upper_unused_keys, lower_unused_keys = {}, {}
+
+    local index = 1
+
+    while #unused_keys >= index do
+        local value = unused_keys[index]
+
+        if value > 'Z' then
+            break
+        end
+
+        table.insert(upper_unused_keys, value)
+        index = index + 1
+    end
+
+    while #unused_keys >= index do
+        table.insert(lower_unused_keys, unused_keys[index])
+        index = index + 1
+    end
+
+    vim.api.nvim_echo({
+        { "Unused uppercase keys: " },
+        { table.concat(upper_unused_keys, ", "), "DiagnosticInfo" },
+        { "\n" },
+        { "Unused lowercase keys: " },
+        { table.concat(lower_unused_keys, ", "), "DiagnosticInfo" },
+    }, true, {})
+end, { desc = "Check unused leader keymaps" })
+
+local function set_global_keys_check(char)
+    vim.keymap.set("n", "<leader>k" .. char, function()
+        local mappings = {}
+
+        for _, map in matched_keys("n", "^" .. vim.g.mapleader .. char) do
+            table.insert(mappings, { string.format("%s: %s\n", map.lhs, map.desc or "[no description]"), "DiagnosticInfo" })
+        end
+
+        vim.api.nvim_echo(mappings, true, {})
+    end, { desc = "Check normal mode leader keys for " .. char .. " key" })
+end
+
+for byte = string.byte'A', string.byte'Z' do
+    set_global_keys_check(string.char(byte))
+end
+
+for byte = string.byte'a', string.byte'z' do
+    set_global_keys_check(string.char(byte))
+end
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
@@ -130,6 +222,79 @@ end, { noremap = true, desc = "Next buffer " })
 
 
 vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Open a new empty buffer" })
+
+local discord_buffer, discord_win
+
+local function close_discord_window()
+    vim.api.nvim_win_close(discord_win, false)
+end
+
+local discord_keymap_lhs = "<leader>#"
+
+vim.keymap.set("n",  discord_keymap_lhs, function()
+    if discord_win and vim.api.nvim_win_is_valid(discord_win) then
+        close_discord_window()
+        return
+    end
+
+    local buf = discord_buffer
+    local new_buffer = false
+
+    if not buf or not vim.api.nvim_buf_is_valid(buf) then
+        new_buffer = true
+        buf = vim.api.nvim_create_buf(false, true)
+        discord_buffer = buf
+    end
+
+    local columns, lines = vim.o.columns, vim.o.lines
+
+    local width = math.floor(columns * 0.8)
+    local height = math.floor(lines * 0.8)
+
+    local col = math.floor((columns - width) / 2)
+    local row = math.floor((lines - height) / 2)
+
+    discord_win = vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = width,
+        height = height,
+        col = col,
+        row = row,
+        style = "minimal",
+    })
+
+    if new_buffer then
+        vim.fn.termopen("discordo", {
+            on_exit = function()
+                if vim.api.nvim_win_is_valid(discord_win) then
+                    vim.api.nvim_win_close(discord_win, false)
+                end
+
+                if vim.api.nvim_buf_is_valid(discord_buffer) then
+                    vim.api.nvim_buf_delete(discord_buffer, {})
+                end
+
+                discord_win, discord_buffer = nil, nil
+            end
+        })
+
+        vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], { noremap = true })
+        vim.keymap.set({"n", "t"}, "<Esc>", close_discord_window, { buffer = buf })
+        vim.keymap.set("n", discord_keymap_lhs, close_discord_window, { buffer = buf })
+    end
+
+    vim.cmd("startinsert")
+end)
+
+-- vim.keymap.set("n", "<leader>c<C-d>", function()
+--     if vim.api.nvim_buf_is_valid(discord_buffer) then
+--         vim.api.nvim_buf_delete(discord_buffer)
+--     end
+--
+--     if vim.api.nvim_win_is_valid(discord_win) then
+--         vim.api.nvim_win_close(discord_win, false)
+--     end
+-- end)
 
 --[[
 --------------------------------------------------------
