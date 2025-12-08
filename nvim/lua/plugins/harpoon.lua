@@ -83,12 +83,12 @@ return {
             vim.keymap.set("n", "<leader>o" .. navigation_key, function()
                 harpoon:list():select(i)
                 vim.cmd("BufOnly")
-            end)
+            end, { desc = "Harpoon switch to only " .. i .. " and displayed" })
 
             vim.keymap.set("n", "<leader>O" .. navigation_key, function()
                 harpoon:list():select(i)
                 vim.cmd("BufCurrentOnly")
-            end)
+            end, { desc = "Harpoon switch to only " .. i})
         end
     end,
 }
