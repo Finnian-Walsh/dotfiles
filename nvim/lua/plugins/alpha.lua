@@ -6,6 +6,15 @@ local function uninitialized_padding()
     return { type = "padding" }
 end
 
+local function center_text(text, required_width)
+    local text_width = vim.fn.strdisplaywidth(text)
+    local missing_width = required_width - text_width
+    local first_half = math.floor(missing_width / 2)
+    local second_half = math.ceil(missing_width / 2)
+
+    return string.format("%s%s%s", string.rep(" ", first_half), text, string.rep(" ", second_half))
+end
+
 local CenteredButtons = {}
 CenteredButtons.__index = CenteredButtons
 
@@ -203,6 +212,8 @@ local function config()
         end
     })
 
+    local xmas_header_line = days_until_xmas and center_text(string.format("%d days until Christmas!", days_until_xmas), 49)
+
     local header = {
         type = "text",
         val = {
@@ -212,6 +223,8 @@ local function config()
             [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
             [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
             [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
+            xmas_header_line and "",
+            xmas_header_line,
         },
         opts = {
             position = "center",
@@ -223,8 +236,6 @@ local function config()
 
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
-    buttons:add(" Bufferline", "B", function() vim.cmd("ToggleBufferline") end)
-
     buttons:add("󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end)
 
     buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files") end)
@@ -232,10 +243,6 @@ local function config()
     buttons:add(" Resume telescope", "R", function() vim.cmd("Telescope resume") end)
 
     buttons:add(" Header coloring", "c", function() vim.cmd("HeaderColor") end)
-
-    buttons:add("󰒲 Lazy", "L", function() vim.cmd("Lazy") end)
-
-    buttons:add("󰢛 Mason", "M", function() vim.cmd("Mason") end)
 
     local harpoon
     buttons:add("󱡅 Harpoon", "h", function()
@@ -288,16 +295,16 @@ local function config()
             padding_values.buttons.val = 3
         elseif screen_lines >= 40 then
             padding_values.top.val = 1
+            padding_values.header.val = 3
+            padding_values.buttons.val = 3
+        elseif screen_lines >= 36 then
+            padding_values.top.val = 1
             padding_values.header.val = 2
             padding_values.buttons.val = 2
-        elseif screen_lines >= 36 then
-            padding_values.top.val = 0
-            padding_values.header.val = 2
-            padding_values.buttons.val = 1
         else
             padding_values.top.val = 0
             padding_values.header.val = 1
-            padding_values.buttons.val = 0
+            padding_values.buttons.val = 1
         end
     end
 
