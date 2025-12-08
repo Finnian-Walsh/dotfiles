@@ -15,14 +15,21 @@ vim.diagnostic.config{
     update_in_insert = true,
 }
 
-local function A_Z_a_z_char_set()
+local date = os.date("*t")
+_G.is_december = date.month == 12
+
+if is_december then
+    local day = date.day
+
+    if day <= 25 then
+        _G.days_until_xmas = 25 - day
+    end
+end
+
+local function printable_char_set()
     local char_set = {}
 
-    for byte = string.byte('A'), string.byte('Z') do
-        char_set[string.char(byte)] = true
-    end
-
-    for byte = string.byte('a'), string.byte('z') do
+    for byte = 32, 126 do
         char_set[string.char(byte)] = true
     end
 
@@ -42,11 +49,50 @@ local function matched_keys(mode, regular_expression)
     end)
 end
 
--- command for checking unused global leader keymaps:
-vim.keymap.set("n", "<leader>k?", function()
-    local chars = A_Z_a_z_char_set()
+local function group_ascii_characters(chars)
+    local uppercase_chars = {}
+    local lowercase_chars = {}
+    local numbers = {}
+    local symbols = {}
 
-    for key in matched_keys("n", "^" .. vim.g.mapleader .. "(%a)") do
+    local zero_byte = string.byte'0'
+    local nine_byte = string.byte'9'
+
+    local upper_a_byte = string.byte'A'
+    local upper_z_byte = string.byte'Z'
+
+    local lower_a_byte = string.byte'a'
+    local lower_z_byte = string.byte'z'
+
+    -- lazy so no optimize
+
+    for _, key in ipairs(chars) do
+        local key_byte = string.byte(key)
+        if key_byte < zero_byte then
+            table.insert(symbols, key)
+        elseif key_byte <= nine_byte then
+            table.insert(numbers, key)
+        elseif key_byte < upper_a_byte then
+            table.insert(symbols, key)
+        elseif key_byte <= upper_z_byte then
+            table.insert(uppercase_chars, key)
+        elseif key_byte < lower_a_byte then
+            table.insert(symbols, key)
+        elseif key_byte <= lower_z_byte then
+            table.insert(lowercase_chars, key)
+        else
+            table.insert(symbols, key)
+        end
+    end
+
+    return uppercase_chars, lowercase_chars, numbers, symbols
+end
+
+-- command for checking unused global leader keymaps:
+vim.keymap.set("n", "<leader>K", function()
+    local chars = printable_char_set()
+
+    for key in matched_keys("n", "^" .. vim.g.mapleader .. "[%g ]") do
         chars[key] = nil
     end
 
@@ -57,53 +103,43 @@ vim.keymap.set("n", "<leader>k?", function()
     end
 
     table.sort(unused_keys)
-    local upper_unused_keys, lower_unused_keys = {}, {}
 
-    local index = 1
-
-    while #unused_keys >= index do
-        local value = unused_keys[index]
-
-        if value > 'Z' then
-            break
-        end
-
-        table.insert(upper_unused_keys, value)
-        index = index + 1
-    end
-
-    while #unused_keys >= index do
-        table.insert(lower_unused_keys, unused_keys[index])
-        index = index + 1
-    end
+    local unused_uppercase, unused_lowercase, unused_numbers, unused_symbols = group_ascii_characters(unused_keys)
 
     vim.api.nvim_echo({
-        { "Unused uppercase keys: " },
-        { table.concat(upper_unused_keys, ", "), "DiagnosticInfo" },
+        { "Unused uppercase: " },
+        { table.concat(unused_uppercase, ", "), "DiagnosticInfo" },
         { "\n" },
-        { "Unused lowercase keys: " },
-        { table.concat(lower_unused_keys, ", "), "DiagnosticInfo" },
+        { "Unused lowercase: " },
+        { table.concat(unused_lowercase, ", "), "DiagnosticInfo" },
+        { "\n" },
+        { "Unused numbers: " },
+        { table.concat(unused_numbers, ", "), "DiagnosticInfo" },
+        { "\n" },
+        { "Unused symbols: " },
+        { table.concat(unused_symbols, ", "), "DiagnosticInfo" },
     }, true, {})
 end, { desc = "Check unused leader keymaps" })
+
 
 local function set_global_keys_check(char)
     vim.keymap.set("n", "<leader>k" .. char, function()
         local mappings = {}
 
         for _, map in matched_keys("n", "^" .. vim.g.mapleader .. char) do
-            table.insert(mappings, { string.format("%s: %s\n", map.lhs, map.desc or "[no description]"), "DiagnosticInfo" })
+            table.insert(mappings, { string.format("<leader>%s: %s\n", map.lhs:sub(2), map.desc or "[no description]"), "DiagnosticInfo" })
+        end
+
+        if #mappings == 0 then
+            mappings[1] = { string.format("<leader>%s is not mapped\n", char), "DiagnosticInfo" }
         end
 
         vim.api.nvim_echo(mappings, true, {})
     end, { desc = "Check normal mode leader keys for " .. char .. " key" })
 end
 
-for byte = string.byte'A', string.byte'Z' do
-    set_global_keys_check(string.char(byte))
-end
-
-for byte = string.byte'a', string.byte'z' do
-    set_global_keys_check(string.char(byte))
+for i = 32, 126 do
+    set_global_keys_check(string.char(i))
 end
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
@@ -112,6 +148,8 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Tu
 -- vim.keymap.set("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit neovim" })
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
+vim.keymap.set("n", "<leader>nA", "<cmd>vs | wincmd l | Alpha<CR>", { desc = "Toggle Alpha in a new vertical split" })
+vim.keymap.set("n", "<leader>NA", "<cmd>sp | wincmd j | Alpha<CR>", { desc = "Toggle Alpha in a new horizontal split" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
 
@@ -229,9 +267,9 @@ local function close_discord_window()
     vim.api.nvim_win_close(discord_win, false)
 end
 
-local discord_keymap_lhs = "<leader>#"
+local discord_keymap = "<leader>#"
 
-vim.keymap.set("n",  discord_keymap_lhs, function()
+vim.keymap.set("n",  discord_keymap, function()
     if discord_win and vim.api.nvim_win_is_valid(discord_win) then
         close_discord_window()
         return
@@ -280,21 +318,11 @@ vim.keymap.set("n",  discord_keymap_lhs, function()
 
         vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], { noremap = true })
         vim.keymap.set({"n", "t"}, "<Esc>", close_discord_window, { buffer = buf })
-        vim.keymap.set("n", discord_keymap_lhs, close_discord_window, { buffer = buf })
+        vim.keymap.set("n", discord_keymap, close_discord_window, { buffer = buf })
     end
 
     vim.cmd("startinsert")
-end)
-
--- vim.keymap.set("n", "<leader>c<C-d>", function()
---     if vim.api.nvim_buf_is_valid(discord_buffer) then
---         vim.api.nvim_buf_delete(discord_buffer)
---     end
---
---     if vim.api.nvim_win_is_valid(discord_win) then
---         vim.api.nvim_win_close(discord_win, false)
---     end
--- end)
+end, { desc = "Toggle floating discord window" })
 
 --[[
 --------------------------------------------------------
@@ -540,7 +568,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function()
-        if tonumber(os.date("%m")) == 12 then
+        if is_december then
             vim.cmd("LetItSnow")
         end
 
