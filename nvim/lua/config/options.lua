@@ -49,40 +49,34 @@ local function matched_keys(mode, regular_expression)
     end)
 end
 
-local function group_ascii_characters(chars)
+local function group_sorted_ascii_characters(chars)
     local uppercase_chars = {}
     local lowercase_chars = {}
     local numbers = {}
     local symbols = {}
 
-    local zero_byte = string.byte'0'
-    local nine_byte = string.byte'9'
+    local groups = {
+        { string.byte'0'-1, symbols },
+        { string.byte'9', numbers },
+        { string.byte'A'-1, symbols },
+        { string.byte'Z', uppercase_chars },
+        { string.byte'a'-1, symbols },
+        { string.byte'z', lowercase_chars },
+        { 126, symbols },
+    }
 
-    local upper_a_byte = string.byte'A'
-    local upper_z_byte = string.byte'Z'
-
-    local lower_a_byte = string.byte'a'
-    local lower_z_byte = string.byte'z'
-
-    -- lazy so no optimize
+    local index = 1
+    local current_table = groups[index][2]
 
     for _, key in ipairs(chars) do
         local key_byte = string.byte(key)
-        if key_byte < zero_byte then
-            table.insert(symbols, key)
-        elseif key_byte <= nine_byte then
-            table.insert(numbers, key)
-        elseif key_byte < upper_a_byte then
-            table.insert(symbols, key)
-        elseif key_byte <= upper_z_byte then
-            table.insert(uppercase_chars, key)
-        elseif key_byte < lower_a_byte then
-            table.insert(symbols, key)
-        elseif key_byte <= lower_z_byte then
-            table.insert(lowercase_chars, key)
-        else
-            table.insert(symbols, key)
+
+        while key_byte > groups[index][1] do
+            index = index + 1
+            current_table = groups[index][2]
         end
+
+        table.insert(current_table, key)
     end
 
     return uppercase_chars, lowercase_chars, numbers, symbols
@@ -92,7 +86,7 @@ end
 vim.keymap.set("n", "<leader>K", function()
     local chars = printable_char_set()
 
-    for key in matched_keys("n", "^" .. vim.g.mapleader .. "[%g ]") do
+    for key in matched_keys("n", "^" .. vim.g.mapleader .. "([%g ])") do
         chars[key] = nil
     end
 
@@ -104,21 +98,45 @@ vim.keymap.set("n", "<leader>K", function()
 
     table.sort(unused_keys)
 
-    local unused_uppercase, unused_lowercase, unused_numbers, unused_symbols = group_ascii_characters(unused_keys)
+    local unused_uppercase, unused_lowercase, unused_numbers, unused_symbols = group_sorted_ascii_characters(unused_keys)
 
-    vim.api.nvim_echo({
-        { "Unused uppercase: " },
-        { table.concat(unused_uppercase, ", "), "DiagnosticInfo" },
-        { "\n" },
-        { "Unused lowercase: " },
-        { table.concat(unused_lowercase, ", "), "DiagnosticInfo" },
-        { "\n" },
-        { "Unused numbers: " },
-        { table.concat(unused_numbers, ", "), "DiagnosticInfo" },
-        { "\n" },
-        { "Unused symbols: " },
-        { table.concat(unused_symbols, ", "), "DiagnosticInfo" },
-    }, true, {})
+    local echo_message = {}
+
+    local edge_message = {"'"}
+    local middle_message = {"', '"}
+
+    local function add_to_message(t)
+        if #t == 0 then
+            return
+        end
+
+        table.insert(echo_message, edge_message)
+
+        local i = 1
+        local length = #t
+        while i < length do
+            table.insert(echo_message, { t[i], "DiagnosticInfo" })
+            table.insert(echo_message, middle_message)
+            i = i + 1
+        end
+
+        table.insert(echo_message, { t[i], "DiagnosticInfo" })
+        table.insert(echo_message, edge_message)
+    end
+
+    table.insert(echo_message, { "Unused uppercase: " })
+    add_to_message(unused_uppercase)
+
+    table.insert(echo_message, { "\nUnused lowercase: " })
+    add_to_message(unused_lowercase)
+
+    table.insert(echo_message, { "\nUnused numbers: " })
+    add_to_message(unused_numbers)
+
+    table.insert(echo_message, { "\nUnused symbols: " })
+    add_to_message(unused_symbols)
+
+    vim.api.nvim_echo(echo_message, true, {})
 end, { desc = "Check unused leader keymaps" })
 
 
