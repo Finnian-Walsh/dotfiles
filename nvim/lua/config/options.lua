@@ -15,16 +15,22 @@ vim.diagnostic.config{
     update_in_insert = true,
 }
 
-local date = os.date("*t")
-_G.is_december = date.month == 12
+function _G.update_date()
+    _G.current_date = os.date("*t")
+    _G.current_month = current_date.month
+    _G.current_day = current_date.day
+    _G.current_week_day = current_date.wday
 
-if is_december then
-    local day = date.day
-
-    if day <= 25 then
-        _G.days_until_xmas = 25 - day
+    if current_month == 12 then
+        if current_day <= 25 then
+            _G.days_until_xmas = 25 - current_day
+        end
+    elseif current_month == 9 then
+        _G.days_until_halloween = 31 - current_day
     end
 end
+
+update_date()
 
 local function printable_char_set()
     local char_set = {}
@@ -587,7 +593,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function()
-        if is_december then
+        if current_month == 12 then
             vim.cmd("LetItSnow")
         end
 
