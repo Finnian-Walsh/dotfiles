@@ -13,15 +13,6 @@ vim.keymap.set("n", "<leader>Ctn", "<cmd>colorscheme tokyonight-night<CR>", { de
 vim.keymap.set("n", "<leader>Ctm", "<cmd>colorscheme tokyonight-moon<CR>", { desc = "Set colorscheme to tokyonight-moon" })
 vim.keymap.set("n", "<leader>Ctd", "<cmd>colorscheme tokyonight-day<CR>", { desc = "Set colorscheme to tokyonight-day" })
 
-local date, week_day
-
-local function update_date()
-    date = os.date("*t")
-    week_day = date.wday
-end
-
-update_date()
-
 local daily_colorschemes = {
     "catppuccin", -- Sunday
     "tokyonight", -- Monday
@@ -56,7 +47,7 @@ local offset = 0
 
 local function update_colorscheme_with_offset()
     update_date()
-    local target_day = (week_day + offset - 1) % 7 + 1
+    local target_day = (current_week_day + offset - 1) % 7 + 1
 
     local colorscheme = daily_colorschemes[target_day]
     vim.cmd("colorscheme " .. colorscheme)
@@ -66,17 +57,19 @@ local function update_colorscheme_with_offset()
     end)
 end
 
-local function reset_colorscheme(log)
+local function reset_colorscheme(silent)
     update_date()
     offset = 0
-    local colorscheme = daily_colorschemes[week_day]
+    local colorscheme = daily_colorschemes[current_week_day]
     vim.cmd("colorscheme " .. colorscheme)
 
-    if log then
-        vim.schedule(function()
-            vim.api.nvim_echo({{string.format("Reset: displaying colorscheme for %s (%s)", days_of_week[week_day], colorscheme), UPDATION_HIGHLIGHT}}, true, {})
-        end)
+    if silent then
+        return
     end
+
+    vim.schedule(function()
+        vim.api.nvim_echo({{string.format("Reset: displaying colorscheme for %s (%s)", days_of_week[current_week_day], colorscheme), UPDATION_HIGHLIGHT}}, true, {})
+    end)
 end
 
 vim.keymap.set("n", "<Left>", function()
@@ -89,8 +82,9 @@ vim.keymap.set("n", "<Right>", function()
     update_colorscheme_with_offset()
 end, { desc = "Cycle through daily colorschemes" })
 
-vim.keymap.set("n", "<Up>", function() reset_colorscheme(true) end, { desc = "Reset daily colorscheme" })
-vim.keymap.set("n", "<Down>", function() reset_colorscheme(true) end, { desc = "Reset daily colorscheme" })
+vim.keymap.set("n", "<Up>", reset_colorscheme, { desc = "Reset daily colorscheme" })
 
-reset_colorscheme()
+vim.keymap.set("n", "<Down>", reset_colorscheme, { desc = "Reset daily colorscheme" })
+
+reset_colorscheme(true)
 
