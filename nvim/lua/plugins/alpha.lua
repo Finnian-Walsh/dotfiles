@@ -12,7 +12,7 @@ local function center_text(text, required_width)
     local first_half = math.floor(missing_width / 2)
     local second_half = math.ceil(missing_width / 2)
 
-    return string.format("%s%s%s", string.rep(" ", first_half), text, string.rep(" ", second_half))
+    return string.rep(" ", first_half) .. text .. string.rep(" ", second_half)
 end
 
 local CenteredButtons = {}
@@ -23,20 +23,12 @@ function CenteredButtons.new(opts)
     return setmetatable({
         _padding = create_padding(opts.padding),
         _buttons = {},
-        _max_name_width = 0,
     }, CenteredButtons)
 end
 
 function CenteredButtons:add(name, key, fn)
-    local name_width = vim.fn.strdisplaywidth(name)
-
-    if name_width > self._max_name_width then
-        self._max_name_width = name_width
-    end
-
     table.insert(self._buttons, {
         name = name,
-        name_width = name_width,
         key = key,
         fn = fn,
     })
@@ -48,23 +40,40 @@ function CenteredButtons:add_all(buttons)
     end
 end
 
-function CenteredButtons:build()
+function CenteredButtons:build(text_width)
     local value = {}
     local padding = self._padding
-    local max_name_width = self._max_name_width
 
     for _, button in ipairs(self._buttons) do
-        local fn = button.fn
+        local button_name = button.name
+        local button_key = button.key
+        local button_fn = button.fn
+
+        local spaces = text_width
+            - (vim.fn.strdisplaywidth(button_name)
+            + vim.fn.strdisplaywidth(button_key)
+            + 2)
+
+        local button_val = button_name
+            .. string.rep(" ", spaces)
+            .. "["
+            .. button.key
+            .. "]"
+
         table.insert(value, {
-            on_press = fn,
+            on_press = button_fn,
             opts = {
                 position = "center",
-                shortcut = "[" .. button.key .. "] ",
-                cursor = 1,
-                keymap = { "n", button.key, fn },
+                cursor = vim.fn.strdisplaywidth(button_val) - 2,
+                keymap = { "n", button.key, button_fn },
+                hl = {
+                    { "AlphaShortcutBracket", #button_val - 3, #button_val - 2, },
+                    { "AlphaShortcut", #button_val - 2, #button_val - 1, },
+                    { "AlphaShortcutBracket", #button_val - 1, #button_val, },
+                },
             },
             type = "button",
-            val = button.name .. string.rep(" ", max_name_width - button.name_width),
+            val = button_val,
         })
         table.insert(value, padding)
     end
@@ -212,27 +221,75 @@ local function config()
         end
     })
 
-    local xmas_header_line = days_until_xmas and center_text(string.format("%d days until Christmas!", days_until_xmas), 49)
-
-    local header = {
-        type = "text",
-        val = {
+    local header_values = {
+        italics = {
             [[                               __                ]],
             [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
             [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
             [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
             [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
             [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
-            xmas_header_line and "",
-            xmas_header_line,
         },
+        straight = {
+            "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+            "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+            "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+            "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+            "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+            "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+        },
+        spooky = {
+            " ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓",
+            " ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒",
+            "▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░",
+            "▓██▒  ▐▌██▒▒▓█  ▄ ▒██   ██░  ▒██ █░░░██░▒██    ▒██ ",
+            "▒██░   ▓██░░▒████▒░ ████▓▒░   ▒▀█░  ░██░▒██▒   ░██▒",
+            "░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▒░▒░▒░    ░ ▐░  ░▓  ░ ▒░   ░  ░",
+            "░ ░░   ░ ▒░ ░ ░  ░  ░ ▒ ▒░    ░ ░░   ▒ ░░  ░      ░",
+            "   ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░   ",
+            "         ░    ░  ░    ░ ░        ░   ░         ░   ",
+            "                                ░                  ",
+        }
+    }
+
+    local desired_header_val = header_values.straight
+    local header_additions = {}
+
+    if current_month == 9 then
+        desired_header_val = header_values.spooky
+        table.insert(header_additions, {""})
+        table.insert(header_additions, {
+            days_until_halloween .. " days until Halloween!",
+            center = true,
+        })
+    elseif current_month == 12 then
+        table.insert(header_additions, {""})
+        table.insert(header_additions, {
+            days_until_xmas .. " days until Christmas!",
+            center = true,
+        })
+    end
+
+    local header_width = vim.fn.strdisplaywidth(desired_header_val[1])
+
+    for _, addition in ipairs(header_additions) do
+        if addition.center then
+            table.insert(desired_header_val, center_text(addition[1], header_width))
+        else
+            table.insert(desired_header_val, addition[1])
+        end
+    end
+
+    local header = {
+        type = "text",
+        val = desired_header_val,
         opts = {
             position = "center",
             hl = "AlphaHeader",
         },
     }
 
-    local buttons = CenteredButtons.new({ padding = 1 })
+    local buttons = CenteredButtons.new{padding = 1}
 
     buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
 
@@ -242,7 +299,7 @@ local function config()
 
     buttons:add(" Resume telescope", "R", function() vim.cmd("Telescope resume") end)
 
-    buttons:add(" Header coloring", "c", function() vim.cmd("HeaderColor") end)
+    buttons:add(" Header coloring", "C", function() vim.cmd("HeaderColor") end)
 
     local harpoon
     buttons:add("󱡅 Harpoon", "h", function()
@@ -270,6 +327,8 @@ local function config()
     local function set_highlights()
         set_header_color(current_header_color)
         vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
+        vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#ff966C"})
+        vim.api.nvim_set_hl(0, "AlphaShortcutBracket", { fg = "#7aa2f7"})
     end
 
     set_highlights()
@@ -294,15 +353,15 @@ local function config()
             padding_values.header.val = 3
             padding_values.buttons.val = 3
         elseif screen_lines >= 40 then
-            padding_values.top.val = 1
+            padding_values.top.val = 2
             padding_values.header.val = 3
             padding_values.buttons.val = 3
         elseif screen_lines >= 36 then
-            padding_values.top.val = 1
+            padding_values.top.val = 2
             padding_values.header.val = 2
             padding_values.buttons.val = 2
         else
-            padding_values.top.val = 0
+            padding_values.top.val = 1
             padding_values.header.val = 1
             padding_values.buttons.val = 1
         end
@@ -321,7 +380,7 @@ local function config()
         padding_values.top,
         header,
         padding_values.header,
-        buttons:build(),
+        buttons:build(header_width),
         padding_values.buttons,
         ferris,
         padding_values.bottom,
