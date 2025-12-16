@@ -34,9 +34,11 @@ local days_of_week = {
 }
 
 local UPDATION_HIGHLIGHT = "ColorschemeUpdation"
+local QUERY_HIGHLIGHT = "ColorschemeQuery"
 
 local function set_colorscheme_updation_hl()
     vim.api.nvim_set_hl(0, UPDATION_HIGHLIGHT, { fg = "#5fafff" })
+    vim.api.nvim_set_hl(0, QUERY_HIGHLIGHT, { fg = "#0ab4cf" })
 end
 
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -53,7 +55,9 @@ local function update_colorscheme_with_offset()
     vim.cmd("colorscheme " .. colorscheme)
 
     vim.schedule(function()
-        vim.api.nvim_echo({{string.format("Displaying colorscheme for %s (%s)", days_of_week[target_day], colorscheme), UPDATION_HIGHLIGHT}}, true, {})
+        vim.api.nvim_echo({
+            { string.format("Displaying colorscheme for %s (%s)", days_of_week[target_day], colorscheme), UPDATION_HIGHLIGHT },
+        }, true, {})
     end)
 end
 
@@ -68,8 +72,16 @@ local function reset_colorscheme(silent)
     end
 
     vim.schedule(function()
-        vim.api.nvim_echo({{string.format("Reset: displaying colorscheme for %s (%s)", days_of_week[current_week_day], colorscheme), UPDATION_HIGHLIGHT}}, true, {})
+        vim.api.nvim_echo({
+            { string.format("Reset: displaying colorscheme for %s (%s)", days_of_week[current_week_day], colorscheme), UPDATION_HIGHLIGHT },
+        }, true, {})
     end)
+end
+
+local function query_colorscheme()
+    vim.api.nvim_echo({
+        { string.format("Current colorscheme: %s\nCurrent week day: %s", vim.g.colors_name, current_week_day), QUERY_HIGHLIGHT },
+    }, true, {})
 end
 
 vim.keymap.set("n", "<Left>", function()
@@ -84,7 +96,7 @@ end, { desc = "Cycle through daily colorschemes" })
 
 vim.keymap.set("n", "<Up>", reset_colorscheme, { desc = "Reset daily colorscheme" })
 
-vim.keymap.set("n", "<Down>", reset_colorscheme, { desc = "Reset daily colorscheme" })
+vim.keymap.set("n", "<Down>", query_colorscheme, { desc = "Query colorscheme and day" })
 
 reset_colorscheme(true)
 
