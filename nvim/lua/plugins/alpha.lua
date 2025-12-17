@@ -384,7 +384,7 @@ local function config()
                 vim.cmd[[AlphaRedraw]]
             end, merge_opts{ desc = "Next header value" })
 
-            vim.keymap.set("n", "F", "<cmd>Telescope find_files initial_mode=normal", merge_opts{ desc = "Find files (start in normal)" })
+            vim.keymap.set("n", "F", "<cmd>Telescope find_files initial_mode=normal<CR>", merge_opts{ desc = "Find files (start in normal)" })
         end
     })
 
