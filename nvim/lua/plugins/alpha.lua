@@ -15,18 +15,25 @@ local function center_text(text, required_width)
     return string.rep(" ", first_half) .. text .. string.rep(" ", second_half)
 end
 
-local CenteredButtons = {}
-CenteredButtons.__index = CenteredButtons
+local ButtonCreator = {}
+ButtonCreator.__index = ButtonCreator
 
-function CenteredButtons.new(opts)
+function ButtonCreator.new(opts)
     opts = opts or {}
-    return setmetatable({
+
+    local self = setmetatable({
         _padding = create_padding(opts.padding),
         _buttons = {},
-    }, CenteredButtons)
+    }, ButtonCreator)
+
+    if opts.buttons then
+        self:add_all(opts.buttons)
+    end
+
+    return self
 end
 
-function CenteredButtons:add(name, key, fn)
+function ButtonCreator:add(name, key, fn)
     table.insert(self._buttons, {
         name = name,
         key = key,
@@ -34,13 +41,13 @@ function CenteredButtons:add(name, key, fn)
     })
 end
 
-function CenteredButtons:add_all(buttons)
+function ButtonCreator:add_all(buttons)
     for _, button in ipairs(buttons) do
-        self:add(table.unpack(button))
+        self:add(unpack(button))
     end
 end
 
-function CenteredButtons:build(text_width)
+function ButtonCreator:build(text_width)
     local value = {}
     local padding = self._padding
 
@@ -67,9 +74,10 @@ function CenteredButtons:build(text_width)
                 cursor = vim.fn.strdisplaywidth(button_val) - 2,
                 keymap = { "n", button.key, button_fn },
                 hl = {
-                    { "AlphaShortcutBracket", #button_val - 3, #button_val - 2, },
+                    { "AlphaText", 0, #button_name, },
+                    { "AlphaBracket", #button_val - 3, #button_val - 2, },
                     { "AlphaShortcut", #button_val - 2, #button_val - 1, },
-                    { "AlphaShortcutBracket", #button_val - 1, #button_val, },
+                    { "AlphaBracket", #button_val - 1, #button_val, },
                 },
             },
             type = "button",
@@ -222,23 +230,23 @@ local function config()
     })
 
     local header_values = {
-        italics = {
+        {{
             [[                               __                ]],
             [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
             [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
             [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
             [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
             [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
-        },
-        straight = {
+        }, name = "italics"},
+        {{
             "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
             "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
             "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
             "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
             "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
             "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-        },
-        spooky = {
+        }, name = "straight"},
+        {{
             " ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓",
             " ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒",
             "▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░",
@@ -249,14 +257,71 @@ local function config()
             "   ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░   ",
             "         ░    ░  ░    ░ ░        ░   ░         ░   ",
             "                                ░                  ",
-        }
+        }, name = "spooky"},
+        {{
+            "    ▄▄▄██▀▀▀▒█████ ▓██   ██▓ ▄▄▄▄    ▒█████ ▓██   ██▓ ",
+            "      ▒██  ▒██▒  ██▒▒██  ██▒▓█████▄ ▒██▒  ██▒▒██  ██▒ ",
+            "      ░██  ▒██░  ██▒ ▒██ ██░▒██▒ ▄██▒██░  ██▒ ▒██ ██░ ",
+            "   ▓██▄██▓ ▒██   ██░ ░ ▐██▓░▒██░█▀  ▒██   ██░ ░ ▐██▓░ ",
+            "    ▓███▒  ░ ████▓▒░ ░ ██▒▓░░▓█  ▀█▓░ ████▓▒░ ░ ██▒▓░ ",
+            "    ▒▓▒▒░  ░ ▒░▒░▒░   ██▒▒▒ ░▒▓███▀▒░ ▒░▒░▒░   ██▒▒▒  ",
+            "    ▒ ░▒░    ░ ▒ ▒░ ▓██ ░▒░ ▒░▒   ░   ░ ▒ ▒░ ▓██ ░▒░  ",
+            "    ░ ░ ░  ░ ░ ░ ▒  ▒ ▒ ░░   ░    ░ ░ ░ ░ ▒  ▒ ▒ ░░   ",
+            "    ░   ░      ░ ░  ░ ░      ░          ░ ░  ░ ░      ",
+            "                    ░ ░           ░          ░ ░      ",
+        }, name = "one_piece"},
     }
 
-    local desired_header_val = header_values.straight
+    local desired_header_val = setmetatable({
+        next = function(self)
+            local index = self._index
+
+            if index >= #header_values then
+                index = 1
+            else
+                index = index + 1
+            end
+
+            self._index = index
+        end,
+        prev = function(self)
+            local index = self._index
+
+            if index <= 1 then
+                index = #header_values
+            else
+                index = index - 1
+            end
+
+            self._index = index
+        end,
+        use = function(self, key)
+            for index, header_val in pairs(header_values) do
+                if header_val.name == key then
+                    rawset(self, "_index", index)
+                    return
+                end
+            end
+        end,
+    }, {
+        __index = function(self, index)
+            if index == "value" then
+                return header_values[self._index][1]
+            else
+                return rawget(self, index)
+            end
+        end,
+        __newindex = function()
+            error("Cannot assign new index")
+        end,
+    })
+
+    desired_header_val:use("straight")
+
     local header_additions = {}
 
     if current_month == 9 then
-        desired_header_val = header_values.spooky
+        desired_header_val:use("spooky")
         table.insert(header_additions, {""})
         table.insert(header_additions, {
             days_until_halloween .. " days until Halloween!",
@@ -270,44 +335,70 @@ local function config()
         })
     end
 
-    local header_width = vim.fn.strdisplaywidth(desired_header_val[1])
+    local header_width = vim.fn.strdisplaywidth(desired_header_val.value[1])
 
-    for _, addition in ipairs(header_additions) do
-        if addition.center then
-            table.insert(desired_header_val, center_text(addition[1], header_width))
-        else
-            table.insert(desired_header_val, addition[1])
+    for _, header in pairs(header_values) do
+        local value = header[1]
+        for _, addition in ipairs(header_additions) do
+            if addition.center then
+                table.insert(value, center_text(addition[1], header_width))
+            else
+                table.insert(value, addition[1])
+            end
         end
     end
 
     local header = {
         type = "text",
-        val = desired_header_val,
+        val = desired_header_val.value,
         opts = {
             position = "center",
             hl = "AlphaHeader",
         },
     }
 
-    local buttons = CenteredButtons.new{padding = 1}
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "alpha",
+        callback = function(event)
+            local opts = { buffer = event.buf, silent = true, noremap = true }
 
-    buttons:add("󱏒 Oil", "t", function() vim.cmd("Oil") end)
+            local function merge_opts(t)
+                for k, v in pairs(opts) do
+                    if not t[k] then
+                        t[k] = v
+                    end
+                end
 
-    buttons:add("󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end)
+                return t
+            end
 
-    buttons:add(" Fuzzy find", "f", function() vim.cmd("Telescope find_files") end)
+            vim.keymap.set("n", "{", function()
+                desired_header_val:prev()
+                header.val = desired_header_val.value
+                vim.cmd[[AlphaRedraw]]
+            end, merge_opts{ desc = "Previous header value" })
 
-    buttons:add(" Resume telescope", "R", function() vim.cmd("Telescope resume") end)
+            vim.keymap.set("n", "}", function()
+                desired_header_val:next()
+                header.val = desired_header_val.value
+                vim.cmd[[AlphaRedraw]]
+            end, merge_opts{ desc = "Next header value" })
 
-    buttons:add(" Header coloring", "C", function() vim.cmd("HeaderColor") end)
+            vim.keymap.set("n", "F", "<cmd>Telescope find_files initial_mode=normal", merge_opts{ desc = "Find files (start in normal)" })
+        end
+    })
 
-    local harpoon
-    buttons:add("󱡅 Harpoon", "h", function()
-        harpoon = harpoon or require("harpoon")
-        harpoon.ui:toggle_quick_menu(harpoon:list())
-    end)
-
-    buttons:add("󰈆 Quit", "q", function() vim.cmd("quit") end)
+    local buttons = ButtonCreator.new{
+        padding = 1,
+        buttons = {
+            { "󱏒 Oil", "t", function() vim.cmd("Oil") end },
+            { "󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end },
+            { " Fuzzy find", "f", function() vim.cmd("Telescope find_files") end },
+            { " Resume telescope", "R", function() vim.cmd("Telescope resume") end },
+            { " Header coloring", "C", function() vim.cmd("HeaderColor") end },
+            { "󰈆 Quit", "q", function() vim.cmd("quit") end },
+        },
+    }
 
     local ferris = {
         type = "text",
@@ -326,9 +417,10 @@ local function config()
 
     local function set_highlights()
         set_header_color(current_header_color)
-        vim.api.nvim_set_hl(0, "Ferris", { fg = "#BA0C2F", bold = true })
+        vim.api.nvim_set_hl(0, "Ferris", { fg = "#ba0c2f", bold = true })
+        vim.api.nvim_set_hl(0, "AlphaText", { fg = "#f4c430"})
+        vim.api.nvim_set_hl(0, "AlphaBracket", { fg = "#7aa2f7"})
         vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#ff966C"})
-        vim.api.nvim_set_hl(0, "AlphaShortcutBracket", { fg = "#7aa2f7"})
     end
 
     set_highlights()
@@ -359,11 +451,11 @@ local function config()
         elseif screen_lines >= 36 then
             padding_values.top.val = 2
             padding_values.header.val = 2
-            padding_values.buttons.val = 2
+            padding_values.buttons.val = 0
         else
             padding_values.top.val = 1
             padding_values.header.val = 1
-            padding_values.buttons.val = 1
+            padding_values.buttons.val = 0
         end
     end
 
