@@ -12,7 +12,7 @@ return {
             local dap = require("dap")
 
             vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
-            vim.keymap.set("n", "<leader>dr", dap.clear_breakpoints, { desc = "Toggle breakpoint" })
+            vim.keymap.set("n", "<leader>dB", dap.clear_breakpoints, { desc = "Toggle breakpoint" })
             vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue debugging" })
             vim.keymap.set("n", "<leader>dn", "<cmd>DapNew<CR>", { desc = "New debugging session" })
 
