@@ -18,6 +18,7 @@ return {
         local function open_at_cwd()
             oil.open(vim.uv.cwd())
         end
+
         vim.keymap.set("n", "<leader>t", oil.open, { desc = "Open oil file tree" })
         vim.keymap.set("n", "<leader>T", open_at_cwd, { desc = "Open oil file tree at cwd" })
 
