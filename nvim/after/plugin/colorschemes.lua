@@ -17,7 +17,7 @@ local daily_colorschemes = {
     "catppuccin", -- Sunday
     "tokyonight", -- Monday
     "habamax", -- Tuesday
-    "elflord", -- Wednesday
+    "carbonfox", -- Wednesday
     "evening", -- Thursday
     "catppuccin-macchiato", -- Friday
     "catppuccin", -- Saturday
@@ -56,7 +56,7 @@ local function update_colorscheme_with_offset()
 
     vim.schedule(function()
         vim.api.nvim_echo({
-            { string.format("Displaying colorscheme for %s (%s)", days_of_week[target_day], colorscheme), UPDATION_HIGHLIGHT },
+            { string.format("Displaying %s colorscheme for %s (day %d)", colorscheme, days_of_week[target_day], current_week_day), UPDATION_HIGHLIGHT },
         }, true, {})
     end)
 end
@@ -73,7 +73,7 @@ local function reset_colorscheme(silent)
 
     vim.schedule(function()
         vim.api.nvim_echo({
-            { string.format("Reset: displaying colorscheme for %s (%s)", days_of_week[current_week_day], colorscheme), UPDATION_HIGHLIGHT },
+            { string.format("Reset: displaying %s colorscheme for %s (day %d)", colorscheme, days_of_week[current_week_day], current_week_day), UPDATION_HIGHLIGHT },
         }, true, {})
     end)
 end
