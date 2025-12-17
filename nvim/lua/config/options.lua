@@ -89,7 +89,7 @@ local function group_sorted_ascii_characters(chars)
 end
 
 -- command for checking unused global leader keymaps:
-vim.keymap.set("n", "<leader>K", function()
+vim.keymap.set("n", "<leader>kk", function()
     local chars = printable_char_set()
 
     for key in matched_keys("n", "^" .. vim.g.mapleader .. "([%g ])") do
@@ -147,7 +147,7 @@ end, { desc = "Check unused leader keymaps" })
 
 
 local function set_global_keys_check(char)
-    vim.keymap.set("n", "<leader>k" .. char, function()
+    vim.keymap.set("n", "<leader>K" .. char, function()
         local mappings = {}
 
         for _, map in matched_keys("n", "^" .. vim.g.mapleader .. char) do
