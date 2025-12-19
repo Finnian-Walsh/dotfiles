@@ -220,12 +220,15 @@ local function config()
     end, { desc = "Toggle the header color changing", nargs = "?" })
 
     vim.api.nvim_create_autocmd("BufLeave", {
-        callback = function()
-            vim.schedule(function()
-                if not loaded_alpha_buffers() then
-                    header_cycle_system:stop()
+        callback = function(event)
+            local this_buffer = event.buf
+            for buffer in loaded_alpha_buffers() do
+                if this_buffer ~= buffer then
+                    return
                 end
-            end)
+            end
+
+            header_cycle_system:stop()
         end
     })
 
