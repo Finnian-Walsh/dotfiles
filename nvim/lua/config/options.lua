@@ -10,7 +10,7 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.mouse = ""
 
-vim.diagnostic.config{
+vim.diagnostic.config {
     virtual_text = true,
     update_in_insert = true,
 }
@@ -172,8 +172,20 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Tu
 -- vim.keymap.set("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit neovim" })
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
-vim.keymap.set("n", "<leader>nA", "<cmd>vs | wincmd l | Alpha<CR>", { desc = "Toggle Alpha in a new vertical split" })
-vim.keymap.set("n", "<leader>NA", "<cmd>sp | wincmd j | Alpha<CR>", { desc = "Toggle Alpha in a new horizontal split" })
+
+vim.keymap.set("n", "<leader>nA", function()
+    vim.cmd("vs | wincmd l")
+    if vim.bo.filetype ~= "alpha" then
+        vim.cmd("Alpha")
+    end
+end, { desc = "Toggle Alpha in a new vertical split" })
+
+vim.keymap.set("n", "<leader>NA", function()
+    vim.cmd("sp | wincmd j")
+    if vim.bo.filetype ~= "alpha" then
+        vim.cmd("Alpha")
+    end
+end, { desc = "Toggle Alpha in a new horizontal split" })
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
 
