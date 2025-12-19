@@ -84,8 +84,10 @@ local function update_colorscheme_with_offset(silent)
 end
 
 local function reset_colorscheme(silent)
-    update_date()
+    current_colorscheme_is_festive = false
     offset = 0
+
+    update_date()
     local colorscheme = daily_colorschemes[current_week_day]
     vim.cmd("colorscheme " .. colorscheme)
 
@@ -100,19 +102,34 @@ local function reset_colorscheme(silent)
     end)
 end
 
-local function enable_festive_colorscheme()
+local function enable_festive_colorscheme(silent)
+    local colorscheme
+
     if current_month == 12 then
         -- christmas
-        vim.cmd("colorscheme christmas")
+        colorscheme = "christmas"
     elseif current_month == 10 then
         -- halloween
-        vim.cmd("colorscheme nightfall")
+        colorscheme = "nightfall"
     else
         vim.api.nvim_echo({{"Currently, there are no festive colorschemes", "WarningMsg"}}, true, {})
-        return false
+        return
     end
 
-    return true
+    assert(type(colorscheme) == "string", "Expected a colorscheme")
+    vim.cmd("colorscheme " .. colorscheme)
+
+    current_colorscheme_is_festive = true
+
+    if silent then
+        return
+    end
+
+    vim.schedule(function()
+        vim.api.nvim_echo({
+            { string.format("Displaying %s colorscheme for month %s", colorscheme, current_month), UPDATION_HIGHLIGHT },
+        }, true, {})
+    end)
 end
 
 local function colorscheme_is_festive()
@@ -130,17 +147,6 @@ local function colorscheme_is_festive()
     end
 
     return parsed_contents
-end
-
-local function toggle_festive_colorscheme()
-    if current_colorscheme_is_festive then
-        update_colorscheme_with_offset(true)
-        current_colorscheme_is_festive = false
-    else
-        if enable_festive_colorscheme() then
-            current_colorscheme_is_festive = true
-        end
-    end
 end
 
 local function query_colorscheme()
@@ -161,13 +167,13 @@ end, { desc = "Cycle through daily colorschemes" })
 
 vim.keymap.set("n", "<Up>", reset_colorscheme, { desc = "Reset daily colorscheme" })
 
-vim.keymap.set("n", "<S-Up>", toggle_festive_colorscheme, { desc = "Reset daily colorscheme" })
+vim.keymap.set("n", "<S-Up>", enable_festive_colorscheme, { desc = "Reset daily colorscheme" })
 
 vim.keymap.set("n", "<Down>", query_colorscheme, { desc = "Query colorscheme and day" })
 
 if colorscheme_is_festive() then
     current_colorscheme_is_festive = true
-    enable_festive_colorscheme()
+    enable_festive_colorscheme(true)
 else
     current_colorscheme_is_festive = false
     reset_colorscheme(true)
