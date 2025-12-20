@@ -169,7 +169,15 @@ end
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
 
--- vim.keymap.set("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit neovim" })
+vim.keymap.set("i", "<Left>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("i", "<Down>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("i", "<Up>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("i", "<Right>", "<Nop>", { desc = "Nothing" })
+
+vim.keymap.set("v", "<Left>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("v", "<Down>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("v", "<Up>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("v", "<Right>", "<Nop>", { desc = "Nothing" })
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 
