@@ -7,14 +7,22 @@ return {
         "williamboman/mason-lspconfig.nvim",
         event = "VeryLazy",
         config = function()
+            if vim.uv.os_getenv("TERMUX_VERSION") then
+                return
+            end
+
+            require("mason").setup{
+                ensure_installed = { "clang-format", },
+            }
+
             require("mason-lspconfig").setup{
-                ensure_installed = vim.uv.os_getenv("TERMUX_VERSION") and {}
-                    or { "rust_analyzer", "lua_ls", "pyright", },
+                ensure_installed = { "rust_analyzer", "lua_ls", "pyright", "clangd", },
             }
         end,
     },
     {
         "neovim/nvim-lspconfig",
+        ft = { "lua", "rust", "c", "cpp", "python" },
         config = function()
             vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show lsp documentation" })
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
