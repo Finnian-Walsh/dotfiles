@@ -1,11 +1,5 @@
 return {
     {
-        "mfussenegger/nvim-dap-python",
-        config = function()
-            require("dap-python").setup("python3")
-        end
-    },
-    {
         "mfussenegger/nvim-dap",
 
         config = function()
@@ -23,5 +17,12 @@ return {
 
             vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#FF0000", bg = "", bold = true })
         end
-    }
+    },
+    {
+        "mfussenegger/nvim-dap-python",
+        config = function()
+            require("dap-python").setup("python3")
+        end
+    },
+
 }
