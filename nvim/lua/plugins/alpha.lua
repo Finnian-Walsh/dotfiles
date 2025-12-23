@@ -427,11 +427,13 @@ local function config()
         vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#ff966C"})
     end
 
-    set_highlights()
-
     vim.api.nvim_create_autocmd("ColorScheme", {
         callback = set_highlights,
     })
+
+    if vim.g.colors_name then
+        set_highlights()
+    end
 
     local padding_values = {
         top = uninitialized_padding(),
