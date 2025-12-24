@@ -1,14 +1,5 @@
 return {
     {
-        "benjasper/nightfall.nvim",
-        opts = {},
-    },
-    { "EdenEast/nightfox.nvim" },
-    {
-        "everviolet/nvim",
-        name = "evergarden",
-    },
-    {
         "ChaseRensberger/christmas.nvim",
         name = "christmas",
     },
