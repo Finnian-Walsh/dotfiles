@@ -28,7 +28,7 @@ return {
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
             vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to lsp declaration" })
             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename a variable" })
-            vim.keymap.set("n", "<leader>C", vim.lsp.buf.code_action, { desc = "Code actions" })
+            vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, { desc = "Code actions" })
 
             local capabilities = require("blink-cmp").get_lsp_capabilities()
             vim.lsp.config("*", { capabilities = capabilities })
