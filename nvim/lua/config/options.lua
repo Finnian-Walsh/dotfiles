@@ -583,8 +583,8 @@ vim.api.nvim_create_autocmd("BufLeave", {
 
 -- Miscellaneous keymaps
 
-vim.keymap.set("n", "<leader>S", "<cmd>LetItSnow<CR>", { desc = "Let it snow!" })
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Open neo-tree" })
+
 vim.keymap.set("n", "<leader>m", function()
     if vim.g.syntax_on then
         vim.cmd("syntax off")
