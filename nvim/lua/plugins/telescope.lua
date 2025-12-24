@@ -22,8 +22,8 @@ return {
         vim.keymap.set("n", "<leader>R", builtin.resume, { desc = "Resume previous telescope action" })
         vim.keymap.set("n", "<leader>D", builtin.diagnostics, { desc = "View diagnostics" })
 
-        vim.keymap.set("n", "<leader>c/", builtin.colorscheme, { desc = "Search for colorschemes" })
-        vim.keymap.set("n", "<leader>c?", function() builtin.colorscheme(initial_mode_normal) end, { desc = "View colorschemes" })
+        vim.keymap.set("n", "<leader>C/", builtin.colorscheme, { desc = "Search for colorschemes" })
+        vim.keymap.set("n", "<leader>C?", function() builtin.colorscheme(initial_mode_normal) end, { desc = "View colorschemes" })
 
         vim.keymap.set("n", "<leader>b/", builtin.buffers, { desc = "Search for buffer with telescope" })
         vim.keymap.set("n", "<leader>b?", function() builtin.buffers(initial_mode_normal) end, { desc = "View buffers with telescope" })
