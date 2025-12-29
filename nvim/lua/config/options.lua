@@ -22,9 +22,7 @@ function _G.update_date()
     _G.current_week_day = current_date.wday
 
     if current_month == 12 then
-        if current_day <= 25 then
-            _G.days_until_xmas = 25 - current_day
-        end
+        _G.days_until_xmas = 25 - current_day
     elseif current_month == 9 then
         _G.days_until_halloween = 31 - current_day
     end
