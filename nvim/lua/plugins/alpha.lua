@@ -15,6 +15,60 @@ local function center_text(text, required_width)
     return string.rep(" ", first_half) .. text .. string.rep(" ", second_half)
 end
 
+local HeaderValues = {}
+
+function HeaderValues.__index(self, key)
+    if key == "selected" then
+        return self._headers[rawget(self, "_selected_index")]
+    else
+        return HeaderValues[key]
+    end
+end
+
+function HeaderValues.new(...)
+    local raw_values = {...}
+    local ordered_values = {}
+
+    for _, value in ipairs(raw_values) do
+        table.insert(ordered_values, {
+            name = value[1],
+            text = value[2],
+            width = vim.fn.strdisplaywidth(value[2][1]),
+        })
+    end
+
+    return setmetatable({
+        _headers = ordered_values,
+    }, HeaderValues)
+end
+
+function HeaderValues:select(name)
+    for index, header in ipairs(self._headers) do
+        if header.name == name then
+            self._selected_index = index
+        end
+    end
+end
+
+function HeaderValues:select_next()
+    self._selected_index = self._selected_index + 1
+end
+
+function HeaderValues:add_extensions(extensions)
+    for _, header in ipairs(self._headers) do
+        local text = header.text
+        local header_width = vim.fn.strdisplaywidth(text[1])
+
+        for _, addition in ipairs(extensions) do
+            if addition.center then
+                table.insert(text, center_text(addition[1], header_width))
+            else
+                table.insert(text, addition[1])
+            end
+        end
+    end
+end
+
 local ButtonCreator = {}
 ButtonCreator.__index = ButtonCreator
 
@@ -233,24 +287,24 @@ local function config()
         end
     })
 
-    local header_values = {
-        {{
+    local header_values = HeaderValues.new(
+        {"italics", {
             [[                               __                ]],
             [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
             [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
             [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
             [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
             [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
-        }, name = "italics"},
-        {{
+        }},
+        {"straight", {
             "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
             "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
             "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
             "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
             "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
             "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-        }, name = "straight"},
-        {{
+        }},
+        {"spooky", {
             " ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓",
             " ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒",
             "▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░",
@@ -261,8 +315,8 @@ local function config()
             "   ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░   ",
             "         ░    ░  ░    ░ ░        ░   ░         ░   ",
             "                                ░                  ",
-        }, name = "spooky"},
-        {{
+        }},
+        {"one_piece", {
             "    ▄▄▄██▀▀▀▒█████ ▓██   ██▓ ▄▄▄▄    ▒█████ ▓██   ██▓ ",
             "      ▒██  ▒██▒  ██▒▒██  ██▒▓█████▄ ▒██▒  ██▒▒██  ██▒ ",
             "      ░██  ▒██░  ██▒ ▒██ ██░▒██▒ ▄██▒██░  ██▒ ▒██ ██░ ",
@@ -273,88 +327,39 @@ local function config()
             "    ░ ░ ░  ░ ░ ░ ▒  ▒ ▒ ░░   ░    ░ ░ ░ ░ ▒  ▒ ▒ ░░   ",
             "    ░   ░      ░ ░  ░ ░      ░          ░ ░  ░ ░      ",
             "                    ░ ░           ░          ░ ░      ",
-        }, name = "one_piece"},
-    }
+        }}
+    )
 
-    local desired_header_val = setmetatable({
-        next = function(self)
-            local index = self._index
+    header_values:select[[straight]]
 
-            if index >= #header_values then
-                index = 1
-            else
-                index = index + 1
-            end
-
-            self._index = index
-        end,
-        prev = function(self)
-            local index = self._index
-
-            if index <= 1 then
-                index = #header_values
-            else
-                index = index - 1
-            end
-
-            self._index = index
-        end,
-        use = function(self, key)
-            for index, header_val in pairs(header_values) do
-                if header_val.name == key then
-                    rawset(self, "_index", index)
-                    return
-                end
-            end
-        end,
-    }, {
-        __index = function(self, index)
-            if index == "value" then
-                return header_values[self._index][1]
-            else
-                return rawget(self, index)
-            end
-        end,
-        __newindex = function()
-            error("Cannot assign new index")
-        end,
-    })
-
-    desired_header_val:use("straight")
-
-    local header_additions = {}
+    local header_extensions = {}
 
     if current_month == 9 then
-        desired_header_val:use("spooky")
-        table.insert(header_additions, {""})
-        table.insert(header_additions, {
-            days_until_halloween .. " days until Halloween!",
+        header_values:select[[spooky]]
+        table.insert(header_extensions, {""})
+        table.insert(header_extensions, {
+            days_until_halloween <= 0
+                and "Happy Halloween!"
+                or days_until_halloween .. " days until Halloween!",
             center = true,
         })
     elseif current_month == 12 then
-        table.insert(header_additions, {""})
-        table.insert(header_additions, {
-            days_until_xmas .. " days until Christmas!",
+        table.insert(header_extensions, {""})
+        table.insert(header_extensions, {
+            days_until_xmas < 0
+                and "Merry Christmas!"
+                or days_until_xmas == 1
+                and "1 day until Christmas!"
+                or days_until_xmas .. " days until Christmas!",
             center = true,
         })
     end
 
-    local header_width = vim.fn.strdisplaywidth(desired_header_val.value[1])
-
-    for _, header in pairs(header_values) do
-        local value = header[1]
-        for _, addition in ipairs(header_additions) do
-            if addition.center then
-                table.insert(value, center_text(addition[1], header_width))
-            else
-                table.insert(value, addition[1])
-            end
-        end
-    end
+    header_values:add_extensions(header_extensions)
 
     local header = {
         type = "text",
-        val = desired_header_val.value,
+        val = header_values.selected.text,
         opts = {
             position = "center",
             hl = "AlphaHeader",
@@ -377,14 +382,14 @@ local function config()
             end
 
             vim.keymap.set("n", "{", function()
-                desired_header_val:prev()
-                header.val = desired_header_val.value
+                header_values:select_next()
+                header.val = header_values.selected.text
                 vim.cmd[[AlphaRedraw]]
             end, merge_opts{ desc = "Previous header value" })
 
             vim.keymap.set("n", "}", function()
-                desired_header_val:next()
-                header.val = desired_header_val.value
+                header_values:select_previous()
+                header.val = header_values.selected.text
                 vim.cmd[[AlphaRedraw]]
             end, merge_opts{ desc = "Next header value" })
 
@@ -478,7 +483,7 @@ local function config()
         padding_values.top,
         header,
         padding_values.header,
-        buttons:build(header_width),
+        buttons:build(header_values.selected.width),
         padding_values.buttons,
         ferris,
         padding_values.bottom,
