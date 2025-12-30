@@ -2,7 +2,7 @@ pane_frames false
 
 keybinds clear-defaults=true {
     locked {
-        bind "Alt g" { SwitchToMode "normal"; }
+        bind "Ctrl g" { SwitchToMode "normal"; }
     }
     pane {
         bind "left" { MoveFocus "left"; }
@@ -112,7 +112,7 @@ keybinds clear-defaults=true {
             }
             SwitchToMode "normal"
         }
-        bind "Alt b" { SwitchToMode "normal"; }
+        bind "Ctrl s" { SwitchToMode "normal"; }
         bind "p" {
             LaunchOrFocusPlugin "plugin-manager" {
                 floating true
@@ -142,7 +142,7 @@ keybinds clear-defaults=true {
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
         bind "Alt f" { ToggleFloatingPanes; }
-        bind "Alt g" { SwitchToMode "locked"; }
+        bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Alt i" { MoveTab "left"; }
         bind "Alt o" { MoveTab "right"; }
         bind "Alt h" { MoveFocusOrTab "left"; }
@@ -157,7 +157,7 @@ keybinds clear-defaults=true {
         bind "Alt m" { SwitchToMode "move"; }
     }
     shared_except "locked" "session" {
-        bind "Alt b" { SwitchToMode "session"; }
+        bind "Ctrl s" { SwitchToMode "session"; }
     }
     // shared_except "locked" "scroll" "search" "tmux" {
     //     bind "Ctrl b" { SwitchToMode "tmux"; }
