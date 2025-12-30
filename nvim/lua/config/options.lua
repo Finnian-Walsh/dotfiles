@@ -40,12 +40,12 @@ local function printable_char_set()
     return char_set
 end
 
-local function matched_keys(mode, regular_expression)
+local function matched_keys(mode, pattern)
     return coroutine.wrap(function()
         local keymaps = vim.api.nvim_get_keymap(mode)
 
         for _, map in ipairs(keymaps) do
-            local result = map.lhs:match(regular_expression)
+            local result = map.lhs:match(pattern)
             if result then
                 coroutine.yield(result, map)
             end
@@ -581,6 +581,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
 
 -- Miscellaneous keymaps
 
+vim.keymap.set("n", "<leader>S", "<cmd>LetItSnow<CR>", { desc = "Let it snow!" })
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Open neo-tree" })
 
 vim.keymap.set("n", "<leader>m", function()
