@@ -16,7 +16,7 @@ return {
             }
 
             require("mason-lspconfig").setup{
-                ensure_installed = { "rust_analyzer", "lua_ls", "pyright", "clangd", },
+                ensure_installed = { "rust_analyzer", "lua_ls", "pyright", vim.uv.os_getenv("NO_CLANGD") or "clangd", },
             }
         end,
     },
