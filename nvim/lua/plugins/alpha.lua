@@ -404,7 +404,7 @@ local function config()
             { "󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end },
             { " Fuzzy find", "f", function() vim.cmd("Telescope find_files") end },
             { " Resume telescope", "R", function() vim.cmd("Telescope resume") end },
-            { " Header coloring", "C", function() vim.cmd("HeaderColor") end },
+            { " Header coloring", "h", function() vim.cmd("HeaderColor") end },
             { "󰈆 Quit", "q", function() vim.cmd("quit") end },
         },
     }
