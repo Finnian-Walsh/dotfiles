@@ -15,15 +15,15 @@ return {
                 ensure_installed = { "clang-format", },
             }
 
-            local ensure_installed = {
-                "rust_analyzer", "lua_ls", "pyright",
+            local mason_lspconfig_ensure_installed = {
+                "rust_analyzer", "lua_ls", "pyright", "asm_lsp",
             }
 
             if not vim.uv.os_getenv("NO_CLANGD") then
-                table.insert(ensure_installed, "clangd")
+                table.insert(mason_lspconfig_ensure_installed, "clangd")
             end
 
-            require("mason-lspconfig").setup{ ensure_installed = ensure_installed }
+            require("mason-lspconfig").setup{ ensure_installed = mason_lspconfig_ensure_installed }
         end,
     },
     {
