@@ -208,19 +208,19 @@ local function get_last_colorscheme()
     return parsed_contents
 end
 
-vim.keymap.set("n", "<Left>", function()
+vim.keymap.set("n", "<S-Left>", function()
     enable_modified_day_colorscheme(false, -vim.v.count1)
 end, { desc = "Cycle through daily colorschemes" })
 
-vim.keymap.set("n", "<Right>", function()
+vim.keymap.set("n", "<S-Right>", function()
     enable_modified_day_colorscheme(false, vim.v.count1)
 end, { desc = "Cycle through daily colorschemes" })
 
-vim.keymap.set("n", "<Up>", enable_default_colorscheme, { desc = "Reset daily colorscheme" })
+vim.keymap.set("n", "<S-Up>", enable_default_colorscheme, { desc = "Reset daily colorscheme" })
 
-vim.keymap.set("n", "<S-Up>", enable_festive_colorscheme, { desc = "Reset daily colorscheme" })
+vim.keymap.set("n", "<M-S-Up>", enable_festive_colorscheme, { desc = "Reset daily colorscheme" })
 
-vim.keymap.set("n", "<Down>", sync_custom_colorscheme, { desc = "Query colorscheme and day" })
+vim.keymap.set("n", "<S-Down>", sync_custom_colorscheme, { desc = "Query colorscheme and day" })
 
 current_colorscheme = get_last_colorscheme() or {
     type = COLORSCHEME.Default,
