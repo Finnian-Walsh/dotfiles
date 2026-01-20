@@ -372,75 +372,82 @@ end, { desc = "Toggle floating discord window" })
 --------------------------------------------------------
 ]]
 
-vim.keymap.set("n", "<leader>bd", function()
-    for _ = 1, vim.v.count1 do
-        vim.api.nvim_buf_delete(0, {})
+local function delete_buffer(buf)
+    if not vim.bo[buf].modified then
+        vim.api.nvim_buf_delete(buf, {})
+        return
     end
-end, { noremap = true, desc = "Close buffer"})
 
-vim.keymap.set("n", "<leader>b!d", function()
-    for _ = 1, vim.v.count1 do
-        vim.api.nvim_buf_delete(0, { force = true })
+    local name = vim.api.nvim_buf_get_name(buf)
+    vim.notify("Save changes to " .. name .. "? (Y)es, (N)o, (C)ancel ")
+
+    local response
+
+    while true do
+        response = vim.fn.getchar()
+
+        if response == 67       -- C
+            or response == 99   -- c
+            or response == 27   -- Esc
+        then
+            break
+        elseif response == 89   -- Y
+            or response == 121  -- y
+        then
+            vim.api.nvim_buf_call(buf, function()
+                vim.cmd("write")
+            end)
+            vim.api.nvim_buf_delete(buf, {})
+            break
+        elseif response == 78   -- N
+            or response == 110  -- n
+        then
+            vim.api.nvim_buf_delete(buf, {force=true})
+            break
+        end
     end
-end, { noremap = true, desc = "Close buffer"})
+end
 
-local function delete_undisplayed_buffers(force)
+local function delete_undisplayed_buffers()
     local displayed = {}
 
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         displayed[vim.api.nvim_win_get_buf(win)] = true
     end
 
-    local opts = {force = force}
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if not displayed[buf] then
-            vim.api.nvim_buf_delete(buf, opts)
+            delete_buffer(buf)
         end
     end
 end
 
-local function delete_other_buffers(force)
+local function delete_other_buffers()
     local current_buf = vim.api.nvim_get_current_buf()
     local current_win = vim.api.nvim_get_current_win()
 
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         if win ~= current_win then
-            vim.api.nvim_win_close(win, force)
+            vim.api.nvim_win_close(win, {})
         end
     end
-
-    local opts = {force = force}
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if buf ~= current_buf then
-            vim.api.nvim_buf_delete(buf, opts)
+            delete_buffer(buf)
         end
     end
-
 end
 
 vim.keymap.set("n", "<leader>bo", delete_undisplayed_buffers, { noremap = true, desc = "Delete undisplayed buffers"})
-
-vim.keymap.set("n", "<leader>b!o", function()
-    delete_undisplayed_buffers(true)
-end, { noremap = true, desc = "Force delete undisplayed buffers"})
-
-vim.api.nvim_create_user_command("BufOnly", function(opts)
-    delete_undisplayed_buffers(opts.bang)
-end, { desc = "Delete undisplayed buffers", bang = true })
+vim.api.nvim_create_user_command("BufOnly", delete_undisplayed_buffers, { desc = "Delete undisplayed buffers", bang = true })
 
 vim.keymap.set("n", "<leader>bO", delete_other_buffers, { desc = "Delete other buffers"})
+vim.api.nvim_create_user_command("BufCurrentOnly", delete_other_buffers, { desc = "Delete all other windows and buffers", bang = true })
 
-vim.keymap.set("n", "<leader>b!O", function()
-    delete_other_buffers(true)
-end, { desc = "Force delete other buffers"})
-
-vim.api.nvim_create_user_command("BufCurrentOnly", function(opts)
-    delete_other_buffers(opts.bang)
-end, { desc = "Delete all other windows and buffers", bang = true })
-
-vim.keymap.set("n", "<leader>bD", "<cmd>bufdo bd<CR>", { noremap = true, desc = "Close all buffers"})
-vim.keymap.set("n", "<leader>b!D", "<cmd>bufdo bd!<CR>", { noremap = true, desc = "Close all buffers"})
+vim.keymap.set("n", "<leader>bd", function()
+    delete_buffer(0)
+end, { noremap = true, desc = "Close all buffers"})
 
 -- Buffer moving
 
@@ -557,7 +564,9 @@ local function auto_buffer_delete(buf)
     end
 
     vim.schedule(function()
-        vim.api.nvim_buf_delete(buf, { force = true })
+        if vim.api.nvim_buf_is_valid(buf) then
+            vim.api.nvim_buf_delete(buf, { force = true })
+        end
     end)
 end
 
