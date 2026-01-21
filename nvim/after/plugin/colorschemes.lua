@@ -262,16 +262,6 @@ local function enable_festive_colorscheme(silent)
     end)
 end
 
-local function sync_custom_colorscheme(silent)
-    if silent then
-        return
-    end
-
-    vim.api.nvim_echo({
-        { "Syncing colorscheme " .. current_colorscheme_name, UPDATION_HIGHLIGHT },
-    }, true, {})
-end
-
 local function query_colorscheme_name()
     vim.api.nvim_echo({{"Colorscheme in use: " .. current_colorscheme_name, QUERY_HIGHLIGHT}}, true, {})
 end
