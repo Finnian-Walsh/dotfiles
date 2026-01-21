@@ -379,7 +379,7 @@ local function delete_buffer(buf)
     end
 
     local name = vim.api.nvim_buf_get_name(buf)
-    vim.notify("Save changes to " .. name .. "? (Y)es, (N)o, (C)ancel ")
+    vim.notify("Save changes to `" .. name .. "`? (Y)es, (N)o, (C)ancel ")
 
     local response
 
