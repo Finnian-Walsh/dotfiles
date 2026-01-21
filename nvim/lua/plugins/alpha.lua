@@ -51,7 +51,23 @@ function HeaderValues:select(name)
 end
 
 function HeaderValues:select_next()
-    self._selected_index = self._selected_index + 1
+    local new_index = self._selected_index + 1
+
+    if new_index > #self._headers then
+        new_index = 1
+    end
+
+    self._selected_index = new_index
+end
+
+function HeaderValues:select_previous()
+    local new_index = self._selected_index - 1
+
+    if new_index <= 0 then
+        new_index = #self._headers
+    end
+
+    self._selected_index = new_index
 end
 
 function HeaderValues:add_extensions(extensions)
