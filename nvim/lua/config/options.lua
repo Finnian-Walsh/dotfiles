@@ -309,7 +309,7 @@ local function close_discord_window()
     vim.api.nvim_win_close(discord_win, false)
 end
 
-local discord_keymap = "<leader>#"
+local discord_keymap = "<leader>@"
 
 vim.keymap.set("n",  discord_keymap, function()
     if discord_win and vim.api.nvim_win_is_valid(discord_win) then
