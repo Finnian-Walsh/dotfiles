@@ -1,3 +1,6 @@
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#00BFA5", bg = "NONE", bold = true })
+vim.opt.showtabline = 0
+
 --[[
 --------------------------------------------------------
     Colorscheme functionality
@@ -40,33 +43,39 @@ local days_of_week = {
 local UPDATION_HIGHLIGHT = "ColorschemeUpdation"
 local QUERY_HIGHLIGHT = "ColorschemeQuery"
 
+local JsonFields = setmetatable(
+    {
+        LAST_COLORSCHEME = "last_colorscheme",
+        FAVORITES = "favorites",
+    }, {
+        __index = function(_, key)
+            error(string.format("No such json field `%s`", key))
+        end,
+
+        __newindex = function()
+            error("Keys should not be added to this table")
+        end,
+    }
+)
+
 local current_colorscheme_name = vim.g.colors_name
 
-local current_colorscheme
-local colorscheme_path = vim.fn.stdpath("data") .. "/last_colorscheme.json"
+local current_colorscheme, favorite_colorschemes
+local colorscheme_path = vim.fn.stdpath("data") .. "/colorschemes.json"
 
 local ColorschemeState = {}
 ColorschemeState.__index = ColorschemeState
 
 function ColorschemeState.default()
-    return setmetatable({ mode = COLORSCHEME_MODE.Default }, ColorschemeState)
+    return setmetatable({ colorscheme = daily_colorschemes[current_week_day], mode = COLORSCHEME_MODE.Default }, ColorschemeState)
 end
 
-function ColorschemeState.fetch_last_or_default()
-    local file = io.open(colorscheme_path, "r")
-
-    if not file then
-        return ColorschemeState.default()
+function ColorschemeState.from_colorscheme_data(colorscheme_data)
+    if colorscheme_data then
+        return setmetatable(colorscheme_data, ColorschemeState)
     end
 
-    local ok, parsed_contents = pcall(vim.json.decode, file:read("*a"))
-
-    if not ok then
-        vim.api.nvim_echo({{"Failed to decode contents", "WarningMsg"}}, true, {})
-        return ColorschemeState.default()
-    end
-
-    return setmetatable(parsed_contents, ColorschemeState)
+    return ColorschemeState.default()
 end
 
 function ColorschemeState:switch(mode)
@@ -167,17 +176,22 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     callback = on_colorscheme_changed,
 })
 
+local function save_colorscheme_data()
+    local file = io.open(colorscheme_path, "w")
+
+    if not file then
+        return
+    end
+
+    file:write(vim.json.encode({
+        [JsonFields.LAST_COLORSCHEME] = current_colorscheme,
+        [JsonFields.FAVORITES] = favorite_colorschemes,
+    }))
+    file:close()
+end
+
 vim.api.nvim_create_autocmd("VimLeavePre", {
-    callback = function()
-        local file = io.open(colorscheme_path, "w")
-
-        if not file then
-            return
-        end
-
-        file:write(vim.json.encode(current_colorscheme))
-        file:close()
-    end,
+    callback = save_colorscheme_data,
 })
 
 local function enable_modified_day_colorscheme(silent, delta)
@@ -276,6 +290,77 @@ local function query_synced_colorscheme()
     vim.api.nvim_echo(message, true, {})
 end
 
+local function get_colorscheme_data()
+    local file = io.open(colorscheme_path, "r")
+
+    if not file then
+        return ColorschemeState.default()
+    end
+
+    local ok, parsed_contents = pcall(vim.json.decode, file:read("*a"))
+
+    if not ok then
+        vim.api.nvim_echo({{"Failed to decode contents", "WarningMsg"}}, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
+
+    return parsed_contents
+end
+
+-- favorites functionality
+
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local conf = require "telescope.config" .values
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
+
+local function open_favorites(opts)
+    opts = opts or {}
+
+    pickers.new(opts, {
+        finder = finders.new_table {
+            results = favorite_colorschemes,
+        },
+        sorter = conf.generic_sorter(opts),
+        attach_mappings = function(bufnr, _)
+            actions.select_default:replace(function()
+                actions.close(bufnr)
+                local selection = action_state.get_selected_entry()
+                vim.cmd("colorscheme " .. selection[1])
+            end)
+            return true
+        end
+    }):find()
+end
+
+local function add_to_favorites()
+    for _, colorscheme in ipairs(favorite_colorschemes) do
+        if current_colorscheme_name == colorscheme then
+            vim.api.nvim_echo({{string.format("Colorscheme `%s` is already in your favorites", colorscheme), "WarningMsg"}}, true, {})
+            return
+        end
+    end
+
+    vim.api.nvim_echo({{string.format("Added colorscheme `%s` to favorites", current_colorscheme_name), UPDATION_HIGHLIGHT}}, true, {})
+    table.insert(favorite_colorschemes, current_colorscheme_name)
+end
+
+local function remove_from_favorites()
+    for i, colorscheme in ipairs(favorite_colorschemes) do
+        if current_colorscheme_name == colorscheme then
+            table.remove(favorite_colorschemes, i)
+            vim.api.nvim_echo({{string.format("Removed colorscheme `%s` from favorites", colorscheme), UPDATION_HIGHLIGHT}}, true, {})
+            return
+        end
+    end
+
+    vim.api.nvim_echo({{string.format("Colorscheme `%s` is not in your favorites", current_colorscheme_name), "WarningMsg"}}, true, {})
+end
+
+-- keymaps
+
 vim.keymap.set("n", "<S-Left>", function()
     enable_modified_day_colorscheme(false, -vim.v.count1)
 end, { desc = "Cycle through daily colorschemes" })
@@ -293,7 +378,23 @@ vim.keymap.set("n", "<Down>", query_synced_colorscheme, { desc = "Query the sync
 vim.keymap.set("n", "<Left>", undo_colorscheme_action, { desc = "Undo the colorscheme action" })
 vim.keymap.set("n", "<Right>", redo_colorscheme_action, { desc = "Redo the colorscheme action" })
 
+-- vim.keymap.set("n", "<leader>=", save_colorscheme_data, { desc = "Open favorite colorschemes" })
+vim.keymap.set("n", "<leader>~", open_favorites, { desc = "Open favorite colorschemes" })
+vim.keymap.set("n", "<leader>#", function() open_favorites{initial_mode="normal"} end, { desc = "Open favorite colorschemes" })
+vim.keymap.set("n", "<leader>=", add_to_favorites, { desc = "Open favorite colorschemes" })
+vim.keymap.set("n", "<leader>-", remove_from_favorites, { desc = "Open favorite colorschemes" })
 
-current_colorscheme = ColorschemeState.fetch_last_or_default()
+-- startup
+
+local colorscheme_data = get_colorscheme_data()
+
+if colorscheme_data then
+    current_colorscheme = ColorschemeState.from_colorscheme_data(colorscheme_data[JsonFields.LAST_COLORSCHEME])
+    favorite_colorschemes = colorscheme_data[JsonFields.FAVORITES] or {}
+else
+    current_colorscheme = ColorschemeState.default()
+    favorite_colorschemes = {}
+end
+
 ColorschemeAction.from_current():append_and_apply()
 
