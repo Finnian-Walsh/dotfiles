@@ -177,6 +177,16 @@ vim.keymap.set("v", "<Down>", "<Nop>", { desc = "Nothing" })
 vim.keymap.set("v", "<Up>", "<Nop>", { desc = "Nothing" })
 vim.keymap.set("v", "<Right>", "<Nop>", { desc = "Nothing" })
 
+vim.keymap.set("n", "<leader>x", function()
+    if vim.wo.number then
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+    else
+        vim.opt.number = true
+        vim.opt.relativenumber = true
+    end
+end, { desc = "Toggle line info" })
+
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 
 vim.keymap.set("n", "<leader>nA", function()
