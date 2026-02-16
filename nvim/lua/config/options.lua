@@ -148,7 +148,19 @@ local function set_global_keys_check(char)
     vim.keymap.set("n", "<leader>K" .. char, function()
         local mappings = {}
 
-        for _, map in matched_keys("n", "^" .. vim.g.mapleader .. char) do
+        local special_cases = {
+            ["["] = "\\[",
+            ["-"] = "\\-",
+            ["^"] = "\\^",
+        }
+
+        local special_match = special_cases[char]
+
+        if special_match then
+            char = special_match
+        end
+
+        for _, map in matched_keys("n", "^" .. vim.g.mapleader .. '[' .. char .. ']') do
             table.insert(mappings, { string.format("<leader>%s: %s\n", map.lhs:sub(2), map.desc or "[no description]"), "DiagnosticInfo" })
         end
 
@@ -172,10 +184,15 @@ vim.keymap.set("i", "<Down>", "<Nop>", { desc = "Nothing" })
 vim.keymap.set("i", "<Up>", "<Nop>", { desc = "Nothing" })
 vim.keymap.set("i", "<Right>", "<Nop>", { desc = "Nothing" })
 
-vim.keymap.set("v", "<Left>", "<Nop>", { desc = "Nothing" })
-vim.keymap.set("v", "<Down>", "<Nop>", { desc = "Nothing" })
-vim.keymap.set("v", "<Up>", "<Nop>", { desc = "Nothing" })
-vim.keymap.set("v", "<Right>", "<Nop>", { desc = "Nothing" })
+vim.keymap.set("n", "<leader>x", function()
+    if vim.wo.number then
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+    else
+        vim.opt.number = true
+        vim.opt.relativenumber = true
+    end
+end, { desc = "Toggle line info" })
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 
