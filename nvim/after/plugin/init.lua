@@ -310,13 +310,22 @@ end
 
 -- favorites functionality
 
-local pickers = require "telescope.pickers"
-local finders = require "telescope.finders"
-local conf = require "telescope.config" .values
-local actions = require "telescope.actions"
-local action_state = require "telescope.actions.state"
+local telescope_modules_loaded = false
+local pickers
+local finders
+local conf
+local actions
+local action_state
 
 local function open_favorites(opts)
+    if not telescope_modules_loaded then
+        pickers = require "telescope.pickers"
+        finders = require "telescope.finders"
+        conf = require "telescope.config" .values
+        actions = require "telescope.actions"
+        action_state = require "telescope.actions.state"
+    end
+
     opts = opts or {}
 
     pickers.new(opts, {
@@ -397,4 +406,3 @@ else
 end
 
 ColorschemeAction.from_current():append_and_apply()
-
