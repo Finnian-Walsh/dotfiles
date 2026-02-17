@@ -467,7 +467,11 @@ local function config()
         local screen_lines = vim.o.lines -- vim.fn.line('w$') - vim.fn.line('w0') + 1
         padding_values.bottom.val = screen_lines
 
-        if screen_lines > 44 then
+        if screen_lines > 55 then
+            padding_values.top.val = 4
+            padding_values.header.val = 5
+            padding_values.buttons.val = 6
+        elseif screen_lines >= 45 then
             padding_values.top.val = 3
             padding_values.header.val = 3
             padding_values.buttons.val = 3
