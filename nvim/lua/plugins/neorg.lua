@@ -10,9 +10,9 @@ return {
                 ["core.dirman"] = {
                     config = {
                         workspaces = {
-                            school = "~/notes/school",
-                            literature = "~/notes/school/literature/",
-                            sparx = "~/notes/school/sparx/",
+                            school = "~/Documents/notes/school",
+                            literature = "~/Documents/notes/school/literature/",
+                            bookwork = "~/Documents/notes/school/bookwork/",
                         },
                     },
                 },
