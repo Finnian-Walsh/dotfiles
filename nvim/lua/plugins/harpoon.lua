@@ -66,18 +66,41 @@ return {
         for i = 1, 20 do
             local navigation_key = nav_keys[i]
 
+            local function can_select_item()
+                local list = harpoon:list()
+                return list._length >= i, list
+            end
+
+            local warning_msg = {{"There is no item " .. i .. " in the harpoon list", "WarningMsg"}}
+
+            local function warn_cannot_select()
+                vim.api.nvim_echo(warning_msg, true, {})
+            end
+
             vim.keymap.set("n", "<leader>" .. navigation_key, function()
                 harpoon:list():select(i)
             end, { desc = "Harpoon " .. i})
 
             vim.keymap.set("n", "<leader>n" .. navigation_key, function()
-                vim.cmd("vs | wincmd l")
-                harpoon:list():select(i)
+                local can_select, list = can_select_item()
+
+                if can_select then
+                    vim.cmd("vs | wincmd l")
+                    list:select(i)
+                else
+                    warn_cannot_select()
+                end
             end, { desc = "Harpoon " .. i .. " (vertical split)"})
 
             vim.keymap.set("n", "<leader>N" .. navigation_key, function()
-                vim.cmd("sp | wincmd j")
-                harpoon:list():select(i)
+                local can_select, list = can_select_item()
+
+                if can_select then
+                    vim.cmd("sp | wincmd j")
+                    list:select(i)
+                else
+                    warn_cannot_select()
+                end
             end, { desc = "Harpoon " .. i .. " (horizontal split)"})
 
             vim.keymap.set("n", "<leader>o" .. navigation_key, function()
