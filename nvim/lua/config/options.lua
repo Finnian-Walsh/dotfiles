@@ -64,30 +64,74 @@ set_diagnostic_config()
 --]]
 
 local gitsigns
+local line_metadata = true
 
 vim.keymap.set("n", "<leader>x", function()
     if not gitsigns then
         gitsigns = require("gitsigns")
     end
 
-    if vim.wo.number then
+    if line_metadata then
+        line_metadata = false
+
+        local initial_opt_number = vim.api.nvim_win_get_option(0, "number")
+        local initial_opt_relativenumber = vim.api.nvim_win_get_option(0, "relativenumber")
+
         vim.opt.number = false
         vim.opt.relativenumber = false
+
+        if vim.api.nvim_win_get_config(0).relative ~= "" then
+            vim.api.nvim_win_set_option(0, "number", initial_opt_number)
+            vim.api.nvim_win_set_option(0, "relativenumber", initial_opt_relativenumber)
+        end
+
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_config(win).relative == "" then
+                vim.api.nvim_win_set_option(win, "number", false)
+                vim.api.nvim_win_set_option(win, "relativenumber", false)
+            end
+        end
 
         virtual_diagnostics_enabled = false
         set_diagnostic_config()
 
         gitsigns.toggle_signs(false)
+        disable_todo_signs()
     else
+        line_metadata = true
+
+        local initial_opt_number = vim.api.nvim_win_get_option(0, "number")
+        local initial_opt_relativenumber = vim.api.nvim_win_get_option(0, "relativenumber")
+
         vim.opt.number = true
         vim.opt.relativenumber = true
+
+        if vim.api.nvim_win_get_config(0).relative ~= "" then
+            vim.api.nvim_win_set_option(0, "number", initial_opt_number)
+            vim.api.nvim_win_set_option(0, "relativenumber", initial_opt_relativenumber)
+        end
+
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_config(win).relative == "" then
+                vim.api.nvim_win_set_option(win, "number", true)
+                vim.api.nvim_win_set_option(win, "relativenumber", true)
+            end
+        end
+
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_get_option(buf, "ft") == "alpha" then
+                vim.api.nvim_buf_set_option(buf, "number", false)
+                vim.api.nvim_buf_set_option(buf, "relativenumber", false)
+            end
+        end
 
         virtual_diagnostics_enabled = true
         set_diagnostic_config()
 
         gitsigns.toggle_signs(true)
+        reset_todo_signs()
     end
-end, { desc = "Toggle line info" })
+end, { desc = "Toggle line metadata" })
 
 vim.keymap.set("n", "<leader>vl", function() -- lines
     virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualLines
