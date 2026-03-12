@@ -16,6 +16,18 @@ return {
                         },
                     },
                 },
+                ["core.completion"] = {
+                    config = {
+                        engine = "nvim-cmp",
+                    },
+                },
+                ["core.integrations.nvim-cmp"] = {},
+                ["core.integrations.treesitter"] = {
+                    config = {
+                        configure_parsers = true,
+                        install_parsers = true,
+                    },
+                },
             }
         }
 
