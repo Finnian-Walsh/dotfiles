@@ -33,5 +33,8 @@ return {
 
         vim.keymap.set("n", "<leader>p", builtin.planets, { desc = "View planets with telescope" })
         vim.keymap.set("n", "<leader>P", function() builtin.planets(initial_mode_normal) end, { desc = "View planets with telescope" })
+
+        vim.keymap.set("n", "<leader>u", "<cmd>TodoTelescope<CR>", { desc = "Search for todo comments" })
+        vim.keymap.set("n", "<leader>U", "<cmd>TodoTelescope initial_mode=normal<CR>", { desc = "View todo comments" })
     end,
 }
