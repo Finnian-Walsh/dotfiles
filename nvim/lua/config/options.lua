@@ -237,11 +237,19 @@ vim.keymap.set("n", "<leader>x", function()
     end
 end, { desc = "Toggle line info" })
 
-vim.keymap.set("n", "<leader>v", function()
-    if virtual_diagnostics_enabled then
-        virtual_diagnostic_mode = virtual_diagnostic_mode % 3 + 1
-        set_diagnostic_config()
-    end
+vim.keymap.set("n", "<leader>vl", function() -- lines
+    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualLines
+    set_diagnostic_config()
+end)
+
+vim.keymap.set("n", "<leader>vi", function() -- inline
+    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
+    set_diagnostic_config()
+end)
+
+vim.keymap.set("n", "<leader>vn", function() -- none
+    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.None
+    set_diagnostic_config()
 end)
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
