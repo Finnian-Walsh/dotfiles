@@ -10,10 +10,37 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.mouse = ""
 
-vim.diagnostic.config {
-    virtual_text = true,
-    update_in_insert = true,
+local VIRTUAL_DIAGNOSTIC_MODE = {
+    VirtualText = 1,
+    VirtualLines = 2,
+    None = 3,
 }
+
+local virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
+local virtual_diagnostics_enabled = true
+
+local function set_diagnostic_config()
+    local config = {
+        update_in_insert = true,
+    }
+
+    if virtual_diagnostics_enabled then
+        if virtual_diagnostic_mode == VIRTUAL_DIAGNOSTIC_MODE.VirtualText then
+            config.virtual_text = true
+            config.virtual_lines = false
+        elseif virtual_diagnostic_mode == VIRTUAL_DIAGNOSTIC_MODE.VirtualLines then
+            config.virtual_lines = true
+            config.virtual_text = false
+        else
+            config.virtual_lines = false
+            config.virtual_text = false
+        end
+    end
+
+    vim.diagnostic.config(config)
+end
+
+set_diagnostic_config()
 
 function _G.update_date()
     _G.current_date = os.date("*t")
@@ -184,15 +211,38 @@ vim.keymap.set("i", "<Down>", "<Nop>", { desc = "Nothing" })
 vim.keymap.set("i", "<Up>", "<Nop>", { desc = "Nothing" })
 vim.keymap.set("i", "<Right>", "<Nop>", { desc = "Nothing" })
 
+local gitsigns
+
 vim.keymap.set("n", "<leader>x", function()
+    if not gitsigns then
+        gitsigns = require("gitsigns")
+    end
+
     if vim.wo.number then
         vim.opt.number = false
         vim.opt.relativenumber = false
+
+        virtual_diagnostics_enabled = false
+        set_diagnostic_config()
+
+        gitsigns.toggle_signs(false)
     else
         vim.opt.number = true
         vim.opt.relativenumber = true
+
+        virtual_diagnostics_enabled = true
+        set_diagnostic_config()
+
+        gitsigns.toggle_signs(true)
     end
 end, { desc = "Toggle line info" })
+
+vim.keymap.set("n", "<leader>v", function()
+    if virtual_diagnostics_enabled then
+        virtual_diagnostic_mode = virtual_diagnostic_mode % 3 + 1
+        set_diagnostic_config()
+    end
+end)
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 
