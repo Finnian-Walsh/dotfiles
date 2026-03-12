@@ -18,4 +18,9 @@ return {
         "nvim-mini/mini.ai",
         opts = {},
     },
+    {
+        "folke/todo-comments.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {},
+    },
 }
