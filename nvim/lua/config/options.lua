@@ -10,6 +10,21 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.mouse = ""
 
+function _G.update_date()
+    _G.current_date = os.date("*t")
+    _G.current_month = current_date.month
+    _G.current_day = current_date.day
+    _G.current_week_day = current_date.wday
+
+    if current_month == 12 then
+        _G.days_until_xmas = 25 - current_day
+    elseif current_month == 9 then
+        _G.days_until_halloween = 31 - current_day
+    end
+end
+
+update_date()
+
 local VIRTUAL_DIAGNOSTIC_MODE = {
     VirtualText = 1,
     VirtualLines = 2,
@@ -42,20 +57,58 @@ end
 
 set_diagnostic_config()
 
-function _G.update_date()
-    _G.current_date = os.date("*t")
-    _G.current_month = current_date.month
-    _G.current_day = current_date.day
-    _G.current_week_day = current_date.wday
+--[[
+--------------------------------------------------------
+    Line keymaps
+--------------------------------------------------------
+--]]
 
-    if current_month == 12 then
-        _G.days_until_xmas = 25 - current_day
-    elseif current_month == 9 then
-        _G.days_until_halloween = 31 - current_day
+local gitsigns
+
+vim.keymap.set("n", "<leader>x", function()
+    if not gitsigns then
+        gitsigns = require("gitsigns")
     end
-end
 
-update_date()
+    if vim.wo.number then
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+
+        virtual_diagnostics_enabled = false
+        set_diagnostic_config()
+
+        gitsigns.toggle_signs(false)
+    else
+        vim.opt.number = true
+        vim.opt.relativenumber = true
+
+        virtual_diagnostics_enabled = true
+        set_diagnostic_config()
+
+        gitsigns.toggle_signs(true)
+    end
+end, { desc = "Toggle line info" })
+
+vim.keymap.set("n", "<leader>vl", function() -- lines
+    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualLines
+    set_diagnostic_config()
+end)
+
+vim.keymap.set("n", "<leader>vi", function() -- inline
+    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
+    set_diagnostic_config()
+end)
+
+vim.keymap.set("n", "<leader>vn", function() -- none
+    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.None
+    set_diagnostic_config()
+end)
+
+--[[
+--------------------------------------------------------
+    Keymap usage checking
+--------------------------------------------------------
+--]]
 
 local function printable_char_set()
     local char_set = {}
@@ -170,7 +223,6 @@ vim.keymap.set("n", "<leader>kk", function()
     vim.api.nvim_echo(echo_message, true, {})
 end, { desc = "Check unused leader keymaps" })
 
-
 local function set_global_keys_check(char)
     vim.keymap.set("n", "<leader>K" .. char, function()
         local mappings = {}
@@ -206,51 +258,11 @@ end
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
 
-vim.keymap.set("i", "<Left>", "<Nop>", { desc = "Nothing" })
-vim.keymap.set("i", "<Down>", "<Nop>", { desc = "Nothing" })
-vim.keymap.set("i", "<Up>", "<Nop>", { desc = "Nothing" })
-vim.keymap.set("i", "<Right>", "<Nop>", { desc = "Nothing" })
-
-local gitsigns
-
-vim.keymap.set("n", "<leader>x", function()
-    if not gitsigns then
-        gitsigns = require("gitsigns")
-    end
-
-    if vim.wo.number then
-        vim.opt.number = false
-        vim.opt.relativenumber = false
-
-        virtual_diagnostics_enabled = false
-        set_diagnostic_config()
-
-        gitsigns.toggle_signs(false)
-    else
-        vim.opt.number = true
-        vim.opt.relativenumber = true
-
-        virtual_diagnostics_enabled = true
-        set_diagnostic_config()
-
-        gitsigns.toggle_signs(true)
-    end
-end, { desc = "Toggle line info" })
-
-vim.keymap.set("n", "<leader>vl", function() -- lines
-    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualLines
-    set_diagnostic_config()
-end)
-
-vim.keymap.set("n", "<leader>vi", function() -- inline
-    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
-    set_diagnostic_config()
-end)
-
-vim.keymap.set("n", "<leader>vn", function() -- none
-    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.None
-    set_diagnostic_config()
-end)
+--[[
+--------------------------------------------------------
+    Plugin screen keymaps
+--------------------------------------------------------
+--]]
 
 vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
 
@@ -374,7 +386,6 @@ vim.keymap.set("n", "<leader>N]", function()
         vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
     end
 end, { noremap = true, desc = "Next buffer " })
-
 
 vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Open a new empty buffer" })
 
