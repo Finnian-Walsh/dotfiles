@@ -33,22 +33,23 @@ local VIRTUAL_DIAGNOSTIC_MODE = {
 
 local virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
 local virtual_diagnostics_enabled = true
+local sign_diagnostics_enabled = true
+local underline_diagnostics_enabled = true
 
 local function set_diagnostic_config()
     local config = {
+        signs = sign_diagnostics_enabled,
+        underline = underline_diagnostics_enabled,
         update_in_insert = true,
+        virtual_lines = false,
+        virtual_text = false,
     }
 
     if virtual_diagnostics_enabled then
         if virtual_diagnostic_mode == VIRTUAL_DIAGNOSTIC_MODE.VirtualText then
             config.virtual_text = true
-            config.virtual_lines = false
         elseif virtual_diagnostic_mode == VIRTUAL_DIAGNOSTIC_MODE.VirtualLines then
             config.virtual_lines = true
-            config.virtual_text = false
-        else
-            config.virtual_lines = false
-            config.virtual_text = false
         end
     end
 
@@ -93,6 +94,8 @@ vim.keymap.set("n", "<leader>x", function()
         end
 
         virtual_diagnostics_enabled = false
+        sign_diagnostics_enabled = false
+        underline_diagnostics_enabled = false
         set_diagnostic_config()
 
         gitsigns.toggle_signs(false)
@@ -126,6 +129,8 @@ vim.keymap.set("n", "<leader>x", function()
         end
 
         virtual_diagnostics_enabled = true
+        sign_diagnostics_enabled = true
+        underline_diagnostics_enabled = true
         set_diagnostic_config()
 
         gitsigns.toggle_signs(true)
@@ -706,6 +711,16 @@ vim.api.nvim_create_autocmd("BufHidden", {
     end,
 })
 
+local diagnostics_namespace = vim.api.nvim_create_namespace("diagnostics")
+
+vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
+    pattern = "*",
+    callback = function()
+        vim.diagnostic.reset(nil, 0)
+        vim.diagnostic.set(diagnostics_namespace, 0, vim.diagnostic.get(0))
+    end,
+})
+
 -- Automatic tabline updation
 
 local function schedule_tabline_redraw()
@@ -738,7 +753,6 @@ vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move to window above" })
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
-
 
 -- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
