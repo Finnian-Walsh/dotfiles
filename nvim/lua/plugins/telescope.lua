@@ -3,11 +3,16 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     event = "VeryLazy",
     config = function()
-        require("telescope").setup{ defaults = { } }
+        require("telescope").setup { defaults = {} }
 
         if vim.fn.executable("rg") == 0 then
             vim.schedule(function()
-                vim.api.nvim_echo({{"Warning: ripgrep is not available, so live grep will not work", "WarningMsg"}}, true, {})
+                vim.api.nvim_echo({
+                    {
+                        "Warning: ripgrep is not available, so live grep will not work",
+                        "WarningMsg",
+                    },
+                }, true, {})
             end)
         end
 
@@ -17,22 +22,34 @@ return {
 
         vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Live grep with telescope" })
 
-        vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "Find files with telescope"})
-        vim.keymap.set("n", "<leader>F", function() builtin.find_files(initial_mode_normal) end, { desc = "Find files with telescope"})
+        vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "Find files with telescope" })
+        vim.keymap.set("n", "<leader>F", function()
+            builtin.find_files(initial_mode_normal)
+        end, { desc = "Find files with telescope" })
 
         vim.keymap.set("n", "<leader>R", builtin.resume, { desc = "Resume previous telescope action" })
-        vim.keymap.set("n", "<leader>D", function() builtin.diagnostics(initial_mode_normal) end, { desc = "View diagnostics" })
+        vim.keymap.set("n", "<leader>D", function()
+            builtin.diagnostics(initial_mode_normal)
+        end, { desc = "View diagnostics" })
 
-        vim.keymap.set("n", "<leader>C", function() builtin.colorscheme(initial_mode_normal) end, { desc = "View colorschemes" })
+        vim.keymap.set("n", "<leader>C", function()
+            builtin.colorscheme(initial_mode_normal)
+        end, { desc = "View colorschemes" })
 
         vim.keymap.set("n", "<leader>b/", builtin.buffers, { desc = "Search for buffer with telescope" })
-        vim.keymap.set("n", "<leader>b?", function() builtin.buffers(initial_mode_normal) end, { desc = "View buffers with telescope" })
+        vim.keymap.set("n", "<leader>b?", function()
+            builtin.buffers(initial_mode_normal)
+        end, { desc = "View buffers with telescope" })
 
         vim.keymap.set("n", "<leader>k/", builtin.keymaps, { desc = "Search for keymaps with telescope" })
-        vim.keymap.set("n", "<leader>k?", function() builtin.keymaps(initial_mode_normal) end, { desc = "Search for keymaps with telescope" })
+        vim.keymap.set("n", "<leader>k?", function()
+            builtin.keymaps(initial_mode_normal)
+        end, { desc = "Search for keymaps with telescope" })
 
         vim.keymap.set("n", "<leader>p", builtin.planets, { desc = "View planets with telescope" })
-        vim.keymap.set("n", "<leader>P", function() builtin.planets(initial_mode_normal) end, { desc = "View planets with telescope" })
+        vim.keymap.set("n", "<leader>P", function()
+            builtin.planets(initial_mode_normal)
+        end, { desc = "View planets with telescope" })
 
         vim.keymap.set("n", "<leader>u", "<cmd>TodoTelescope<CR>", { desc = "Search for todo comments" })
         vim.keymap.set("n", "<leader>U", "<cmd>TodoTelescope initial_mode=normal<CR>", { desc = "View todo comments" })

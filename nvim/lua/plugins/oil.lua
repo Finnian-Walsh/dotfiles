@@ -3,7 +3,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
         local oil = require("oil")
-        oil.setup{
+        oil.setup {
             keymaps = {
                 ["<localleader>h"] = "actions.toggle_hidden",
                 ["<C-l>"] = false,
