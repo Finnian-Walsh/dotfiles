@@ -26,7 +26,7 @@ function HeaderValues.__index(self, key)
 end
 
 function HeaderValues.new(...)
-    local raw_values = {...}
+    local raw_values = { ... }
     local ordered_values = {}
 
     for _, value in ipairs(raw_values) do
@@ -126,16 +126,9 @@ function ButtonCreator:build(text_width)
         local button_key = button.key
         local button_fn = button.fn
 
-        local spaces = text_width
-            - (vim.fn.strdisplaywidth(button_name)
-            + vim.fn.strdisplaywidth(button_key)
-            + 2)
+        local spaces = text_width - (vim.fn.strdisplaywidth(button_name) + vim.fn.strdisplaywidth(button_key) + 2)
 
-        local button_val = button_name
-            .. string.rep(" ", spaces)
-            .. "["
-            .. button.key
-            .. "]"
+        local button_val = button_name .. string.rep(" ", spaces) .. "[" .. button.key .. "]"
 
         table.insert(value, {
             on_press = button_fn,
@@ -144,10 +137,10 @@ function ButtonCreator:build(text_width)
                 cursor = vim.fn.strdisplaywidth(button_val) - 2,
                 keymap = { "n", button.key, button_fn },
                 hl = {
-                    { "AlphaText", 0, #button_name, },
-                    { "AlphaBracket", #button_val - 3, #button_val - 2, },
-                    { "AlphaShortcut", #button_val - 2, #button_val - 1, },
-                    { "AlphaBracket", #button_val - 1, #button_val, },
+                    { "AlphaText", 0, #button_name },
+                    { "AlphaBracket", #button_val - 3, #button_val - 2 },
+                    { "AlphaShortcut", #button_val - 2, #button_val - 1 },
+                    { "AlphaBracket", #button_val - 1, #button_val },
                 },
             },
             type = "button",
@@ -229,8 +222,7 @@ end
 local function loaded_alpha_buffers()
     return coroutine.wrap(function()
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.api.nvim_buf_is_loaded(buf)
-                and vim.bo[buf].filetype == "alpha" then
+            if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype == "alpha" then
                 coroutine.yield(buf)
             end
         end
@@ -265,15 +257,10 @@ local function config()
         set_header_color(default_color)
     end
 
-    local header_cycle_system = CycleSystem.new(
-        header_colors,
-        350,
-        reset_header,
-        function(color)
-            current_header_color = color
-            set_header_color(color)
-        end
-    )
+    local header_cycle_system = CycleSystem.new(header_colors, 350, reset_header, function(color)
+        current_header_color = color
+        set_header_color(color)
+    end)
 
     vim.api.nvim_create_user_command("HeaderColor", function(opts)
         local arg = opts.args
@@ -300,27 +287,32 @@ local function config()
 
                 header_cycle_system:stop()
             end)
-        end
+        end,
     })
 
-    local header_values = HeaderValues.new(
-        {"italics", {
+    local header_values = HeaderValues.new({
+        "italics",
+        {
             [[                               __                ]],
             [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
             [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
             [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
             [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
             [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
-        }},
-        {"straight", {
+        },
+    }, {
+        "straight",
+        {
             "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
             "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
             "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
             "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
             "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
             "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-        }},
-        {"spooky", {
+        },
+    }, {
+        "spooky",
+        {
             " ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓",
             " ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒",
             "▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░",
@@ -331,8 +323,10 @@ local function config()
             "   ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░   ",
             "         ░    ░  ░    ░ ░        ░   ░         ░   ",
             "                                ░                  ",
-        }},
-        {"one_piece", {
+        },
+    }, {
+        "one_piece",
+        {
             "    ▄▄▄██▀▀▀▒█████ ▓██   ██▓ ▄▄▄▄    ▒█████ ▓██   ██▓ ",
             "      ▒██  ▒██▒  ██▒▒██  ██▒▓█████▄ ▒██▒  ██▒▒██  ██▒ ",
             "      ░██  ▒██░  ██▒ ▒██ ██░▒██▒ ▄██▒██░  ██▒ ▒██ ██░ ",
@@ -343,29 +337,25 @@ local function config()
             "    ░ ░ ░  ░ ░ ░ ▒  ▒ ▒ ░░   ░    ░ ░ ░ ░ ▒  ▒ ▒ ░░   ",
             "    ░   ░      ░ ░  ░ ░      ░          ░ ░  ░ ░      ",
             "                    ░ ░           ░          ░ ░      ",
-        }}
-    )
+        },
+    })
 
-    header_values:select[[straight]]
+    header_values:select([[straight]])
 
     local header_extensions = {}
 
     if current_month == 9 then
-        header_values:select[[spooky]]
-        table.insert(header_extensions, {""})
+        header_values:select([[spooky]])
+        table.insert(header_extensions, { "" })
         table.insert(header_extensions, {
-            days_until_halloween <= 0
-                and "Happy Halloween!"
-                or days_until_halloween .. " days until Halloween!",
+            days_until_halloween <= 0 and "Happy Halloween!" or days_until_halloween .. " days until Halloween!",
             center = true,
         })
     elseif current_month == 12 then
-        table.insert(header_extensions, {""})
+        table.insert(header_extensions, { "" })
         table.insert(header_extensions, {
-            days_until_xmas < 0
-                and "Merry Christmas!"
-                or days_until_xmas == 1
-                and "1 day until Christmas!"
+            days_until_xmas < 0 and "Merry Christmas!"
+                or days_until_xmas == 1 and "1 day until Christmas!"
                 or days_until_xmas .. " days until Christmas!",
             center = true,
         })
@@ -400,28 +390,69 @@ local function config()
             vim.keymap.set("n", "{", function()
                 header_values:select_next()
                 header.val = header_values.selected.text
-                vim.cmd[[AlphaRedraw]]
-            end, merge_opts{ desc = "Previous header value" })
+                vim.cmd([[AlphaRedraw]])
+            end, merge_opts { desc = "Previous header value" })
 
             vim.keymap.set("n", "}", function()
                 header_values:select_previous()
                 header.val = header_values.selected.text
-                vim.cmd[[AlphaRedraw]]
-            end, merge_opts{ desc = "Next header value" })
+                vim.cmd([[AlphaRedraw]])
+            end, merge_opts { desc = "Next header value" })
 
-            vim.keymap.set("n", "F", "<cmd>Telescope find_files initial_mode=normal<CR>", merge_opts{ desc = "Find files (start in normal)" })
-        end
+            vim.keymap.set(
+                "n",
+                "F",
+                "<cmd>Telescope find_files initial_mode=normal<CR>",
+                merge_opts { desc = "Find files (start in normal)" }
+            )
+        end,
     })
 
-    local buttons = ButtonCreator.new{
+    local buttons = ButtonCreator.new {
         padding = 1,
         buttons = {
-            { "󱏒 Oil", "t", function() vim.cmd("Oil") end },
-            { "󰭎 Live grep", "/", function() vim.cmd("Telescope live_grep") end },
-            { " Fuzzy find", "f", function() vim.cmd("Telescope find_files") end },
-            { " Resume telescope", "R", function() vim.cmd("Telescope resume") end },
-            { " Header coloring", "h", function() vim.cmd("HeaderColor") end },
-            { "󰈆 Quit", "q", function() vim.cmd("quit") end },
+            {
+                "󱏒 Oil",
+                "t",
+                function()
+                    vim.cmd("Oil")
+                end,
+            },
+            {
+                "󰭎 Live grep",
+                "/",
+                function()
+                    vim.cmd("Telescope live_grep")
+                end,
+            },
+            {
+                " Fuzzy find",
+                "f",
+                function()
+                    vim.cmd("Telescope find_files")
+                end,
+            },
+            {
+                " Resume telescope",
+                "R",
+                function()
+                    vim.cmd("Telescope resume")
+                end,
+            },
+            {
+                " Header coloring",
+                "h",
+                function()
+                    vim.cmd("HeaderColor")
+                end,
+            },
+            {
+                "󰈆 Quit",
+                "q",
+                function()
+                    vim.cmd("quit")
+                end,
+            },
         },
     }
 
@@ -437,15 +468,15 @@ local function config()
         opts = {
             position = "center",
             hl = "Ferris",
-        }
+        },
     }
 
     local function set_highlights()
         set_header_color(current_header_color)
         vim.api.nvim_set_hl(0, "Ferris", { fg = "#ba0c2f", bold = true })
-        vim.api.nvim_set_hl(0, "AlphaText", { fg = "#f4c430"})
-        vim.api.nvim_set_hl(0, "AlphaBracket", { fg = "#7aa2f7"})
-        vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#ff966C"})
+        vim.api.nvim_set_hl(0, "AlphaText", { fg = "#f4c430" })
+        vim.api.nvim_set_hl(0, "AlphaBracket", { fg = "#7aa2f7" })
+        vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#ff966C" })
     end
 
     vim.api.nvim_create_autocmd("ColorScheme", {
@@ -515,6 +546,6 @@ end
 
 return {
     "goolord/alpha-nvim",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = config,
 }

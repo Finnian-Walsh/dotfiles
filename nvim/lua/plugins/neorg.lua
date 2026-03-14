@@ -28,10 +28,10 @@ return {
                         install_parsers = true,
                     },
                 },
-            }
+            },
         }
 
-        vim.keymap.set("n", "<localleader>nw", ":Neorg workspace ", { desc = "[neorg] Enter workspace"})
+        vim.keymap.set("n", "<localleader>nw", ":Neorg workspace ", { desc = "[neorg] Enter workspace" })
         vim.keymap.set("n", "<localleader>nr", "<cmd>Neorg return<CR>", { desc = "[neorg] Return" })
     end,
 }

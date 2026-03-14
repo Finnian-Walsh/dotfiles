@@ -15,12 +15,12 @@ return {
 
     config = function()
         local harpoon = require("harpoon")
-        harpoon:setup{
+        harpoon:setup {
             settings = {
-            save_on_toggle = true,
+                save_on_toggle = true,
                 save_on_change = true,
                 sync_on_ui_close = true,
-            }
+            },
         }
 
         vim.keymap.set("n", "<leader>a", function()
@@ -33,9 +33,12 @@ return {
 
                 local fd = vim.uv.fs_scandir(dir)
                 if not fd then
-                    vim.api.nvim_echo({{
-                        "The current directory (" .. dir .. ") does not exist", "WarningMsg"
-                    }}, true, {})
+                    vim.api.nvim_echo({
+                        {
+                            "The current directory (" .. dir .. ") does not exist",
+                            "WarningMsg",
+                        },
+                    }, true, {})
                     return
                 end
 
@@ -61,7 +64,9 @@ return {
             harpoon.ui:toggle_quick_menu(harpoon:list())
         end, { desc = "Add file(s) to harpoon" })
 
-        vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Open Harpoon" })
+        vim.keymap.set("n", "<leader>h", function()
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+        end, { desc = "Open Harpoon" })
 
         for i = 1, 20 do
             local navigation_key = nav_keys[i]
@@ -71,7 +76,7 @@ return {
                 return list._length >= i, list
             end
 
-            local warning_msg = {{"There is no item " .. i .. " in the harpoon list", "WarningMsg"}}
+            local warning_msg = { { "There is no item " .. i .. " in the harpoon list", "WarningMsg" } }
 
             local function warn_cannot_select()
                 vim.api.nvim_echo(warning_msg, true, {})
@@ -79,7 +84,7 @@ return {
 
             vim.keymap.set("n", "<leader>" .. navigation_key, function()
                 harpoon:list():select(i)
-            end, { desc = "Harpoon " .. i})
+            end, { desc = "Harpoon " .. i })
 
             vim.keymap.set("n", "<leader>n" .. navigation_key, function()
                 local can_select, list = can_select_item()
@@ -90,7 +95,7 @@ return {
                 else
                     warn_cannot_select()
                 end
-            end, { desc = "Harpoon " .. i .. " (vertical split)"})
+            end, { desc = "Harpoon " .. i .. " (vertical split)" })
 
             vim.keymap.set("n", "<leader>N" .. navigation_key, function()
                 local can_select, list = can_select_item()
@@ -101,17 +106,19 @@ return {
                 else
                     warn_cannot_select()
                 end
-            end, { desc = "Harpoon " .. i .. " (horizontal split)"})
+            end, { desc = "Harpoon " .. i .. " (horizontal split)" })
 
             vim.keymap.set("n", "<leader>o" .. navigation_key, function()
                 harpoon:list():select(i)
                 vim.cmd("BufOnly")
-            end, { desc = "Harpoon switch to only " .. i .. " and displayed" })
+            end, {
+                desc = "Harpoon switch to only " .. i .. " and displayed",
+            })
 
             vim.keymap.set("n", "<leader>O" .. navigation_key, function()
                 harpoon:list():select(i)
                 vim.cmd("BufCurrentOnly")
-            end, { desc = "Harpoon switch to only " .. i})
+            end, { desc = "Harpoon switch to only " .. i })
         end
     end,
 }

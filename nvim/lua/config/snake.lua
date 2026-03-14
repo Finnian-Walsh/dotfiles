@@ -14,50 +14,34 @@ end
 
 local Direction = {}
 
-Direction.Left = DirectionValue.new(
-    1,
-    function(pos)
-        return pos[1] - 1, pos[2]
-    end,
-    function()
-        return Direction.Right
-    end
-)
+Direction.Left = DirectionValue.new(1, function(pos)
+    return pos[1] - 1, pos[2]
+end, function()
+    return Direction.Right
+end)
 
-Direction.Down = DirectionValue.new(
-    2,
-    function(pos)
-        return pos[1], pos[2] + 1
-    end,
-    function()
-        return Direction.Up
-    end
-)
+Direction.Down = DirectionValue.new(2, function(pos)
+    return pos[1], pos[2] + 1
+end, function()
+    return Direction.Up
+end)
 
-Direction.Up = DirectionValue.new(
-    3,
-    function(pos)
-        return pos[1], pos[2] - 1
-    end,
-    function()
-        return Direction.Down
-    end
-)
+Direction.Up = DirectionValue.new(3, function(pos)
+    return pos[1], pos[2] - 1
+end, function()
+    return Direction.Down
+end)
 
-Direction.Right = DirectionValue.new(
-    4,
-    function(pos)
-        return pos[1] + 1, pos[2]
-    end,
-    function()
-        return Direction.Left
-    end
-)
+Direction.Right = DirectionValue.new(4, function(pos)
+    return pos[1] + 1, pos[2]
+end, function()
+    return Direction.Left
+end)
 
 setmetatable(Direction, {
     __newindex = function()
         error("Direction enum is read-only")
-    end
+    end,
 })
 
 local Block = {}
@@ -92,7 +76,7 @@ local function snake(opts)
     elseif difficulty == "hard" then
         waiting_time_ms = 400
     else
-        vim.api.nvim_echo({{"Unknown difficulty: " .. difficulty, "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "Unknown difficulty: " .. difficulty, "ErrorMsg" } }, true, {})
         return
     end
 
@@ -105,7 +89,7 @@ local function snake(opts)
     elseif game_size == "large" then
         game_width, game_height = 60, 30
     else
-        vim.api.nvim_echo({{"Unknown game size: " .. game_size}}, true, {})
+        vim.api.nvim_echo({ { "Unknown game size: " .. game_size } }, true, {})
         return
     end
 
@@ -169,11 +153,11 @@ local function snake(opts)
         end
     end
 
-    for _, keys in ipairs({
-        { "h", "j", "k", "l", },
-        { "a", "s", "w", "d", },
-        { "<Left>", "<Down>", "<Up>", "<Right>", },
-    }) do
+    for _, keys in ipairs {
+        { "h", "j", "k", "l" },
+        { "a", "s", "w", "d" },
+        { "<Left>", "<Down>", "<Up>", "<Right>" },
+    } do
         vim.keymap.set("n", keys[1], turn_left, buffer_local)
         vim.keymap.set("n", keys[2], turn_down, buffer_local)
         vim.keymap.set("n", keys[3], turn_up, buffer_local)
@@ -209,7 +193,7 @@ local function snake(opts)
     end
 
     local title = "Snake"
-    vim.api.nvim_buf_set_lines(buf, 0, 1, true, {string.rep(" ", math.floor((buffer_width - #title) / 2)) .. title})
+    vim.api.nvim_buf_set_lines(buf, 0, 1, true, { string.rep(" ", math.floor((buffer_width - #title) / 2)) .. title })
     vim.api.nvim_buf_set_lines(buf, 1, -1, false, grid)
 
     local function update_game()
@@ -227,7 +211,7 @@ local function snake(opts)
         -- new_tail.prev = nil
 
         local line = grid[y]
-        grid[y] = line:sub(1, x-1) .. "s" .. line:sub(x+1)
+        grid[y] = line:sub(1, x - 1) .. "s" .. line:sub(x + 1)
         print(grid[y])
         vim.api.nvim_buf_set_lines(buf, 1, -1, false, grid)
     end
@@ -237,8 +221,8 @@ local function snake(opts)
     vim.print("waiting time: ", waiting_time_ms)
 end
 
-local difficulties = {"easy", "normal", "hard"}
-local game_sizes = {"small", "medium", "large"}
+local difficulties = { "easy", "normal", "hard" }
+local game_sizes = { "small", "medium", "large" }
 
 vim.api.nvim_create_user_command("Snake", snake, {
     desc = "Play snake",
@@ -275,7 +259,7 @@ vim.api.nvim_create_user_command("Snake", snake, {
         end
 
         return matches
-    end
+    end,
 })
 
 vim.keymap.set("n", "<leader>s", "<cmd>Snake<CR>", { desc = "Play snake" })
