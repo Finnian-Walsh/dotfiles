@@ -3,7 +3,8 @@ return {
         "williamboman/mason.nvim",
         event = "VeryLazy",
         opts = {},
-    }, {
+    },
+    {
         "williamboman/mason-lspconfig.nvim",
         event = "VeryLazy",
         config = function()
@@ -11,19 +12,23 @@ return {
                 return
             end
 
-            require("mason").setup{
-                ensure_installed = { "clang-format", },
-            }
+            require("mason").setup {}
 
-            local mason_lspconfig_ensure_installed = {
-                "rust_analyzer", "lua_ls", "pyright", "asm_lsp",
+            local ensure_installed = {
+                "stylua",
+                "rust_analyzer",
+                "lua_ls",
+                "pyright",
+                "asm_lsp",
             }
 
             if not vim.uv.os_getenv("NO_CLANGD") then
-                table.insert(mason_lspconfig_ensure_installed, "clangd")
+                table.insert(ensure_installed, "clangd")
             end
 
-            require("mason-lspconfig").setup{ ensure_installed = mason_lspconfig_ensure_installed }
+            require("mason-lspconfig").setup {
+                ensure_installed = ensure_installed,
+            }
         end,
     },
     {
@@ -39,16 +44,21 @@ return {
             local capabilities = require("blink-cmp").get_lsp_capabilities()
             vim.lsp.config("*", { capabilities = capabilities })
 
-            vim.lsp.config("rust_analyzer", {
-                settings = {
-                    ["rust-analyzer"] = {
-                        cargo = { allFeatures = true },
-                        checkOnSave = true,
-                        check = { command = "clippy" },
-                        diagnostics = { enable = true, experimental = { enable = true, }, },
+            vim.g.rustaceanvim = {
+                server = {
+                    settings = {
+                        ["rust-analyzer"] = {
+                            cargo = { allFeatures = true },
+                            checkOnSave = { command = "clippy" },
+                            check = { command = "clippy" },
+                            diagnostics = {
+                                enable = true,
+                                experimental = { enable = true },
+                            },
+                        },
                     },
-                }
-            })
+                },
+            }
 
             vim.lsp.config("lua_ls", {
                 settings = {
@@ -59,13 +69,34 @@ return {
                         diagnostics = {
                             globals = {
                                 "vim",
-                            }
+                            },
                         },
-                    }
-                }
+                    },
+                },
             })
 
             vim.lsp.config("pyright", {})
         end,
+    },
+    {
+        "mrcjkb/rustaceanvim",
+        priority = 49,
+        version = "*",
+        lazy = false,
+    },
+    {
+        "stevearc/conform.nvim",
+        opts = {
+            formatters_by_ft = {
+                lua = { "stylua" },
+                -- Conform will run multiple formatters sequentially
+                python = { "isort", "black" },
+                -- You can customize some of the format options for the filetype (:help conform.format)
+                rust = { "rustfmt" },
+            },
+            format_on_save = {
+                timeout_ms = 5000,
+            },
+        },
     },
 }
