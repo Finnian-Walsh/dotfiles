@@ -189,12 +189,12 @@ local function group_sorted_ascii_characters(chars)
     local symbols = {}
 
     local groups = {
-        { string.byte'0'-1, symbols },
-        { string.byte'9', numbers },
-        { string.byte'A'-1, symbols },
-        { string.byte'Z', uppercase_chars },
-        { string.byte'a'-1, symbols },
-        { string.byte'z', lowercase_chars },
+        { string.byte("0") - 1, symbols },
+        { string.byte("9"), numbers },
+        { string.byte("A") - 1, symbols },
+        { string.byte("Z"), uppercase_chars },
+        { string.byte("a") - 1, symbols },
+        { string.byte("z"), lowercase_chars },
         { 126, symbols },
     }
 
@@ -231,12 +231,13 @@ vim.keymap.set("n", "<leader>kk", function()
 
     table.sort(unused_keys)
 
-    local unused_uppercase, unused_lowercase, unused_numbers, unused_symbols = group_sorted_ascii_characters(unused_keys)
+    local unused_uppercase, unused_lowercase, unused_numbers, unused_symbols =
+        group_sorted_ascii_characters(unused_keys)
 
     local echo_message = {}
 
-    local edge_message = {"'"}
-    local middle_message = {"', '"}
+    local edge_message = { "'" }
+    local middle_message = { "', '" }
 
     local function add_to_message(t)
         if #t == 0 then
@@ -288,8 +289,11 @@ local function set_global_keys_check(char)
             char = special_match
         end
 
-        for _, map in matched_keys("n", "^" .. vim.g.mapleader .. '[' .. char .. ']') do
-            table.insert(mappings, { string.format("<leader>%s: %s\n", map.lhs:sub(2), map.desc or "[no description]"), "DiagnosticInfo" })
+        for _, map in matched_keys("n", "^" .. vim.g.mapleader .. "[" .. char .. "]") do
+            table.insert(mappings, {
+                string.format("<leader>%s: %s\n", map.lhs:sub(2), map.desc or "[no description]"),
+                "DiagnosticInfo",
+            })
         end
 
         if #mappings == 0 then
@@ -386,27 +390,27 @@ vim.keymap.set("n", "<leader>[", function()
     if find_listed_buffer() then
         repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "There are no buffers", "ErrorMsg" } }, true, {})
     end
-end, { noremap = true, desc = "Previous buffer "})
+end, { noremap = true, desc = "Previous buffer " })
 
 vim.keymap.set("n", "<leader>n[", function()
     if find_listed_buffer() then
         vim.cmd(move_new_vert_split)
         repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "There are no buffers", "ErrorMsg" } }, true, {})
     end
-end, { noremap = true, desc = "Previous buffer "})
+end, { noremap = true, desc = "Previous buffer " })
 
 vim.keymap.set("n", "<leader>N[", function()
     if find_listed_buffer() then
         vim.cmd(move_new_horizontal_split)
         repeat_cmd("BufferLineCyclePrev", vim.v.count1)
     else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "There are no buffers", "ErrorMsg" } }, true, {})
     end
-end, { noremap = true, desc = "Previous buffer "})
+end, { noremap = true, desc = "Previous buffer " })
 
 -- next buffer keymaps
 
@@ -414,7 +418,7 @@ vim.keymap.set("n", "<leader>]", function()
     if find_listed_buffer() then
         repeat_cmd("BufferLineCycleNext", vim.v.count1)
     else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "There are no buffers", "ErrorMsg" } }, true, {})
     end
 end, { noremap = true, desc = "Next buffer " })
 
@@ -423,7 +427,7 @@ vim.keymap.set("n", "<leader>n]", function()
         vim.cmd(move_new_vert_split)
         repeat_cmd("BufferLineCycleNext", vim.v.count1)
     else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "There are no buffers", "ErrorMsg" } }, true, {})
     end
 end, { noremap = true, desc = "Next buffer " })
 
@@ -432,7 +436,7 @@ vim.keymap.set("n", "<leader>N]", function()
         vim.cmd(move_new_horizontal_split)
         repeat_cmd("BufferLineCycleNext", vim.v.count1)
     else
-        vim.api.nvim_echo({{"There are no buffers", "ErrorMsg"}}, true, {})
+        vim.api.nvim_echo({ { "There are no buffers", "ErrorMsg" } }, true, {})
     end
 end, { noremap = true, desc = "Next buffer " })
 
@@ -446,7 +450,7 @@ end
 
 local discord_keymap = "<leader>@"
 
-vim.keymap.set("n",  discord_keymap, function()
+vim.keymap.set("n", discord_keymap, function()
     if discord_win and vim.api.nvim_win_is_valid(discord_win) then
         close_discord_window()
         return
@@ -490,11 +494,11 @@ vim.keymap.set("n",  discord_keymap, function()
                 end
 
                 discord_win, discord_buffer = nil, nil
-            end
+            end,
         })
 
         vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], { noremap = true })
-        vim.keymap.set({"n", "t"}, "<Esc>", close_discord_window, { buffer = buf })
+        vim.keymap.set({ "n", "t" }, "<Esc>", close_discord_window, { buffer = buf })
         vim.keymap.set("n", discord_keymap, close_discord_window, { buffer = buf })
     end
 
@@ -521,23 +525,26 @@ local function delete_buffer(buf)
     while true do
         response = vim.fn.getchar()
 
-        if response == 67       -- C
-            or response == 99   -- c
-            or response == 27   -- Esc
+        if
+            response == 67 -- C
+            or response == 99 -- c
+            or response == 27 -- Esc
         then
             break
-        elseif response == 89   -- Y
-            or response == 121  -- y
+        elseif
+            response == 89 -- Y
+            or response == 121 -- y
         then
             vim.api.nvim_buf_call(buf, function()
                 vim.cmd("write")
             end)
             vim.api.nvim_buf_delete(buf, {})
             break
-        elseif response == 78   -- N
-            or response == 110  -- n
+        elseif
+            response == 78 -- N
+            or response == 110 -- n
         then
-            vim.api.nvim_buf_delete(buf, {force=true})
+            vim.api.nvim_buf_delete(buf, { force = true })
             break
         end
     end
@@ -574,15 +581,23 @@ local function delete_other_buffers()
     end
 end
 
-vim.keymap.set("n", "<leader>bo", delete_undisplayed_buffers, { noremap = true, desc = "Delete undisplayed buffers"})
-vim.api.nvim_create_user_command("BufOnly", delete_undisplayed_buffers, { desc = "Delete undisplayed buffers", bang = true })
+vim.keymap.set("n", "<leader>bo", delete_undisplayed_buffers, { noremap = true, desc = "Delete undisplayed buffers" })
+vim.api.nvim_create_user_command(
+    "BufOnly",
+    delete_undisplayed_buffers,
+    { desc = "Delete undisplayed buffers", bang = true }
+)
 
-vim.keymap.set("n", "<leader>bO", delete_other_buffers, { desc = "Delete other buffers"})
-vim.api.nvim_create_user_command("BufCurrentOnly", delete_other_buffers, { desc = "Delete all other windows and buffers", bang = true })
+vim.keymap.set("n", "<leader>bO", delete_other_buffers, { desc = "Delete other buffers" })
+vim.api.nvim_create_user_command(
+    "BufCurrentOnly",
+    delete_other_buffers,
+    { desc = "Delete all other windows and buffers", bang = true }
+)
 
 vim.keymap.set("n", "<leader>bd", function()
     delete_buffer(0)
-end, { noremap = true, desc = "Close all buffers"})
+end, { noremap = true, desc = "Close all buffers" })
 
 -- Buffer moving
 
@@ -616,17 +631,22 @@ vim.keymap.set("n", "<leader><Tab>N", function()
     end
 end, { noremap = true, desc = "Open a new tab to the left" })
 
-vim.keymap.set("n", "<leader>}", "gt", { noremap = true, desc = "Next tab ", silent = true, })
+vim.keymap.set("n", "<leader>}", "gt", { noremap = true, desc = "Next tab ", silent = true })
 
-vim.keymap.set("n", "<leader>{", "gT", { noremap = true, desc = "Previous tab ", silent = true, })
+vim.keymap.set("n", "<leader>{", "gT", { noremap = true, desc = "Previous tab ", silent = true })
 
 vim.keymap.set("n", "<leader><Tab>d", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabclose")
     end
-end, { noremap = true, desc = "Close tab"})
+end, { noremap = true, desc = "Close tab" })
 
-vim.keymap.set("n", "<leader><Tab>o", "<cmd>tabonly<CR>", { noremap = true, desc = "Close all tabs except the current one"})
+vim.keymap.set(
+    "n",
+    "<leader><Tab>o",
+    "<cmd>tabonly<CR>",
+    { noremap = true, desc = "Close all tabs except the current one" }
+)
 
 -- Tab movement
 
@@ -652,7 +672,7 @@ vim.keymap.set("n", "<leader><S-Right>", function()
     if current_tab_can_move(count) then
         vim.cmd("tabmove +" .. count)
     else
-        vim.api.nvim_echo({{ "Cannot move tab +" .. count, "ErrorMsg" }}, true, {})
+        vim.api.nvim_echo({ { "Cannot move tab +" .. count, "ErrorMsg" } }, true, {})
     end
 end, { desc = "Move the tab right" })
 
@@ -661,12 +681,13 @@ vim.keymap.set("n", "<leader><S-Left>", function()
     if current_tab_can_move(-count) then
         vim.cmd("tabmove -" .. count)
     else
-        vim.api.nvim_echo({{ "Cannot move tab -" .. count, "ErrorMsg" }}, true, {})
+        vim.api.nvim_echo({ { "Cannot move tab -" .. count, "ErrorMsg" } }, true, {})
     end
 end, { desc = "Move the tab left" })
 
 -- Tab switching
 
+-- stylua: ignore
 _G.nav_keys = {
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
     "!", "\"", "£", "$", "%", "^", "&", "*", "(", ")"
@@ -674,7 +695,7 @@ _G.nav_keys = {
 
 for i = 1, 20 do
     local command = "<cmd>tabnext " .. i .. "<CR>"
-    local opts = { noremap = true, desc = "Go to tab " .. i}
+    local opts = { noremap = true, desc = "Go to tab " .. i }
     local navigation_key = nav_keys[i]
     vim.keymap.set("n", "<leader><Tab>" .. navigation_key, command, opts)
 end
@@ -692,8 +713,7 @@ local function auto_buffer_delete(buf)
     end
 
     for _, win in ipairs(vim.api.nvim_list_wins()) do
-        if vim.api.nvim_win_get_buf(win) == buf
-            and vim.api.nvim_win_get_config(win).relative ~= "" then
+        if vim.api.nvim_win_get_buf(win) == buf and vim.api.nvim_win_get_config(win).relative ~= "" then
             return
         end
     end
@@ -708,16 +728,6 @@ end
 vim.api.nvim_create_autocmd("BufHidden", {
     callback = function(args)
         auto_buffer_delete(args.buf)
-    end,
-})
-
-local diagnostics_namespace = vim.api.nvim_create_namespace("diagnostics")
-
-vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
-    pattern = "*",
-    callback = function()
-        vim.diagnostic.reset(nil, 0)
-        vim.diagnostic.set(diagnostics_namespace, 0, vim.diagnostic.get(0))
     end,
 })
 
@@ -754,13 +764,46 @@ vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
+vim.keymap.set("n", "<leader>lf", function()
+    vim.lsp.buf.format {
+        async = true,
+    }
+end)
+
 -- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function()
-        vim.opt.formatoptions:remove({"o"})
+        vim.opt.formatoptions:remove { "o" }
     end,
 })
+
+local function assert_files_written()
+    local file_changes = { { "Open files have changes:", "ErrorMsg" } }
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_get_option(buf, "modified") then
+            table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), "Normal" })
+        end
+    end
+
+    local changes = #file_changes > 1
+
+    if changes then
+        if #file_changes == 2 then
+            if vim.api.nvim_buf_get_option(0, "modified") then
+                file_changes[1][1] = "The current file has changes"
+                file_changes[2] = nil
+            else
+                file_changes[1][1] = "An open file has changes:"
+            end
+        end
+
+        vim.api.nvim_echo(file_changes, true, {})
+    end
+
+    return not changes
+end
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
@@ -769,40 +812,42 @@ vim.api.nvim_create_autocmd("FileType", {
             vim.cmd("LetItSnow")
         end
 
+        vim.keymap.set("n", "<leader>dn", function()
+            local args = { "debuggables" }
+            local input = vim.fn.input("Program arguments: ")
+
+            for arg in input:gmatch("%S+") do
+                table.insert(args, arg)
+            end
+
+            vim.cmd.RustLsp(args)
+        end, { desc = "Start a new debugging session" })
+
         local opts = { buffer = true }
 
-        vim.keymap.set("n", "<leader>lf", function()
-            vim.lsp.buf.format{ async = true }
-        end, opts)
-
         vim.keymap.set("n", "<leader>gf", function()
-            local file_changes = {{ "Open files have changes:", "ErrorMsg" }}
-
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                if vim.api.nvim_buf_get_option(buf, "modified") then
-                    table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), "Normal" })
-                end
+            if assert_files_written() then
+                vim.fn.system { "cargo", "fmt" }
+                vim.cmd("edit")
             end
-
-            if #file_changes > 1 then
-                if #file_changes == 2 then
-                    if vim.api.nvim_buf_get_option(0, "modified") then
-                        file_changes[1][1] = "The current file has changes"
-                        file_changes[2] = nil
-                    else
-                        file_changes[1][1] = "An open file has changes:"
-                    end
-                end
-
-                vim.api.nvim_echo(file_changes, true, {})
-                return
-            end
-
-            vim.fn.system{"cargo", "fmt"}
-            vim.cmd("edit")
         end, opts)
 
-        vim.keymap.set("n", "<leader>`", function() vim.cmd("e Cargo.toml") end, opts)
+        vim.keymap.set("n", "<leader>`", function()
+            vim.cmd("e Cargo.toml")
+        end, opts)
     end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "lua",
+    callback = function()
+        local opts = { buffer = true }
+
+        vim.keymap.set("n", "<leader>gf", function()
+            if assert_files_written() then
+                vim.fn.system { "stylua", "." }
+                vim.cmd("edit")
+            end
+        end, opts)
+    end,
+})
