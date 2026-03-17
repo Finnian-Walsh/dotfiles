@@ -851,3 +851,14 @@ vim.api.nvim_create_autocmd("FileType", {
         end, opts)
     end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "python",
+    callback = function()
+        local opts = { buffer = true }
+
+        vim.keymap.set("n", "<leader>gf", function()
+            vim.api.nvim_echo({ { "Not yet implemented", "WarningMsg" } }, true, {})
+        end, opts)
+    end,
+})
