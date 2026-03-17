@@ -28,6 +28,8 @@ return {
 
             require("mason-lspconfig").setup {
                 ensure_installed = ensure_installed,
+                automatic_enable = { exclude = { "rust_analyzer" } },
+                -- ignore_install = { "rust_analyzer" },
             }
         end,
     },
