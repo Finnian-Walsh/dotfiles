@@ -597,7 +597,13 @@ vim.api.nvim_create_user_command(
 
 vim.keymap.set("n", "<leader>bd", function()
     delete_buffer(0)
-end, { noremap = true, desc = "Close all buffers" })
+end, { noremap = true, desc = "Delete current buffer" })
+
+vim.keymap.set("n", "<leader>bD", function()
+    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        delete_buffer(bufnr)
+    end
+end, { noremap = true, desc = "Delete all buffers" })
 
 -- Buffer moving
 
