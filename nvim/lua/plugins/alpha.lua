@@ -121,12 +121,15 @@ function ButtonCreator:build(text_width)
     local value = {}
     local padding = self._padding
 
+    local square_brackets_width = vim.fn.strdisplaywidth("[]")
+
     for _, button in ipairs(self._buttons) do
         local button_name = button.name
         local button_key = button.key
         local button_fn = button.fn
 
-        local spaces = text_width - (vim.fn.strdisplaywidth(button_name) + vim.fn.strdisplaywidth(button_key) + 2)
+        local spaces = text_width
+            - (vim.fn.strdisplaywidth(button_name) + vim.fn.strdisplaywidth(button_key) + square_brackets_width)
 
         local button_val = button_name .. string.rep(" ", spaces) .. "[" .. button.key .. "]"
 
@@ -408,6 +411,8 @@ local function config()
         end,
     })
 
+    local minimize_alpha, maximize_alpha
+
     local buttons = ButtonCreator.new {
         padding = 1,
         buttons = {
@@ -447,10 +452,30 @@ local function config()
                 end,
             },
             {
+                " Minimize",
+                "m",
+                function()
+                    minimize_alpha()
+                end,
+            },
+            {
                 "󰈆 Quit",
                 "q",
                 function()
                     vim.cmd("quit")
+                end,
+            },
+        },
+    }
+
+    local minimal_buttons = ButtonCreator.new {
+        padding = 0,
+        buttons = {
+            {
+                " Maximize",
+                "m",
+                function()
+                    maximize_alpha()
                 end,
             },
         },
@@ -540,7 +565,63 @@ local function config()
         padding_values.bottom,
     }
 
+    local maximize_button = minimal_buttons._buttons
+    local minimal_layout = {
+        minimal_buttons:build(
+            vim.fn.strdisplaywidth(maximize_button.name)
+                + vim.fn.strdisplaywidth(maximize_button.key)
+                + vim.fn.strdisplaywidth("[]")
+        ),
+    }
+
     local theme = { layout = layout }
+
+    local function reset_alpha_buffers()
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(win)
+
+            if vim.bo[buf].filetype ~= "alpha" then
+                goto continue
+            end
+
+            vim.api.nvim_win_call(win, function()
+                vim.cmd("enew")
+                vim.cmd("Alpha")
+            end)
+
+            ::continue::
+        end
+    end
+
+    local last_alpha_reset = 0
+    local alpha_reset_cd = 1
+
+    function minimize_alpha()
+        local current_time = os.time()
+
+        if last_alpha_reset + alpha_reset_cd > current_time then
+            print(current_time - last_alpha_reset - alpha_reset_cd)
+            return
+        end
+
+        last_alpha_reset = current_time
+        theme.layout = minimal_layout
+        reset_alpha_buffers()
+    end
+
+    function maximize_alpha()
+        local current_time = os.time()
+
+        if last_alpha_reset + alpha_reset_cd > current_time then
+            print(current_time - last_alpha_reset - alpha_reset_cd)
+            return
+        end
+
+        last_alpha_reset = current_time
+        theme.layout = layout
+        reset_alpha_buffers()
+    end
+
     require("alpha").setup(theme)
 end
 
