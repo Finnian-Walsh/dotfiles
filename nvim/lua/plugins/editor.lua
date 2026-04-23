@@ -43,4 +43,8 @@ return {
             end
         end,
     },
+    {
+        "saecki/crates.nvim",
+        setup = {},
+    },
 }
