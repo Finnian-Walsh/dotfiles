@@ -313,7 +313,7 @@ local function get_colorscheme_data()
     local ok, parsed_contents = pcall(vim.json.decode, file:read("*a"))
 
     if not ok then
-        vim.api.nvim_echo({ { "Failed to decode contents", "WarningMsg" } }, true, {})
+        vim.api.nvim_echo({ { "Failed to decode contents of colorscheme file", "WarningMsg" } }, true, {})
         vim.fn.getchar()
         os.exit(1)
     end
