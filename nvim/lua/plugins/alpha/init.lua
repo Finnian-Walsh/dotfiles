@@ -2,6 +2,44 @@ local CycleSystem = require("plugins.alpha.cycle_system")
 local ButtonCreator = require("plugins.alpha.button_creator")
 local HeaderValues = require("plugins.alpha.header_values")
 
+local alpha_config_path = vim.fn.stdpath("data") .. "/alpha_config.json"
+
+local Themes = setmetatable({
+    NORMAL = "normal",
+    MINIMAL = "minimal",
+}, {
+    __index = function(_, index)
+        error("No such variant `" .. index .. "`")
+    end,
+})
+
+local function get_alpha_config()
+    local file = io.open(alpha_config_path, "r")
+
+    if not file then
+        return {}
+    end
+
+    local ok, config = pcall(vim.json.decode, file:read("*a"))
+
+    if not ok then
+        vim.api.nvim_echo({ { "Failed to decode alpha config file", "WarningMsg" } }, true, {})
+    end
+
+    return config
+end
+
+local function set_alpha_config(config)
+    local file = io.open(alpha_config_path, "w")
+
+    if not file then
+        vim.api.nvim_echo({ { "Failed to save theme layout", "ErrorMsg" } }, true, {})
+        return
+    end
+
+    file:write(vim.json.encode(config))
+end
+
 local function uninitialized_padding()
     return { type = "padding" }
 end
@@ -266,6 +304,13 @@ local function config()
                     maximize_alpha()
                 end,
             },
+            {
+                "󰈆 Quit",
+                "q",
+                function()
+                    vim.cmd("quit")
+                end,
+            },
         },
     }
 
@@ -362,7 +407,7 @@ local function config()
         ),
     }
 
-    local theme = { layout = layout }
+    local theme = {}
 
     local function reset_alpha_buffers()
         for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -384,6 +429,7 @@ local function config()
     function minimize_alpha()
         if get_confirmation("Minimize alpha screen? (Y)es, (N)o ") then
             theme.layout = minimal_layout
+            set_alpha_config { theme = Themes.MINIMAL }
             reset_alpha_buffers()
         end
     end
@@ -391,8 +437,17 @@ local function config()
     function maximize_alpha()
         if get_confirmation("Maximize alpha screen? (Y)es, (N)o ") then
             theme.layout = layout
+            set_alpha_config { theme = Themes.NORMAL }
             reset_alpha_buffers()
         end
+    end
+
+    local alpha_config = get_alpha_config()
+
+    if alpha_config.theme == Themes.MINIMAL then
+        theme.layout = minimal_layout
+    elseif alpha_config.theme == Themes.NORMAL or true then
+        theme.layout = layout
     end
 
     require("alpha").setup(theme)
