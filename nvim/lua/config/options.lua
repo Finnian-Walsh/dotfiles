@@ -10,6 +10,22 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.mouse = ""
 
+_G.response_key_codes = {
+    affirmative = {
+        [89] = true, -- Y
+        [121] = true, -- y
+    },
+    negative = {
+        [78] = true, -- N
+        [110] = true, -- n
+    },
+    abortive = {
+        [67] = true, -- C
+        [99] = true, -- c
+        [27] = true, -- Esc
+    },
+}
+
 function _G.update_date()
     _G.current_date = os.date("*t")
     _G.current_month = current_date.month
@@ -520,30 +536,18 @@ local function delete_buffer(buf)
     local name = vim.api.nvim_buf_get_name(buf)
     vim.notify("Save changes to `" .. name .. "`? (Y)es, (N)o, (C)ancel ")
 
-    local response
-
     while true do
-        response = vim.fn.getchar()
+        local response = vim.fn.getchar()
 
-        if
-            response == 67 -- C
-            or response == 99 -- c
-            or response == 27 -- Esc
-        then
+        if response_key_codes.abortive[response] then
             break
-        elseif
-            response == 89 -- Y
-            or response == 121 -- y
-        then
+        elseif response_key_codes.affirmative[response] then
             vim.api.nvim_buf_call(buf, function()
                 vim.cmd("write")
             end)
             vim.api.nvim_buf_delete(buf, {})
             break
-        elseif
-            response == 78 -- N
-            or response == 110 -- n
-        then
+        elseif response_key_codes.negative[response] then
             vim.api.nvim_buf_delete(buf, { force = true })
             break
         end
