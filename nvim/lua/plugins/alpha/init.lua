@@ -1,235 +1,23 @@
-local function create_padding(value)
-    return { type = "padding", val = value or 2 }
-end
+local CycleSystem = require("plugins.alpha.cycle_system")
+local ButtonCreator = require("plugins.alpha.button_creator")
+local HeaderValues = require("plugins.alpha.header_values")
 
 local function uninitialized_padding()
     return { type = "padding" }
 end
 
-local function center_text(text, required_width)
-    local text_width = vim.fn.strdisplaywidth(text)
-    local missing_width = required_width - text_width
-    local first_half = math.floor(missing_width / 2)
-    local second_half = math.ceil(missing_width / 2)
+local function get_confirmation(message)
+    vim.notify(message)
 
-    return string.rep(" ", first_half) .. text .. string.rep(" ", second_half)
-end
+    while true do
+        local response = vim.fn.getchar()
 
-local HeaderValues = {}
-
-function HeaderValues.__index(self, key)
-    if key == "selected" then
-        return self._headers[rawget(self, "_selected_index")]
-    else
-        return HeaderValues[key]
-    end
-end
-
-function HeaderValues.new(...)
-    local raw_values = { ... }
-    local ordered_values = {}
-
-    for _, value in ipairs(raw_values) do
-        table.insert(ordered_values, {
-            name = value[1],
-            text = value[2],
-            width = vim.fn.strdisplaywidth(value[2][1]),
-        })
-    end
-
-    return setmetatable({
-        _headers = ordered_values,
-    }, HeaderValues)
-end
-
-function HeaderValues:select(name)
-    for index, header in ipairs(self._headers) do
-        if header.name == name then
-            self._selected_index = index
+        if response_key_codes.affirmative[response] then
+            return true
+        elseif response_key_codes.negative[response] or response_key_codes.abortive[response] then
+            return false
         end
     end
-end
-
-function HeaderValues:select_next()
-    local new_index = self._selected_index + 1
-
-    if new_index > #self._headers then
-        new_index = 1
-    end
-
-    self._selected_index = new_index
-end
-
-function HeaderValues:select_previous()
-    local new_index = self._selected_index - 1
-
-    if new_index <= 0 then
-        new_index = #self._headers
-    end
-
-    self._selected_index = new_index
-end
-
-function HeaderValues:add_extensions(extensions)
-    for _, header in ipairs(self._headers) do
-        local text = header.text
-        local header_width = vim.fn.strdisplaywidth(text[1])
-
-        for _, addition in ipairs(extensions) do
-            if addition.center then
-                table.insert(text, center_text(addition[1], header_width))
-            else
-                table.insert(text, addition[1])
-            end
-        end
-    end
-end
-
-local ButtonCreator = {}
-ButtonCreator.__index = ButtonCreator
-
-function ButtonCreator.new(opts)
-    opts = opts or {}
-
-    local self = setmetatable({
-        _padding = create_padding(opts.padding),
-        _buttons = {},
-    }, ButtonCreator)
-
-    if opts.buttons then
-        self:add_all(opts.buttons)
-    end
-
-    return self
-end
-
-function ButtonCreator:add(name, key, fn)
-    table.insert(self._buttons, {
-        name = name,
-        key = key,
-        fn = fn,
-    })
-end
-
-function ButtonCreator:add_all(buttons)
-    for _, button in ipairs(buttons) do
-        self:add(unpack(button))
-    end
-end
-
-function ButtonCreator:build(text_width)
-    local value = {}
-    local padding = self._padding
-
-    local square_brackets_width = vim.fn.strdisplaywidth("[]")
-
-    for _, button in ipairs(self._buttons) do
-        local button_name = button.name
-        local button_key = button.key
-        local button_fn = button.fn
-
-        local spaces = text_width
-            - (vim.fn.strdisplaywidth(button_name) + vim.fn.strdisplaywidth(button_key) + square_brackets_width)
-
-        local button_val = button_name .. string.rep(" ", spaces) .. "[" .. button.key .. "]"
-
-        table.insert(value, {
-            on_press = button_fn,
-            opts = {
-                position = "center",
-                cursor = vim.fn.strdisplaywidth(button_val) - 2,
-                keymap = { "n", button.key, button_fn },
-                hl = {
-                    { "AlphaText", 0, #button_name },
-                    { "AlphaBracket", #button_val - 3, #button_val - 2 },
-                    { "AlphaShortcut", #button_val - 2, #button_val - 1 },
-                    { "AlphaBracket", #button_val - 1, #button_val },
-                },
-            },
-            type = "button",
-            val = button_val,
-        })
-        table.insert(value, padding)
-    end
-
-    return {
-        type = "group",
-        val = value,
-    }
-end
-
-local CycleSystem = {}
-CycleSystem.__index = CycleSystem
-
-function CycleSystem.new(items, interval, reset, fn)
-    return setmetatable({
-        items = items,
-        reset = reset,
-        fn = fn,
-        _running = false,
-        _index = 1,
-        _last_used = 0,
-        _interval = interval,
-        _extended_interval = interval + 1,
-    }, CycleSystem)
-end
-
-function CycleSystem:is_running()
-    return self._running
-end
-
-function CycleSystem:start()
-    if self._running or self._last_used + self._extended_interval > os.time() * 1000 then
-        return
-    end
-
-    self._running = true
-    self:_next()
-end
-
-function CycleSystem:_next()
-    if not self._running then
-        return
-    end
-
-    local new_index = self._index % #self.items + 1
-    self._index = new_index
-    self.fn(self.items[new_index])
-
-    vim.defer_fn(function()
-        self:_next()
-    end, self._interval)
-end
-
-function CycleSystem:stop()
-    if not self._running then
-        return
-    end
-
-    self._running = false
-    self._last_used = os.time() * 1000
-
-    vim.defer_fn(function()
-        self.reset()
-    end, self._extended_interval)
-end
-
-function CycleSystem:toggle()
-    if self._running then
-        self:stop()
-    else
-        self:start()
-    end
-end
-
-local function loaded_alpha_buffers()
-    return coroutine.wrap(function()
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype == "alpha" then
-                coroutine.yield(buf)
-            end
-        end
-    end)
 end
 
 local function config()
@@ -282,10 +70,10 @@ local function config()
     vim.api.nvim_create_autocmd("BufLeave", {
         callback = function()
             vim.schedule(function()
-                local iter = loaded_alpha_buffers()
-
-                if iter() then
-                    return
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype == "alpha" then
+                        return
+                    end
                 end
 
                 header_cycle_system:stop()
@@ -593,33 +381,18 @@ local function config()
         end
     end
 
-    local last_alpha_reset = 0
-    local alpha_reset_cd = 1
-
     function minimize_alpha()
-        local current_time = os.time()
-
-        if last_alpha_reset + alpha_reset_cd > current_time then
-            print(current_time - last_alpha_reset - alpha_reset_cd)
-            return
+        if get_confirmation("Minimize alpha screen? (Y)es, (N)o ") then
+            theme.layout = minimal_layout
+            reset_alpha_buffers()
         end
-
-        last_alpha_reset = current_time
-        theme.layout = minimal_layout
-        reset_alpha_buffers()
     end
 
     function maximize_alpha()
-        local current_time = os.time()
-
-        if last_alpha_reset + alpha_reset_cd > current_time then
-            print(current_time - last_alpha_reset - alpha_reset_cd)
-            return
+        if get_confirmation("Maximize alpha screen? (Y)es, (N)o ") then
+            theme.layout = layout
+            reset_alpha_buffers()
         end
-
-        last_alpha_reset = current_time
-        theme.layout = layout
-        reset_alpha_buffers()
     end
 
     require("alpha").setup(theme)
