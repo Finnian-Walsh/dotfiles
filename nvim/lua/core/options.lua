@@ -157,17 +157,17 @@ end, { desc = "Toggle line metadata" })
 vim.keymap.set("n", "<leader>vl", function() -- lines
     virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualLines
     set_diagnostic_config()
-end)
+end, { desc = "Separate line virtual diagnostics" })
 
 vim.keymap.set("n", "<leader>vi", function() -- inline
     virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
     set_diagnostic_config()
-end)
+end, { desc = "Inline virtual diagnostics" })
 
 vim.keymap.set("n", "<leader>vn", function() -- none
     virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.None
     set_diagnostic_config()
-end)
+end, { desc = "No virtual diagnostics" })
 
 --[[
 --------------------------------------------------------
@@ -286,7 +286,7 @@ vim.keymap.set("n", "<leader>kk", function()
     table.insert(echo_message, { "\nUnused symbols: " })
     add_to_message(unused_symbols)
 
-    vim.notify(echo_message)
+    vim.api.nvim_echo(echo_message, true, {})
 end, { desc = "Check unused leader keymaps" })
 
 local function set_global_keys_check(char)
@@ -316,7 +316,7 @@ local function set_global_keys_check(char)
             mappings[1] = { string.format("<leader>%s is not mapped\n", char), "DiagnosticInfo" }
         end
 
-        vim.notify(mappings)
+        vim.api.nvim_echo(mappings, true, {})
     end, { desc = "Check normal mode leader keys for " .. char .. " key" })
 end
 
@@ -327,15 +327,9 @@ end
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
 
---[[
---------------------------------------------------------
-    Plugin screen keymaps
---------------------------------------------------------
---]]
-
-vim.keymap.set("n", "<leader>L", "<cmd>Lazy<CR>", { desc = "Open Lazy" })
-vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
-
+vim.keymap.set("n", "<leader>V", function()
+    vim.pack.update()
+end, { desc = "Update plugins" })
 
 -- Automatic empty buffer deletion
 
@@ -398,12 +392,6 @@ vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
-vim.keymap.set("n", "<leader>lf", function()
-    vim.lsp.buf.format {
-        async = true,
-    }
-end)
-
 -- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
@@ -412,87 +400,10 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-local function assert_files_written()
-    local file_changes = { { "Open files have changes:", "ErrorMsg" } }
-
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_get_option(buf, "modified") then
-            table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), "Normal" })
-        end
-    end
-
-    local changes = #file_changes > 1
-
-    if changes then
-        if #file_changes == 2 then
-            if vim.api.nvim_buf_get_option(0, "modified") then
-                file_changes[1][1] = "The current file has changes"
-                file_changes[2] = nil
-            else
-                file_changes[1][1] = "An open file has changes:"
-            end
-        end
-
-        vim.notify(file_changes)
-    end
-
-    return not changes
-end
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "rust",
-    callback = function()
-        if current_month == 12 then
+if current_month == 12 then
+    vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function()
             vim.cmd("LetItSnow")
-        end
-
-        vim.keymap.set("n", "<leader>dn", function()
-            local args = { "debuggables" }
-            local input = vim.fn.input("Program arguments: ")
-
-            for arg in input:gmatch("%S+") do
-                table.insert(args, arg)
-            end
-
-            vim.cmd.RustLsp(args)
-        end, { desc = "Start a new debugging session" })
-
-        local opts = { buffer = true }
-
-        vim.keymap.set("n", "<leader>gf", function()
-            if assert_files_written() then
-                vim.fn.system { "cargo", "fmt" }
-                vim.cmd("edit")
-            end
-        end, opts)
-
-        vim.keymap.set("n", "<leader>`", function()
-            vim.cmd("e Cargo.toml")
-        end, opts)
-    end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "lua",
-    callback = function()
-        local opts = { buffer = true }
-
-        vim.keymap.set("n", "<leader>gf", function()
-            if assert_files_written() then
-                vim.fn.system { "stylua", "." }
-                vim.cmd("edit")
-            end
-        end, opts)
-    end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "python",
-    callback = function()
-        local opts = { buffer = true }
-
-        vim.keymap.set("n", "<leader>gf", function()
-            vim.notify("Not yet implemented", vim.log.levels.WARN)
-        end, opts)
-    end,
-})
+        end,
+    })
+end
