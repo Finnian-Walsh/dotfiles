@@ -1,0 +1,13 @@
+
+require("config.functionality.blink")
+require("config.functionality.editor")
+require("config.functionality.gitsigns")
+require("config.functionality.harpoon")
+require("config.functionality.lsp")
+require("config.functionality.neo-tree")
+require("config.functionality.neorg")
+require("config.functionality.nvim-dap")
+require("config.functionality.oil")
+require("config.functionality.telescope")
+require("config.functionality.which-key")
+require("config.functionality.winresize")
