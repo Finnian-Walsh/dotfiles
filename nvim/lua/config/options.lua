@@ -397,10 +397,22 @@ local function find_listed_buffer()
     end
 end
 
--- previous buffer keymaps
-
 local move_new_vert_split = "vs | wincmd l"
 local move_new_horizontal_split = "sp | wincmd j"
+
+local return_code = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+
+vim.keymap.set("n", "<leader>n<CR>", function()
+    vim.cmd(move_new_vert_split)
+    vim.api.nvim_feedkeys(return_code, "n", false)
+end)
+
+vim.keymap.set("n", "<leader>N<CR>", function()
+    vim.cmd(move_new_horizontal_split)
+    vim.api.nvim_feedkeys(return_code, false)
+end)
+
+-- previous buffer keymaps
 
 vim.keymap.set("n", "<leader>[", function()
     if find_listed_buffer() then
