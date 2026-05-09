@@ -398,7 +398,7 @@ vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
-vim.keymap.set("n", "<leader>l", function()
+vim.keymap.set("n", "<leader>lf", function()
     vim.lsp.buf.format {
         async = true,
     }
