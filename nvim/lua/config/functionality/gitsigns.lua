@@ -53,9 +53,4 @@ gitsigns.setup {
 vim.keymap.set("n", "<leader>gd", gitsigns.diffthis, { desc = "See the git diff for the current file " })
 vim.keymap.set("n", "<leader>gb", gitsigns.blame, { desc = "Toggle the global git blame" })
 vim.keymap.set("n", "<leader>gi", gitsigns.blame_line, { desc = "Inspect the commit for the current line" })
-vim.keymap.set(
-    "n",
-    "<leader>gl",
-    gitsigns.toggle_current_line_blame,
-    { desc = "Toggle the current line blame" }
-)
+vim.keymap.set("n", "<leader>gl", gitsigns.toggle_current_line_blame, { desc = "Toggle the current line blame" })
