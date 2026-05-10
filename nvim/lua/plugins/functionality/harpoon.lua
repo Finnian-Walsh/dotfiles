@@ -1,7 +1,7 @@
 return {
     {
         src = "https://github.com/ThePrimeagen/harpoon",
-        version = "harpoon2",
+        version = "87b1a35",
     },
     "https://github.com/nvim-lua/plenary.nvim",
 }

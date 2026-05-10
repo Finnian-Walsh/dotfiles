@@ -1,5 +1,3 @@
-if true then return end
-
 local function trim_path(path, dir)
     if path:sub(1, #dir) == dir then
         return path:sub(#dir + 1)
@@ -9,7 +7,6 @@ local function trim_path(path, dir)
 end
 
 local harpoon = require("harpoon")
-vim.print(harpoon)
 
 harpoon:setup {
     settings = {
@@ -101,12 +98,11 @@ for i = 1, 20 do
         harpoon:list():select(i)
         vim.cmd("BufOnly")
     end, {
-    desc = "Harpoon switch to only " .. i .. " and displayed",
-})
+        desc = "Harpoon switch to only " .. i .. " and displayed",
+    })
 
-vim.keymap.set("n", "<leader>O" .. navigation_key, function()
-    harpoon:list():select(i)
-    vim.cmd("BufCurrentOnly")
-end, { desc = "Harpoon switch to only " .. i })
-
+    vim.keymap.set("n", "<leader>O" .. navigation_key, function()
+        harpoon:list():select(i)
+        vim.cmd("BufCurrentOnly")
+    end, { desc = "Harpoon switch to only " .. i })
 end
