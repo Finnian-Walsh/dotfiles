@@ -1,4 +1,3 @@
-
 require("vim._core.ui2").enable()
 
 local local_site = vim.fn.stdpath("data") .. "/site"
@@ -10,8 +9,6 @@ require("core.tabs")
 
 vim.pack.add(require("plugins.aesthetics"))
 require("config.aesthetics")
-
-vim.opt.showtabline = 0
 
 vim.pack.add(require("plugins.functionality"))
 require("config.functionality")
