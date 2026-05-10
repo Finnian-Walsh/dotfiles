@@ -46,11 +46,15 @@ vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename a variable
 vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, { desc = "Code actions" })
 
 local function assert_files_written()
-    local file_changes = { { "Open files have changes:", "ErrorMsg" } }
+    local message_type = "ErrorMsg"
+    local file_changes = { { "Open files have changes:", message_type } }
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_get_option(buf, "modified") then
-            table.insert(file_changes, { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), "Normal" })
+            table.insert(
+                file_changes,
+                { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), message_type }
+            )
         end
     end
 
@@ -66,7 +70,7 @@ local function assert_files_written()
             end
         end
 
-        vim.api.nvim_echo(file_changes)
+        vim.api.nvim_echo(file_changes, true, {})
     end
 
     return not changes
