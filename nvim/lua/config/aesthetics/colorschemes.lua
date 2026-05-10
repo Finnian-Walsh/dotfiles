@@ -390,7 +390,10 @@ local function remove_from_favorites()
         end
     end
 
-    vim.notify(string.format("Colorscheme `%s` is not in your favorites", current_colorscheme_name), vim.log.levels.WARN)
+    vim.notify(
+        string.format("Colorscheme `%s` is not in your favorites", current_colorscheme_name),
+        vim.log.levels.WARN
+    )
 end
 
 -- keymaps

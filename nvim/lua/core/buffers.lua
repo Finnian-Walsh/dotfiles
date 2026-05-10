@@ -255,4 +255,3 @@ vim.keymap.set("n", "<leader><Left>", function()
         vim.cmd("BufferLineMovePrev")
     end
 end, { desc = "Move the buffer left" })
-

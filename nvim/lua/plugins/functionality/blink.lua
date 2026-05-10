@@ -4,4 +4,3 @@ return {
     "https://github.com/saghen/blink.cmp",
     "https://github.com/saghen/blink.compat",
 }
-

@@ -1,4 +1,3 @@
-
 local winresize = require("winresize")
 local resize = winresize.resize
 vim.keymap.set("n", "<C-left>", function()

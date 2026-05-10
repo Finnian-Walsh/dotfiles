@@ -133,8 +133,8 @@ elseif current_month == 12 then
     table.insert(header_extensions, { "" })
     table.insert(header_extensions, {
         days_until_xmas < 0 and "Merry Christmas!"
-        or days_until_xmas == 1 and "1 day until Christmas!"
-        or days_until_xmas .. " days until Christmas!",
+            or days_until_xmas == 1 and "1 day until Christmas!"
+            or days_until_xmas .. " days until Christmas!",
         center = true,
     })
 end
@@ -351,8 +351,8 @@ local maximize_button = minimal_buttons._buttons
 local minimal_layout = {
     minimal_buttons:build(
         vim.fn.strdisplaywidth(maximize_button.name)
-        + vim.fn.strdisplaywidth(maximize_button.key)
-        + vim.fn.strdisplaywidth("[]")
+            + vim.fn.strdisplaywidth(maximize_button.key)
+            + vim.fn.strdisplaywidth("[]")
     ),
 }
 
@@ -416,4 +416,3 @@ vim.keymap.set("n", "<leader>NA", function()
         vim.cmd("Alpha")
     end
 end, { desc = "Toggle Alpha in a new horizontal split" })
-
