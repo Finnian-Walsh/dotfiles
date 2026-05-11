@@ -44,13 +44,15 @@ end)
 
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename a variable" })
 vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, { desc = "Code actions" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
 
 local function assert_files_written()
     local message_type = "ErrorMsg"
     local file_changes = { { "Open files have changes:", message_type } }
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_get_option(buf, "modified") then
+        if vim.bo[buf].modified then
             table.insert(
                 file_changes,
                 { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), message_type }
@@ -62,7 +64,7 @@ local function assert_files_written()
 
     if changes then
         if #file_changes == 2 then
-            if vim.api.nvim_buf_get_option(0, "modified") then
+            if vim.bo.modified then
                 file_changes[1][1] = "The current file has changes"
                 file_changes[2] = nil
             else
@@ -148,6 +150,12 @@ vim.g.rustaceanvim = {
     },
 }
 
+local lua_library = vim.api.nvim_get_runtime_file("", true)
+
+table.insert(lua_library, "${3rd}/luv/library")
+table.insert(lua_library, "${3rd}/luassert/library")
+table.insert(lua_library, "${3rd}/busted/library")
+
 vim.lsp.config("lua_ls", {
     settings = {
         Lua = {
@@ -159,6 +167,10 @@ vim.lsp.config("lua_ls", {
                     "vim",
                 },
             },
+            -- workspace = {
+            --     library = lua_library,
+            --     -- checkThirdParty = true,
+            -- },
         },
     },
 })
