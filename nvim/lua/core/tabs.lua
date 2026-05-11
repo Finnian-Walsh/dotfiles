@@ -1,9 +1,3 @@
---[[
---------------------------------------------------------
-    Tab keymaps
---------------------------------------------------------
-]]
-
 vim.keymap.set("n", "<leader><Tab>n", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnew")
@@ -71,12 +65,6 @@ vim.keymap.set("n", "<leader><S-Left>", function()
 end, { desc = "Move the tab left" })
 
 -- Tab switching
-
--- stylua: ignore
-_G.nav_keys = {
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-    "!", "\"", "£", "$", "%", "^", "&", "*", "(", ")"
-}
 
 for i = 1, 20 do
     local command = "<cmd>tabnext " .. i .. "<CR>"

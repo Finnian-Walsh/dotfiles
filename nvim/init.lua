@@ -6,6 +6,8 @@ vim.opt.packpath:prepend(local_site)
 require("core.options")
 require("core.buffers")
 require("core.tabs")
+require("core.line_metadata")
+require("core.keymap_inspector")
 
 vim.pack.add(require("plugins.aesthetics"))
 require("config.aesthetics")
