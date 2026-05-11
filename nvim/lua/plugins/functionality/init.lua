@@ -3,7 +3,7 @@ local plugins = {}
 vim.list_extend(plugins, require("plugins.functionality.blink"))
 vim.list_extend(plugins, require("plugins.functionality.editor"))
 vim.list_extend(plugins, require("plugins.functionality.gitsigns"))
-vim.list_extend(plugins, require("plugins.functionality.harpoon"))
+vim.list_extend(plugins, require("plugins.functionality.hooker"))
 vim.list_extend(plugins, require("plugins.functionality.lspconfig"))
 vim.list_extend(plugins, require("plugins.functionality.neo-tree"))
 vim.list_extend(plugins, require("plugins.functionality.neorg"))

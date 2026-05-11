@@ -1,7 +1,9 @@
+-- vim.opt.rtp:append("~/Dev/hooker.nvim/")
+
 require("config.functionality.blink")
 require("config.functionality.editor")
 require("config.functionality.gitsigns")
-require("config.functionality.harpoon")
+require("config.functionality.hooker")
 require("config.functionality.lspconfig")
 require("config.functionality.neo-tree")
 require("config.functionality.neorg")
