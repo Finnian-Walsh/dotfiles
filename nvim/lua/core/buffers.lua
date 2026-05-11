@@ -160,7 +160,7 @@ end, { desc = "Toggle floating discord window" })
 --------------------------------------------------------
 ]]
 
-local function delete_buffer(buf)
+local function safe_delete_buffer(buf)
     if not vim.bo[buf].modified then
         vim.api.nvim_buf_delete(buf, {})
         return
@@ -196,7 +196,7 @@ local function delete_undisplayed_buffers()
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if not displayed[buf] then
-            delete_buffer(buf)
+            safe_delete_buffer(buf)
         end
     end
 end
@@ -213,7 +213,7 @@ local function delete_other_buffers()
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if buf ~= current_buf then
-            delete_buffer(buf)
+            safe_delete_buffer(buf)
         end
     end
 end
@@ -233,12 +233,12 @@ vim.api.nvim_create_user_command(
 )
 
 vim.keymap.set("n", "<leader>bd", function()
-    delete_buffer(0)
+    safe_delete_buffer(0)
 end, { noremap = true, desc = "Delete current buffer" })
 
 vim.keymap.set("n", "<leader>bD", function()
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        delete_buffer(bufnr)
+        safe_delete_buffer(bufnr)
     end
 end, { noremap = true, desc = "Delete all buffers" })
 
