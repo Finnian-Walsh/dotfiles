@@ -1,6 +1,8 @@
 local hooker = require("hooker")
 
-hooker.setup()
+hooker.setup {
+    open_directory = require("oil").open,
+}
 
 vim.keymap.set("n", "<leader>a", hooker.add_current, { desc = "Add current file to hooker" })
 
