@@ -168,21 +168,18 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "{", function()
             header_values:select_next()
             header.val = header_values.selected.text
-            vim.cmd([[AlphaRedraw]])
+            vim.cmd.AlphaRedraw()
         end, merge_opts { desc = "Previous header value" })
 
         vim.keymap.set("n", "}", function()
             header_values:select_previous()
             header.val = header_values.selected.text
-            vim.cmd([[AlphaRedraw]])
+            vim.cmd.AlphaRedraw()
         end, merge_opts { desc = "Next header value" })
 
-        vim.keymap.set(
-            "n",
-            "F",
-            "<cmd>Telescope find_files initial_mode=normal<CR>",
-            merge_opts { desc = "Find files (start in normal)" }
-        )
+        vim.keymap.set("n", "F", function()
+            vim.cmd.Telescope("find_files", "initial_mode=normal")
+        end, merge_opts { desc = "Find files (start in normal)" })
     end,
 })
 
@@ -195,35 +192,35 @@ local buttons = ButtonCreator.new {
             "󱏒 Oil",
             "t",
             function()
-                vim.cmd("Oil")
+                vim.cmd.Oil()
             end,
         },
         {
             "󰭎 Live grep",
             "/",
             function()
-                vim.cmd("Telescope live_grep")
+                vim.cmd.Telescope("live_grep")
             end,
         },
         {
             " Fuzzy find",
             "f",
             function()
-                vim.cmd("Telescope find_files")
+                vim.cmd.Telescope("find_files")
             end,
         },
         {
             " Resume telescope",
             "R",
             function()
-                vim.cmd("Telescope resume")
+                vim.cmd.Telescope("resume", "initial_mode=normal")
             end,
         },
         {
             " Header coloring",
             "h",
             function()
-                vim.cmd("HeaderColor")
+                vim.cmd.HeaderColor()
             end,
         },
         {
@@ -236,9 +233,7 @@ local buttons = ButtonCreator.new {
         {
             "󰈆 Quit",
             "q",
-            function()
-                vim.cmd("quit")
-            end,
+            vim.cmd.quit,
         },
     },
 }
@@ -256,9 +251,7 @@ local minimal_buttons = ButtonCreator.new {
         {
             "󰈆 Quit",
             "q",
-            function()
-                vim.cmd("quit")
-            end,
+            vim.cmd.quit,
         },
     },
 }
@@ -333,7 +326,7 @@ update_padding_values()
 vim.api.nvim_create_autocmd("VimResized", {
     callback = function()
         update_padding_values()
-        vim.cmd("AlphaRedraw")
+        vim.cmd.AlphaRedraw()
     end,
 })
 
@@ -367,8 +360,8 @@ local function reset_alpha_buffers()
         end
 
         vim.api.nvim_win_call(win, function()
-            vim.cmd("enew")
-            vim.cmd("Alpha")
+            vim.cmd.enew()
+            vim.cmd.Alpha()
         end)
 
         ::continue::
@@ -401,18 +394,18 @@ end
 
 require("alpha").setup(theme)
 
-vim.keymap.set("n", "<leader>A", "<cmd>Alpha<CR>", { desc = "Toggle Alpha" })
+vim.keymap.set("n", "<leader>A", vim.cmd.Alpha, { desc = "Toggle Alpha" })
 
 vim.keymap.set("n", "<leader>nA", function()
     vim.cmd("vs | wincmd l")
     if vim.bo.filetype ~= "alpha" then
-        vim.cmd("Alpha")
+        vim.cmd.Alpha()
     end
 end, { desc = "Toggle Alpha in a new vertical split" })
 
 vim.keymap.set("n", "<leader>NA", function()
     vim.cmd("sp | wincmd j")
     if vim.bo.filetype ~= "alpha" then
-        vim.cmd("Alpha")
+        vim.cmd.Alpha()
     end
 end, { desc = "Toggle Alpha in a new horizontal split" })

@@ -48,7 +48,7 @@ end
 update_date()
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
+vim.keymap.set("n", "<Esc>", vim.cmd.nohlsearch, { noremap = true, desc = "Turn highlight off" })
 
 -- Automatic empty buffer deletion
 
@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd("BufHidden", {
 
 local function schedule_tabline_redraw()
     vim.schedule(function()
-        vim.cmd("redrawtabline")
+        vim.cmd.redrawtabline()
     end)
 end
 
@@ -111,7 +111,7 @@ vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
-vim.keymap.set("n", "<leader>Q", "<cmd>restart<CR>", { noremap = true, desc = "Restart neovim" })
+vim.keymap.set("n", "<leader>Q", vim.cmd.restart, { noremap = true, desc = "Restart neovim" })
 
 -- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
@@ -124,7 +124,7 @@ vim.api.nvim_create_autocmd("FileType", {
 if current_month == 12 then
     vim.api.nvim_create_autocmd("BufEnter", {
         callback = function()
-            vim.cmd("LetItSnow")
+            vim.cmd.LetItSnow()
         end,
     })
 end

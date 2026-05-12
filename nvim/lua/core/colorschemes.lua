@@ -1,5 +1,5 @@
-vim.g.catppuccin_flavour = "mocha"
-vim.cmd([[colorscheme catppuccin]])
+-- vim.g.catppuccin_flavour = "mocha"
+-- vim.cmd([[colorscheme catppuccin]])
 
 --[[
 --------------------------------------------------------
@@ -150,7 +150,7 @@ function ColorschemeAction:apply()
         current_colorscheme[key] = value
     end
 
-    vim.cmd("colorscheme " .. self.colorscheme)
+    vim.cmd.colorscheme(self.colorscheme)
 end
 
 function ColorschemeAction:append_and_apply()
@@ -351,7 +351,7 @@ local function open_favorites(opts)
                 actions.select_default:replace(function()
                     actions.close(bufnr)
                     local selection = action_state.get_selected_entry()
-                    vim.cmd("colorscheme " .. selection[1])
+                    vim.cmd.colorscheme(selection[1])
                 end)
                 return true
             end,

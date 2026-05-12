@@ -6,4 +6,4 @@ require("let-it-snow").setup {
     delay = 150,
 }
 
-vim.keymap.set("n", "<leader>S", "<cmd>LetItSnow<CR>", { desc = "Let it snow!" })
+vim.keymap.set("n", "<leader>S", vim.cmd.LetItSnow, { desc = "Let it snow!" })

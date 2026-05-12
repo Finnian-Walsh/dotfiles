@@ -1,6 +1,6 @@
 require("mason").setup {}
 
-vim.keymap.set("n", "<leader>M", "<cmd>Mason<CR>", { desc = "Open Mason" })
+vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Open Mason" })
 
 local ensure_installed = {
     "stylua",
@@ -86,12 +86,12 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
                 vim.fn.system { "cargo", "fmt" }
-                vim.cmd("edit")
+                vim.cmd.edit()
             end
         end, opts)
 
         vim.keymap.set("n", "<leader>`", function()
-            vim.cmd("e Cargo.toml")
+            vim.cmd.edit("Cargo.toml")
         end, opts)
     end,
 })
@@ -104,7 +104,7 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
                 vim.fn.system { "stylua", "." }
-                vim.cmd("edit")
+                vim.cmd.edit()
             end
         end, opts)
     end,
