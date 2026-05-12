@@ -1,4 +1,13 @@
-require("telescope").setup { defaults = {} }
+require("telescope").setup {
+    extensions = {
+        fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+        },
+    },
+}
 
 if vim.fn.executable("rg") == 0 then
     vim.schedule(function()
@@ -17,7 +26,9 @@ vim.keymap.set("n", "<leader>F", function()
     builtin.find_files(initial_mode_normal)
 end, { desc = "Find files with telescope" })
 
-vim.keymap.set("n", "<leader>R", builtin.resume, { desc = "Resume previous telescope action" })
+vim.keymap.set("n", "<leader>R", function()
+    builtin.resume(initial_mode_normal)
+end, { desc = "Resume previous telescope action" })
 vim.keymap.set("n", "<leader>D", function()
     builtin.diagnostics(initial_mode_normal)
 end, { desc = "View diagnostics" })
@@ -35,11 +46,6 @@ vim.keymap.set("n", "<leader>k/", builtin.keymaps, { desc = "Search for keymaps 
 vim.keymap.set("n", "<leader>k?", function()
     builtin.keymaps(initial_mode_normal)
 end, { desc = "Search for keymaps with telescope" })
-
-vim.keymap.set("n", "<leader>p", builtin.planets, { desc = "View planets with telescope" })
-vim.keymap.set("n", "<leader>P", function()
-    builtin.planets(initial_mode_normal)
-end, { desc = "View planets with telescope" })
 
 vim.keymap.set("n", "<leader>u", "<cmd>TodoTelescope<CR>", { desc = "Search for todo comments" })
 vim.keymap.set("n", "<leader>U", "<cmd>TodoTelescope initial_mode=normal<CR>", { desc = "View todo comments" })
