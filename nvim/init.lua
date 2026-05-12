@@ -12,6 +12,8 @@ require("core.keymap_inspector")
 vim.pack.add(require("plugins.aesthetics"))
 require("config.aesthetics")
 
+require("core.colorschemes")
+
 vim.pack.add(require("plugins.functionality"))
 require("config.functionality")
 
