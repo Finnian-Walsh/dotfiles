@@ -12,5 +12,6 @@ vim.list_extend(plugins, require("plugins.functionality.oil"))
 vim.list_extend(plugins, require("plugins.functionality.telescope"))
 vim.list_extend(plugins, require("plugins.functionality.which-key"))
 vim.list_extend(plugins, require("plugins.functionality.winresize"))
+vim.list_extend(plugins, require("plugins.functionality.undotree"))
 
 return plugins
