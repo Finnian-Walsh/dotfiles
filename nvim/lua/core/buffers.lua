@@ -21,16 +21,14 @@ end
 local move_new_vert_split = "vs | wincmd l"
 local move_new_horizontal_split = "sp | wincmd j"
 
-local return_code = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
-
 vim.keymap.set("n", "<leader>n<CR>", function()
     vim.cmd(move_new_vert_split)
-    vim.api.nvim_feedkeys(return_code, "n", false, false)
+    vim.api.nvim_input("<CR>")
 end)
 
 vim.keymap.set("n", "<leader>N<CR>", function()
     vim.cmd(move_new_horizontal_split)
-    vim.api.nvim_feedkeys(return_code, false, false)
+    vim.api.nvim_input("<CR>")
 end)
 
 -- previous buffer keymaps
@@ -89,7 +87,7 @@ vim.keymap.set("n", "<leader>N]", function()
     end
 end, { noremap = true, desc = "Next buffer " })
 
-vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Open a new empty buffer" })
+vim.keymap.set("n", "<leader>bn", vim.cmd.enew, { desc = "Open a new empty buffer" })
 
 local discord_buffer, discord_win
 
@@ -151,7 +149,7 @@ vim.keymap.set("n", discord_keymap, function()
         vim.keymap.set("n", discord_keymap, close_discord_window, { buffer = buf })
     end
 
-    vim.cmd("startinsert")
+    vim.cmd.startinsert()
 end, { desc = "Toggle floating discord window" })
 
 --[[
@@ -176,7 +174,7 @@ local function safe_delete_buffer(buf)
             break
         elseif response_key_codes.affirmative[response] then
             vim.api.nvim_buf_call(buf, function()
-                vim.cmd("write")
+                vim.cmd.write()
             end)
             vim.api.nvim_buf_delete(buf, {})
             break
@@ -246,12 +244,12 @@ end, { noremap = true, desc = "Delete all buffers" })
 
 vim.keymap.set("n", "<leader><Right>", function()
     for _ = 1, vim.v.count1 do
-        vim.cmd("BufferLineMoveNext")
+        vim.cmd.BufferLineMoveNext()
     end
 end, { desc = "Move the buffer right" })
 
 vim.keymap.set("n", "<leader><Left>", function()
     for _ = 1, vim.v.count1 do
-        vim.cmd("BufferLineMovePrev")
+        vim.cmd.BufferLineMovePrev()
     end
 end, { desc = "Move the buffer left" })

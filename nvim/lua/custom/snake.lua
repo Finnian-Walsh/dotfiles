@@ -166,7 +166,7 @@ local function snake(opts)
 
     vim.keymap.set("n", "<Esc>", function()
         game_active = false
-        vim.cmd("quit")
+        vim.cmd.quit()
     end, buffer_local)
 
     local BODY_LENGTH = 3
@@ -260,4 +260,4 @@ vim.api.nvim_create_user_command("Snake", snake, {
     end,
 })
 
-vim.keymap.set("n", "<leader>s", "<cmd>Snake<CR>", { desc = "Play snake" })
+vim.keymap.set("n", "<leader>s", vim.cmd.Snake, { desc = "Play snake" })
