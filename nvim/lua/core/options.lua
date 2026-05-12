@@ -50,10 +50,6 @@ update_date()
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { noremap = true, desc = "Turn highlight off" })
 
-vim.keymap.set("n", "<leader>V", function()
-    vim.pack.update()
-end, { desc = "Update plugins" })
-
 -- Automatic empty buffer deletion
 
 local function auto_buffer_delete(buf)
@@ -115,11 +111,13 @@ vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move
 vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
 vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
+vim.keymap.set("n", "<leader>Q", "<cmd>restart<CR>", { noremap = true, desc = "Restart neovim" })
+
 -- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function()
-        vim.opt.formatoptions:remove { "o" }
+        vim.opt.formatoptions:remove { "r" }
     end,
 })
 
