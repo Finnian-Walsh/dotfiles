@@ -12,12 +12,7 @@ oil.setup {
     },
 }
 
-local function open_at_cwd()
-    oil.open(vim.uv.cwd())
-end
-
 vim.keymap.set("n", "<leader>t", oil.open, { desc = "Open oil file tree" })
-vim.keymap.set("n", "<leader>T", open_at_cwd, { desc = "Open oil file tree at cwd" })
 
 vim.keymap.set("n", "<leader>nt", function()
     vim.cmd("vs | wincmd l")
@@ -28,13 +23,3 @@ vim.keymap.set("n", "<leader>Nt", function()
     vim.cmd("sp | wincmd j")
     oil.open()
 end, { desc = "Open oil file tree in new horizontal split" })
-
-vim.keymap.set("n", "<leader>nT", function()
-    vim.cmd("vs | wincmd l")
-    open_at_cwd()
-end, { desc = "Open oil file tree at cwd in new vertical split" })
-
-vim.keymap.set("n", "<leader>NT", function()
-    vim.cmd("sp | wincmd j")
-    open_at_cwd()
-end, { desc = "Open oil file tree at cwd in new horizontal split" })
