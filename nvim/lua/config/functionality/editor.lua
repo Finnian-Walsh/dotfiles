@@ -1,9 +1,13 @@
-require("nvim-autopairs").setup {
-    check_ts = true,
-    ts_config = {
-        rust = { "string", "char" },
-    },
-}
+vim.api.nvim_create_autocmd("InsertEnter", {
+    callback = function()
+        require("nvim-autopairs").setup {
+            check_ts = true,
+            ts_config = {
+                rust = { "string", "char" },
+            },
+        }
+    end,
+})
 
 -- TODO: add the next thing to the neovim config
 -- FIX: critical bug!
