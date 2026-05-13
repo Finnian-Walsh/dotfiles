@@ -15,11 +15,15 @@ if not vim.uv.os_getenv("NO_CLANGD") then
     table.insert(ensure_installed, "clangd")
 end
 
-require("mason-lspconfig").setup {
-    ensure_installed = ensure_installed,
-    automatic_enable = { exclude = { "rust_analyzer" } },
-    -- ignore_install = { "rust_analyzer" },
-}
+vim.api.nvim_create_autocmd("UIEnter", {
+    callback = function()
+        require("mason-lspconfig").setup {
+            ensure_installed = ensure_installed,
+            automatic_enable = { exclude = { "rust_analyzer" } },
+            -- ignore_install = { "rust_analyzer" },
+        }
+    end,
+})
 
 require("conform").setup {
     options = {
