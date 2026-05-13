@@ -21,16 +21,6 @@ end
 local move_new_vert_split = "vs | wincmd l"
 local move_new_horizontal_split = "sp | wincmd j"
 
-vim.keymap.set("n", "<leader>n<CR>", function()
-    vim.cmd(move_new_vert_split)
-    vim.api.nvim_input("<CR>")
-end)
-
-vim.keymap.set("n", "<leader>N<CR>", function()
-    vim.cmd(move_new_horizontal_split)
-    vim.api.nvim_input("<CR>")
-end)
-
 -- previous buffer keymaps
 
 vim.keymap.set("n", "<leader>[", function()
