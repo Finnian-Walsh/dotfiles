@@ -136,7 +136,10 @@ local function set_global_keys_check(char)
         end
 
         if #mappings == 0 then
-            mappings[1] = { string.format("<leader>%s is not mapped\n", char), "DiagnosticInfo" }
+            mappings[1] = { string.format("<leader>%s is not mapped", char), "DiagnosticInfo" }
+        else
+            local last_mapping = mappings[#mappings]
+            last_mapping[1] = last_mapping[1]:sub(0, -2)
         end
 
         vim.api.nvim_echo(mappings, true, {})
