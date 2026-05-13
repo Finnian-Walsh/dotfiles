@@ -1,6 +1,3 @@
--- vim.g.catppuccin_flavour = "mocha"
--- vim.cmd([[colorscheme catppuccin]])
-
 --[[
 --------------------------------------------------------
     Colorscheme functionality
@@ -323,7 +320,6 @@ end
 
 -- favorites functionality
 
-local telescope_modules_loaded = false
 local pickers
 local finders
 local conf
@@ -331,7 +327,7 @@ local actions
 local action_state
 
 local function open_favorites(opts)
-    if not telescope_modules_loaded then
+    if not pickers then
         pickers = require("telescope.pickers")
         finders = require("telescope.finders")
         conf = require("telescope.config").values
