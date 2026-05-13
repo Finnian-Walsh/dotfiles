@@ -9,12 +9,32 @@ require("telescope").setup {
     },
 }
 
-require("telescope").load_extension("fzf")
+local function find_telescope_fzf()
+    for _, path in ipairs(vim.opt.rtp:get()) do
+        if path:match("telescope%-fzf%-native%.nvim") then
+            return path
+        end
+    end
+end
+
+vim.api.nvim_create_autocmd("UIEnter", {
+    callback = function()
+        vim.system({ "make", find_telescope_fzf() }, {}, function(res)
+            if res.code ~= 0 then
+                error(
+                    string.format("Failed to build telescope-fzf-native.nvim with code: %d\n%s", res.code, res.stderr),
+                    vim.log.levels.ERROR
+                )
+                return
+            end
+
+            require("telescope").load_extension("fzf")
+        end)
+    end,
+})
 
 if vim.fn.executable("rg") == 0 then
-    vim.schedule(function()
-        vim.notify("Warning: ripgrep is not available, so live grep will not work", vim.log.levels.WARN)
-    end)
+    vim.notify("Warning: ripgrep is not available, so live grep will not work", vim.log.levels.WARN)
 end
 
 local builtin = require("telescope.builtin")
