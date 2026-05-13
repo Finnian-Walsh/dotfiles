@@ -8,12 +8,9 @@ vim.keymap.set("n", "<leader>a", hooker.add_current, { desc = "Add current file 
 
 vim.keymap.set("n", "<leader>h", hooker.menu)
 
-for i = 1, 20 do
-    local navigation_key = nav_keys[i]
-
+local function make_bound(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
-
-    local function bound_function(f)
+    return function(f)
         return function()
             if hooker.length() >= i then
                 f()
@@ -22,6 +19,11 @@ for i = 1, 20 do
             end
         end
     end
+end
+
+for i = 1, 20 do
+    local navigation_key = nav_keys[i]
+    local bound_function = make_bound(i)
 
     vim.keymap.set(
         "n",
@@ -29,7 +31,7 @@ for i = 1, 20 do
         bound_function(function()
             hooker.select(i)
         end),
-        { desc = "Harpoon " .. i }
+        { desc = "Hooker " .. i }
     )
 
     vim.keymap.set(
@@ -39,7 +41,7 @@ for i = 1, 20 do
             vim.cmd("vs | wincmd l")
             hooker.select(i)
         end),
-        { desc = "Harpoon " .. i .. " (vertical split)" }
+        { desc = "Hooker " .. i .. " (vertical split)" }
     )
 
     vim.keymap.set(
@@ -49,7 +51,7 @@ for i = 1, 20 do
             vim.cmd("sp | wincmd j")
             hooker.select(i)
         end),
-        { desc = "Harpoon " .. i .. " (horizontal split)" }
+        { desc = "Hooker " .. i .. " (horizontal split)" }
     )
 
     vim.keymap.set(
@@ -60,7 +62,7 @@ for i = 1, 20 do
             vim.cmd.BufOnly()
         end),
         {
-            desc = "Harpoon switch to only " .. i .. " and displayed",
+            desc = "Hooker switch to only " .. i .. " and displayed",
         }
     )
 
@@ -71,6 +73,6 @@ for i = 1, 20 do
             hooker.select(i)
             vim.cmd.BufCurrentOnly()
         end),
-        { desc = "Harpoon switch to only " .. i }
+        { desc = "Hooker switch to only " .. i }
     )
 end
