@@ -44,7 +44,7 @@ vim.keymap.set("n", "<leader>lf", function()
     vim.lsp.buf.format {
         async = true,
     }
-end)
+end, { desc = "Format the current file" })
 
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename a variable" })
 vim.keymap.set("n", "<leader>c", vim.lsp.buf.code_action, { desc = "Code actions" })
@@ -84,46 +84,40 @@ end
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
-    callback = function()
-        local opts = { buffer = true }
-
+    callback = function(ev)
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
                 vim.fn.system { "cargo", "fmt" }
                 vim.cmd.edit()
             end
-        end, opts)
+        end, { desc = "Globally format files", buffer = ev.buf })
 
         vim.keymap.set("n", "<leader>`", function()
             vim.cmd.edit("Cargo.toml")
-        end, opts)
+        end, { desc = "Go to the cargo.toml file", buffer = ev.buf })
     end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "lua",
-    callback = function()
-        local opts = { buffer = true }
-
+    callback = function(ev)
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
                 vim.fn.system { "stylua", "." }
                 vim.cmd.edit()
             end
-        end, opts)
+        end, { desc = "Globally format files", buffer = ev.buf })
     end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "python",
-    callback = function()
-        local opts = { buffer = true }
-
+    callback = function(ev)
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
                 vim.notify("Not yet implemented", vim.log.levels.WARN)
             end
-        end, opts)
+        end, { desc = "Globally format files", buf = ev.buf })
     end,
 })
 
