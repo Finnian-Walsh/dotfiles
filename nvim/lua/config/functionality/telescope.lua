@@ -9,6 +9,8 @@ require("telescope").setup {
     },
 }
 
+require("telescope").load_extension("fzf")
+
 if vim.fn.executable("rg") == 0 then
     vim.schedule(function()
         vim.notify("Warning: ripgrep is not available, so live grep will not work", vim.log.levels.WARN)
