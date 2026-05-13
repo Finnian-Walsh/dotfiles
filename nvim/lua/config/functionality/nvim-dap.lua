@@ -16,7 +16,7 @@ vim.keymap.set("n", "<leader>dw", function()
 
     local sidebar = widgets.sidebar(widgets.scopes)
     sidebar.open()
-end)
+end, { desc = "Open dap widgets" })
 
 vim.fn.sign_define("DapBreakpoint", {
     text = "🔴", -- symbol
