@@ -1,13 +1,20 @@
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#00BFA5", bg = "NONE", bold = true })
-vim.opt.showtabline = 0
 
-local pickers = require("telescope.pickers")
-local finders = require("telescope.finders")
-local conf = require("telescope.config").values
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
+local pickers
+local finders
+local conf
+local actions
+local action_state
 
 local function open_picker()
+    if not pickers then
+        pickers = require("telescope.pickers")
+        finders = require("telescope.finders")
+        conf = require("telescope.config").values
+        actions = require("telescope.actions")
+        action_state = require("telescope.actions.state")
+    end
+
     pickers
         .new({}, {
             prompt_title = "Plugins",
