@@ -1,4 +1,5 @@
 local oil = require("oil")
+
 oil.setup {
     keymaps = {
         ["<localleader>h"] = "actions.toggle_hidden",
