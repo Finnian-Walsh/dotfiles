@@ -38,7 +38,6 @@ if vim.fn.executable("rg") == 0 then
 end
 
 local builtin = require("telescope.builtin")
-
 local initial_mode_normal = { initial_mode = "normal" }
 
 vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Live grep with telescope" })
