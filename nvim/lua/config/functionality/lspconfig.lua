@@ -92,9 +92,12 @@ vim.api.nvim_create_autocmd("FileType", {
             end
         end, { desc = "Globally format files", buffer = ev.buf })
 
-        vim.keymap.set("n", "<leader>`", function()
-            vim.cmd.edit("Cargo.toml")
-        end, { desc = "Go to the cargo.toml file", buffer = ev.buf })
+        vim.keymap.set(
+            "n",
+            "<leader>`",
+            "<cmd>edit Cargo.toml<CR>",
+            { desc = "Go to the cargo.toml file", buffer = ev.buf }
+        )
     end,
 })
 
