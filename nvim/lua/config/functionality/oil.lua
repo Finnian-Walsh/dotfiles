@@ -12,14 +12,14 @@ oil.setup {
     },
 }
 
-vim.keymap.set("n", "<leader>t", oil.open, { desc = "Open oil file tree" })
+vim.keymap.set("n", "<leader>T", oil.open, { desc = "Open oil file tree" })
 
-vim.keymap.set("n", "<leader>nt", function()
+vim.keymap.set("n", "<leader>nT", function()
     vim.cmd("vs | wincmd l")
     oil.open()
 end, { desc = "Open oil file tree in new vertical split" })
 
-vim.keymap.set("n", "<leader>Nt", function()
+vim.keymap.set("n", "<leader>NT", function()
     vim.cmd("sp | wincmd j")
     oil.open()
 end, { desc = "Open oil file tree in new horizontal split" })

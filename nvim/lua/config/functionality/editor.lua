@@ -9,6 +9,10 @@ vim.api.nvim_create_autocmd("InsertEnter", {
     end,
 })
 
+require("mini.files").setup {}
+
+vim.keymap.set("n", "<leader>t", MiniFiles.open, { desc = "Mini files" })
+
 -- TODO: add the next thing to the neovim config
 -- FIX: critical bug!
 -- PERF: yes yes yes yes we have the best performance ever
