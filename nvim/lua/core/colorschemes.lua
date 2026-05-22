@@ -56,7 +56,7 @@ local JsonFields = setmetatable({
 local current_colorscheme_name = vim.g.colors_name
 
 local current_colorscheme, favorite_colorschemes
-local colorscheme_path = vim.fn.stdpath("data") .. "/colorschemes.json"
+local colorscheme_path = vim.fs.joinpath(vim.fn.stdpath("data"), "colorschemes.json")
 
 local ColorschemeState = {}
 ColorschemeState.__index = ColorschemeState
