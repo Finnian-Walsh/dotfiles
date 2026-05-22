@@ -2,7 +2,7 @@ local CycleSystem = require("config.aesthetics.alpha.cycle_system")
 local ButtonCreator = require("config.aesthetics.alpha.button_creator")
 local HeaderValues = require("config.aesthetics.alpha.header_values")
 
-local alpha_config_path = vim.fn.stdpath("data") .. "/alpha_config.json"
+local alpha_config_path = vim.fs.joinpath(vim.fn.stdpath("data"), "alpha_config.json")
 
 local Themes = setmetatable({
     NORMAL = "normal",
@@ -180,6 +180,15 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "F", function()
             vim.cmd.Telescope("find_files", "initial_mode=normal")
         end, merge_opts { desc = "Find files (start in normal)" })
+
+        vim.keymap.set("n", "T", function()
+            vim.cmd.Oil()
+        end, merge_opts { desc = "Open oil" })
+
+        vim.defer_fn(function()
+            vim.keymap.set("n", "cs", "<nop>", opts)
+            vim.keymap.set("n", "cS", "<nop>", opts)
+        end, 10)
     end,
 })
 
@@ -189,10 +198,10 @@ local buttons = ButtonCreator.new {
     padding = 1,
     buttons = {
         {
-            "󱏒 Oil",
+            "󱏒 Mini Files",
             "t",
             function()
-                vim.cmd.Oil()
+                MiniFiles.open() -- don't use the function directly, since it is likely to be loaded after alpha
             end,
         },
         {
@@ -218,7 +227,7 @@ local buttons = ButtonCreator.new {
         },
         {
             " Header coloring",
-            "h",
+            "C",
             function()
                 vim.cmd.HeaderColor()
             end,

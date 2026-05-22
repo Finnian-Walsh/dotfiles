@@ -1,6 +1,6 @@
 require("vim._core.ui2").enable()
 
-local local_site = vim.fn.stdpath("data") .. "/site"
+local local_site = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
 vim.opt.packpath:prepend(local_site)
 
 require("core.options")
