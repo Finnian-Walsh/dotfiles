@@ -1,4 +1,4 @@
-if not vim.env.NEORG then
+if vim.env.NEORG ~= "1" then
     return
 end
 
