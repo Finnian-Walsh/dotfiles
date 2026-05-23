@@ -6,7 +6,7 @@ hooker.setup {
 
 vim.keymap.set("n", "<leader>a", hooker.add_file, { desc = "Add current file to hooker" })
 
-vim.keymap.set("n", "<leader>H", hooker.menu)
+vim.keymap.set("n", "<leader>h", hooker.menu)
 
 local modules
 
@@ -132,7 +132,7 @@ local function load_hooker_telescope()
         :find()
 end
 
-vim.keymap.set("n", "<leader>h", load_hooker_telescope, { desc = "Load hooker using telescope" })
+vim.keymap.set("n", "<leader>H", load_hooker_telescope, { desc = "Load hooker using telescope" })
 
 local function make_bound(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
