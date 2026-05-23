@@ -17,5 +17,5 @@ require("core.colorschemes")
 vim.pack.add(require("plugins.functionality"))
 require("config.functionality")
 
-require("custom.snake")
 require("core.after")
+require("custom.snake")
