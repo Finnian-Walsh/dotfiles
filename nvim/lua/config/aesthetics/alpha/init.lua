@@ -216,17 +216,17 @@ local buttons = ButtonCreator.new {
             end,
         },
         {
-            " Fuzzy find",
+            " Find files",
             "f",
             function()
                 vim.cmd.Telescope("find_files")
             end,
         },
         {
-            " Resume telescope",
-            "R",
+            " New buffer",
+            "e",
             function()
-                vim.cmd.Telescope("resume", "initial_mode=normal")
+                vim.cmd.enew()
             end,
         },
         {
