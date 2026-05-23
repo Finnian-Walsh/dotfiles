@@ -113,6 +113,8 @@ vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equa
 
 vim.keymap.set("n", "<leader>Q", vim.cmd.restart, { noremap = true, desc = "Restart neovim" })
 
+vim.keymap.set("n", "<leader>P", vim.pack.update, { desc = "Update plugins" })
+
 -- File type autocmds
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
