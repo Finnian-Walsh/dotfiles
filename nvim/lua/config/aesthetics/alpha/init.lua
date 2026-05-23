@@ -1,3 +1,7 @@
+if vim.env.DISABLE_ALPHA == "1" then
+    return
+end
+
 local CycleSystem = require("config.aesthetics.alpha.cycle_system")
 local ButtonCreator = require("config.aesthetics.alpha.button_creator")
 local HeaderValues = require("config.aesthetics.alpha.header_values")
