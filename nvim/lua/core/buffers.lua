@@ -198,7 +198,7 @@ vim.api.nvim_create_user_command(
 )
 
 vim.keymap.set("n", "<leader>bd", function()
-    wipe_buffer(0)
+    wipe_buffer("")
 end, { noremap = true, desc = "Delete current buffer" })
 
 vim.keymap.set("n", "<leader>bD", function()
