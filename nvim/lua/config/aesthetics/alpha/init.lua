@@ -157,7 +157,8 @@ local header = {
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "alpha",
     callback = function(event)
-        local opts = { buffer = event.buf, silent = true, noremap = true }
+        local buf = event.buf
+        local opts = { buffer = buf, silent = true, noremap = true }
 
         local function merge_opts(t)
             for k, v in pairs(opts) do
@@ -188,11 +189,6 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "T", function()
             vim.cmd.Oil()
         end, merge_opts { desc = "Open oil" })
-
-        vim.defer_fn(function()
-            vim.keymap.set("n", "cs", "<nop>", opts)
-            vim.keymap.set("n", "cS", "<nop>", opts)
-        end, 10)
     end,
 })
 
@@ -231,7 +227,7 @@ local buttons = ButtonCreator.new {
         },
         {
             " Header coloring",
-            "C",
+            "c",
             function()
                 vim.cmd.HeaderColor()
             end,
