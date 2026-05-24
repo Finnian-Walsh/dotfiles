@@ -8,13 +8,13 @@ vim.keymap.set("n", "<leader>a", hooker.add_file, { desc = "Add current file to 
 
 vim.keymap.set("n", "<leader>h", hooker.menu)
 
-local modules
+local telescope_modules
 
 _G.hooker_picker_selection_reset = 5
 
 local function load_hooker_telescope()
-    if not modules then
-        modules = {
+    if not telescope_modules then
+        telescope_modules = {
             pickers = require("telescope.pickers"),
             finders = require("telescope.finders"),
             conf = require("telescope.config").values,
@@ -24,7 +24,7 @@ local function load_hooker_telescope()
         }
     end
 
-    local get_icon = modules.devicons.get_icon_by_filetype
+    local get_icon = telescope_modules.devicons.get_icon_by_filetype
     local index = 1
 
     local function schedule_ahead(f, loops)
@@ -58,11 +58,11 @@ local function load_hooker_telescope()
         return entry
     end
 
-    modules.pickers
+    telescope_modules.pickers
         .new({}, {
             prompt_title = "Hooker",
 
-            finder = modules.finders.new_table {
+            finder = telescope_modules.finders.new_table {
                 results = hooker.get_written_hooks(),
 
                 entry_maker = entry_maker,
@@ -70,7 +70,7 @@ local function load_hooker_telescope()
 
             attach_mappings = function(buf, map)
                 map("n", "<C-d>", function()
-                    local selection = modules.action_state.get_selected_entry()
+                    local selection = telescope_modules.action_state.get_selected_entry()
                     local hooks = hooker.get_written_hooks()
                     table.remove(hooks, selection.value.index)
 
@@ -78,10 +78,10 @@ local function load_hooker_telescope()
 
                     index = 1
 
-                    local get_picker = modules.action_state.get_current_picker
+                    local get_picker = telescope_modules.action_state.get_current_picker
                     local row = get_picker(buf):get_selection_row()
 
-                    get_picker(buf):refresh(modules.finders.new_table {
+                    get_picker(buf):refresh(telescope_modules.finders.new_table {
                         results = hooker.get_written_hooks(),
                         entry_maker = entry_maker,
                     })
@@ -97,7 +97,7 @@ local function load_hooker_telescope()
                 end)
 
                 map("n", "<C-a>", function()
-                    local search = modules.action_state.get_current_line()
+                    local search = telescope_modules.action_state.get_current_line()
 
                     if #search == 0 then
                         return
@@ -110,10 +110,10 @@ local function load_hooker_telescope()
 
                     index = 1
 
-                    local get_picker = modules.action_state.get_current_picker
+                    local get_picker = telescope_modules.action_state.get_current_picker
                     local row = get_picker(buf):get_selection_row()
 
-                    get_picker(buf):refresh(modules.finders.new_table {
+                    get_picker(buf):refresh(telescope_modules.finders.new_table {
                         results = hooker.get_written_hooks(),
                         entry_maker = entry_maker,
                     })

@@ -320,33 +320,33 @@ end
 
 -- favorites functionality
 
-local pickers
-local finders
-local conf
-local actions
-local action_state
+local telescope_modules
 
 local function open_favorites(opts)
-    if not pickers then
-        pickers = require("telescope.pickers")
-        finders = require("telescope.finders")
-        conf = require("telescope.config").values
-        actions = require("telescope.actions")
-        action_state = require("telescope.actions.state")
+    if not telescope_modules then
+        telescope_modules = {
+            pickers = require("telescope.pickers"),
+            finders = require("telescope.finders"),
+            conf = require("telescope.config").values,
+            actions = require("telescope.actions"),
+            action_state = require("telescope.actions.state"),
+        }
     end
 
     opts = opts or {}
 
-    pickers
+    local actions = telescope_modules.actions
+
+    telescope_modules.pickers
         .new(opts, {
-            finder = finders.new_table {
+            finder = telescope_modules.finders.new_table {
                 results = favorite_colorschemes,
             },
-            sorter = conf.generic_sorter(opts),
+            sorter = telescope_modules.conf.generic_sorter(opts),
             attach_mappings = function(bufnr, _)
                 actions.select_default:replace(function()
                     actions.close(bufnr)
-                    local selection = action_state.get_selected_entry()
+                    local selection = telescope_modules.action_state.get_selected_entry()
                     vim.cmd.colorscheme(selection[1])
                 end)
                 return true
