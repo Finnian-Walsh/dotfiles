@@ -105,11 +105,11 @@ vim.keymap.set("n", "<leader>m", function()
     end
 end, { noremap = true, desc = "Toggle Linus syntax highlighting" })
 
-vim.keymap.set("n", "<C-h>", "<cmd>wincmd h<CR>", { noremap = true, desc = "Move to window left" })
-vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<CR>", { noremap = true, desc = "Move to window below" })
-vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move to window above" })
-vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
-vim.keymap.set("n", "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
+vim.keymap.set({ "n", "t" }, "<C-h>", "<cmd>wincmd h<CR>", { noremap = true, desc = "Move to window left" })
+vim.keymap.set({ "n", "t" }, "<C-j>", "<cmd>wincmd j<CR>", { noremap = true, desc = "Move to window below" })
+vim.keymap.set({ "n", "t" }, "<C-k>", "<cmd>wincmd k<CR>", { noremap = true, desc = "Move to window above" })
+vim.keymap.set({ "n", "t" }, "<C-l>", "<cmd>wincmd l<CR>", { noremap = true, desc = "Move to window right" })
+vim.keymap.set({ "n", "t" }, "<C-`>", "<cmd>wincmd =<CR>", { noremap = true, desc = "Equalize windows" })
 
 vim.keymap.set("n", "<leader>Q", vim.cmd.restart, { noremap = true, desc = "Restart neovim" })
 
