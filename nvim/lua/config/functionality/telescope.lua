@@ -68,6 +68,6 @@ vim.keymap.set("n", "<leader>k?", function()
     builtin.keymaps(initial_mode_normal)
 end, { desc = "Search for keymaps with telescope" })
 
-vim.keymap.set("n", "<leader>L", function()
+vim.keymap.set("n", "<leader>i", function()
     vim.cmd.TodoTelescope("initial_mode=normal")
 end, { desc = "View todo comments" })
