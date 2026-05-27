@@ -47,7 +47,11 @@ end
 
 update_date()
 
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
+vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], { noremap = true })
+vim.keymap.set({ "n", "t" }, "<C-Q>", function()
+    vim.cmd("confirm close")
+end, { noremap = true })
+
 vim.keymap.set("n", "<Esc>", vim.cmd.nohlsearch, { noremap = true, desc = "Turn highlight off" })
 
 -- Automatic empty buffer deletion

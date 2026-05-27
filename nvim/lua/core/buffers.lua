@@ -134,8 +134,6 @@ vim.keymap.set("n", discord_keymap, function()
             end,
         })
 
-        vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], { noremap = true })
-        vim.keymap.set({ "n", "t" }, "<Esc>", close_discord_window, { buffer = buf })
         vim.keymap.set("n", discord_keymap, close_discord_window, { buffer = buf })
     end
 
