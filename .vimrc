@@ -1,11 +1,13 @@
 set relativenumber
 set number
 set cursorline
+set lazyredraw
 set mouse=
 
 let mapleader = "\<Space>"
 
 nnoremap <silent> <leader>t :Ex<CR>
+nnoremap <silent> <leader>e :NERDTree<CR>
 
 nnoremap <silent> <leader>bd :bd<CR>
 nnoremap <silent> <leader>bD :bufdo bd<CR>
@@ -40,6 +42,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'catppuccin/vim', {'as': 'catppuccin'}
 Plug 'vim-airline/vim-airline'
 Plug 'ryanoasis/vim-devicons'
+Plug 'preservim/nerdtree'
 
 call plug#end()
 
