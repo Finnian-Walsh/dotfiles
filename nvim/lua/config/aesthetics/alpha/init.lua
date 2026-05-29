@@ -186,7 +186,7 @@ vim.api.nvim_create_autocmd("FileType", {
             vim.cmd.Telescope("find_files", "initial_mode=normal")
         end, merge_opts { desc = "Find files (start in normal)" })
 
-        vim.keymap.set("n", "T", function()
+        vim.keymap.set("n", "e", function()
             vim.cmd.Oil()
         end, merge_opts { desc = "Open oil" })
     end,
