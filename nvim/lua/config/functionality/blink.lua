@@ -10,13 +10,7 @@ build_task:on_resolve(function()
     vim.schedule(function()
         blink_cmp.setup {
             keymap = {
-                ["<Right>"] = { "insert_next", "fallback" },
-                ["<Left>"] = { "insert_prev", "fallback" },
-                ["<Tab>"] = { "select_next", "fallback" },
-                ["<S-Tab>"] = { "select_prev", "fallback" },
-                ["<CR>"] = { "select_and_accept", "fallback" },
-                ["<C-e>"] = { "hide", "fallback" },
-                -- <C-space> for documentation
+                preset = "enter",
             },
 
             completion = { documentation = { auto_show = false } },

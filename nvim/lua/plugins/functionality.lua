@@ -3,7 +3,7 @@ local plugins = {}
 vim.list_extend(plugins, {
     "https://github.com/saghen/blink.lib",
     "https://github.com/rafamadriz/friendly-snippets",
-    "https://github.com/saghen/blink.cmp",
+    "https://github.com/Finnian-Walsh/blink.cmp",
     "https://github.com/saghen/blink.compat",
 })
 
@@ -72,11 +72,11 @@ vim.list_extend(plugins, {
     "https://github.com/pogyomo/winresize.nvim",
 })
 
-vim.list_extend(plugins, {
-    {
-        src = "https://github.com/Finnian-Walsh/plugin-testing.nvim",
-        version = "✨",
-    },
-})
+-- vim.list_extend(plugins, {
+--     {
+--         src = "https://github.com/Finnian-Walsh/plugin-testing.nvim",
+--         version = "✨",
+--     },
+-- })
 
 return plugins
