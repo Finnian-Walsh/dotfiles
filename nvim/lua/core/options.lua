@@ -48,7 +48,7 @@ end
 update_date()
 
 vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], { noremap = true })
-vim.keymap.set({ "n", "t" }, "<C-Q>", function()
+vim.keymap.set("t", "<C-q>", function()
     vim.cmd("confirm close")
 end, { noremap = true })
 
