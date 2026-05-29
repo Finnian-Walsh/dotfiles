@@ -202,3 +202,10 @@ for i = 1, 20 do
         { desc = "Hooker switch to only " .. i }
     )
 end
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "hooker",
+    callback = function(event)
+        vim.b[event.buf].completion = false
+    end,
+})
