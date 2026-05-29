@@ -48,6 +48,7 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = "minifiles",
     callback = function(event)
         local buf = event.buf
+        vim.b[buf].completion = false
 
         vim.keymap.set("n", "<leader>.", function()
             show_hidden_files = not show_hidden_files

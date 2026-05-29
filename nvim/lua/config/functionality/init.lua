@@ -1,6 +1,7 @@
 if vim.env.NVIM_DEV == "1" then
     vim.opt.rtp:prepend("~/Dev/hooker.nvim/")
     vim.opt.rtp:prepend("~/Dev/plugin-view.nvim/")
+    vim.opt.rtp:prepend("~/Dev/blink.cmp")
 end
 
 require("config.functionality.autopairs")
