@@ -1,4 +1,6 @@
-require("telescope").setup {
+local telescope = require("telescope")
+
+telescope.setup {
     extensions = {
         fzf = {
             fuzzy = true,
@@ -28,7 +30,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
                 return
             end
 
-            require("telescope").load_extension("fzf")
+            telescope.load_extension("fzf")
         end)
     end,
 })
