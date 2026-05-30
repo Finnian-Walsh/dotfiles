@@ -10,10 +10,51 @@ build_task:on_resolve(function()
     vim.schedule(function()
         blink_cmp.setup {
             keymap = {
-                preset = "enter",
+                preset = "none",
+                ["<Down>"] = { "insert_next", "fallback" },
+                ["<Up>"] = { "insert_prev", "fallback" },
+
+                ["<Right>"] = { "insert_next", "fallback" },
+                ["<Left>"] = { "insert_prev", "fallback" },
+
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+
+                ["<CR>"] = { "select_and_accept", "fallback" },
+
+                ["<C-space>"] = { "show", "show_documentation", "fallback" },
+                ["<C-e>"] = { "hide", "fallback" },
+
+                ["<C-u>"] = { "scroll_documentation_up", "fallback" },
+                ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+
+                ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
             },
 
-            completion = { documentation = { auto_show = false } },
+            cmdline = {
+                keymap = {
+                    preset = "none",
+                    ["<Tab>"] = { "insert_next", "fallback" },
+                    ["<S-Tab>"] = { "insert_prev", "fallback" },
+
+                    ["<C-space>"] = { "show", "show_documentation", "fallback" },
+                    ["<C-u>"] = { "scroll_documentation_up", "fallback" },
+                    ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+
+                    ["<C-e>"] = { "cancel" },
+                },
+            },
+
+            term = {
+                enabled = true,
+                keymap = {
+                    preset = "inherit",
+                },
+            },
+
+            completion = {
+                documentation = { auto_show = false },
+            },
 
             sources = {
                 default = { "lsp", "path", "snippets", "buffer" },
