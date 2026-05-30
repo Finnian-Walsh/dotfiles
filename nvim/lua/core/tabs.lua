@@ -2,30 +2,25 @@ vim.keymap.set("n", "<leader><Tab>n", function()
     for _ = 1, vim.v.count1 do
         vim.cmd.tabnew()
     end
-end, { noremap = true, desc = "Open a new tab" })
+end, { desc = "Open a new tab" })
 
 vim.keymap.set("n", "<leader><Tab>N", function()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnew | tabmove -1")
     end
-end, { noremap = true, desc = "Open a new tab to the left" })
+end, { desc = "Open a new tab to the left" })
 
-vim.keymap.set("n", "<leader>}", "gt", { noremap = true, desc = "Next tab ", silent = true })
+vim.keymap.set("n", "<leader>}", "gt", { desc = "Next tab ", silent = true })
 
-vim.keymap.set("n", "<leader>{", "gT", { noremap = true, desc = "Previous tab ", silent = true })
+vim.keymap.set("n", "<leader>{", "gT", { desc = "Previous tab ", silent = true })
 
 vim.keymap.set("n", "<leader><Tab>d", function()
     for _ = 1, vim.v.count1 do
         vim.cmd.tabclose()
     end
-end, { noremap = true, desc = "Close tab" })
+end, { desc = "Close tab" })
 
-vim.keymap.set(
-    "n",
-    "<leader><Tab>o",
-    vim.cmd.tabonly,
-    { noremap = true, desc = "Close all tabs except the current one" }
-)
+vim.keymap.set("n", "<leader><Tab>o", vim.cmd.tabonly, { desc = "Close all tabs except the current one" })
 
 -- Tab movement
 
@@ -69,7 +64,7 @@ end, { desc = "Move the tab left" })
 for i = 1, 20 do
     local command = "<cmd>tabnext " .. i .. "<CR>"
 
-    local opts = { noremap = true, desc = "Go to tab " .. i }
+    local opts = { desc = "Go to tab " .. i }
     local navigation_key = nav_keys[i]
     vim.keymap.set("n", "<leader><Tab>" .. navigation_key, command, opts)
     vim.keymap.set("n", "<leader><S-Tab>" .. navigation_key, command, opts)

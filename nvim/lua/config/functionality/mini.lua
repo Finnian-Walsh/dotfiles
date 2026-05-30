@@ -13,9 +13,7 @@ vim.keymap.set("n", "<leader>t", function()
     mini_files.open(vim.api.nvim_buf_get_name(0))
 end, { desc = "Mini files" })
 
-vim.keymap.set("n", "<leader>T", function()
-    mini_files.open()
-end, { desc = "Mini files" })
+vim.keymap.set("n", "<leader>T", mini_files.open, { desc = "Mini files" })
 
 local mini_actions = {
     new_left = function()

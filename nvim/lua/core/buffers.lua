@@ -29,7 +29,7 @@ vim.keymap.set("n", "<leader>[", function()
     else
         vim.notify("There are no buffers", vim.log.levels.ERROR)
     end
-end, { noremap = true, desc = "Previous buffer " })
+end, { desc = "Previous buffer " })
 
 vim.keymap.set("n", "<leader>n[", function()
     if find_listed_buffer() then
@@ -38,7 +38,7 @@ vim.keymap.set("n", "<leader>n[", function()
     else
         vim.notify("There are no buffers", vim.log.levels.ERROR)
     end
-end, { noremap = true, desc = "Previous buffer " })
+end, { desc = "Previous buffer " })
 
 vim.keymap.set("n", "<leader>N[", function()
     if find_listed_buffer() then
@@ -47,7 +47,7 @@ vim.keymap.set("n", "<leader>N[", function()
     else
         vim.notify("There are no buffers", vim.log.levels.ERROR)
     end
-end, { noremap = true, desc = "Previous buffer " })
+end, { desc = "Previous buffer " })
 
 -- next buffer keymaps
 
@@ -57,7 +57,7 @@ vim.keymap.set("n", "<leader>]", function()
     else
         vim.notify("There are no buffers", vim.log.levels.ERROR)
     end
-end, { noremap = true, desc = "Next buffer " })
+end, { desc = "Next buffer " })
 
 vim.keymap.set("n", "<leader>n]", function()
     if find_listed_buffer() then
@@ -66,7 +66,7 @@ vim.keymap.set("n", "<leader>n]", function()
     else
         vim.notify("There are no buffers", vim.log.levels.ERROR)
     end
-end, { noremap = true, desc = "Next buffer " })
+end, { desc = "Next buffer " })
 
 vim.keymap.set("n", "<leader>N]", function()
     if find_listed_buffer() then
@@ -75,7 +75,7 @@ vim.keymap.set("n", "<leader>N]", function()
     else
         vim.notify("There are no buffers", vim.log.levels.ERROR)
     end
-end, { noremap = true, desc = "Next buffer " })
+end, { desc = "Next buffer " })
 
 vim.keymap.set("n", "<leader>bn", vim.cmd.enew, { desc = "Open a new empty buffer" })
 
@@ -181,7 +181,7 @@ local function delete_other_buffers()
     end
 end
 
-vim.keymap.set("n", "<leader>bo", delete_undisplayed_buffers, { noremap = true, desc = "Delete undisplayed buffers" })
+vim.keymap.set("n", "<leader>bo", delete_undisplayed_buffers, { desc = "Delete undisplayed buffers" })
 vim.api.nvim_create_user_command(
     "BufOnly",
     delete_undisplayed_buffers,
@@ -195,15 +195,13 @@ vim.api.nvim_create_user_command(
     { desc = "Delete all other windows and buffers", bang = true }
 )
 
-vim.keymap.set("n", "<leader>bd", function()
-    wipe_buffer("")
-end, { noremap = true, desc = "Delete current buffer" })
+vim.keymap.set("n", "<leader>bd", "<cmd>confirm bwipeout<CR>", { desc = "Delete current buffer" })
 
 vim.keymap.set("n", "<leader>bD", function()
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         wipe_buffer(bufnr)
     end
-end, { noremap = true, desc = "Delete all buffers" })
+end, { desc = "Delete all buffers" })
 
 -- Buffer moving
 
@@ -218,3 +216,34 @@ vim.keymap.set("n", "<leader><Left>", function()
         vim.cmd.BufferLineMovePrev()
     end
 end, { desc = "Move the buffer left" })
+
+-- Automatic empty buffer deletion
+
+local function auto_buffer_delete(buf)
+    if vim.api.nvim_buf_get_name(buf) ~= "" or vim.bo[buf].filetype ~= "" then
+        return
+    end
+
+    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+    if #lines > 1 or lines[1] ~= "" then
+        return
+    end
+
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == buf and vim.api.nvim_win_get_config(win).relative ~= "" then
+            return
+        end
+    end
+
+    vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(buf) then
+            vim.api.nvim_buf_delete(buf, { force = true })
+        end
+    end)
+end
+
+vim.api.nvim_create_autocmd("BufHidden", {
+    callback = function(args)
+        auto_buffer_delete(args.buf)
+    end,
+})

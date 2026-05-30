@@ -14,7 +14,7 @@ local function toggle_bufferline()
     end
 end
 
-vim.keymap.set("n", "<leader>B", toggle_bufferline, { noremap = true, desc = "Toggle bufferline" })
+vim.keymap.set("n", "<leader>B", toggle_bufferline, { desc = "Toggle bufferline" })
 
 vim.api.nvim_create_user_command("ToggleBufferline", toggle_bufferline, { desc = "Toggle bufferline" })
 
@@ -33,4 +33,16 @@ vim.api.nvim_create_autocmd("UIEnter", {
 
         hide_tabline()
     end,
+})
+
+-- Automatic tabline updation
+
+local function schedule_tabline_redraw()
+    vim.schedule(function()
+        vim.cmd.redrawtabline()
+    end)
+end
+
+vim.api.nvim_create_autocmd("BufLeave", {
+    callback = schedule_tabline_redraw,
 })
