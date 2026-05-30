@@ -1,7 +1,7 @@
 local show_hidden_files = false
-local previous_window = 0
 
-require("mini.files").setup {
+local mini_files = require("mini.files")
+mini_files.setup {
     content = {
         filter = function(file)
             return show_hidden_files or not vim.startswith(file.name, ".")
@@ -10,34 +10,37 @@ require("mini.files").setup {
 }
 
 vim.keymap.set("n", "<leader>t", function()
-    previous_window = vim.api.nvim_get_current_win()
-    MiniFiles.open()
+    mini_files.open(vim.api.nvim_buf_get_name(0))
+end, { desc = "Mini files" })
+
+vim.keymap.set("n", "<leader>T", function()
+    mini_files.open()
 end, { desc = "Mini files" })
 
 local mini_actions = {
     new_left = function()
-        local path = MiniFiles.get_fs_entry().path
-        MiniFiles.close()
+        local path = mini_files.get_fs_entry().path
+        mini_files.close()
         vim.cmd.vsplit(path)
     end,
 
     new_below = function()
-        local path = MiniFiles.get_fs_entry().path
-        MiniFiles.close()
+        local path = mini_files.get_fs_entry().path
+        mini_files.close()
         vim.cmd.split()
         vim.cmd.wincmd("j")
         vim.cmd.edit(path)
     end,
 
     new_above = function()
-        local path = MiniFiles.get_fs_entry().path
-        MiniFiles.close()
+        local path = mini_files.get_fs_entry().path
+        mini_files.close()
         vim.cmd.split(path)
     end,
 
     new_right = function()
-        local path = MiniFiles.get_fs_entry().path
-        MiniFiles.close()
+        local path = mini_files.get_fs_entry().path
+        mini_files.close()
         vim.cmd.vsplit()
         vim.cmd.wincmd("l")
         vim.cmd.edit(path)
@@ -52,13 +55,13 @@ vim.api.nvim_create_autocmd("FileType", {
 
         vim.keymap.set("n", "<leader>.", function()
             show_hidden_files = not show_hidden_files
-            MiniFiles.close()
-            MiniFiles.open()
+            mini_files.close()
+            mini_files.open()
         end, { desc = "Toggle hidden files", buffer = buf })
 
         vim.keymap.set("n", "<leader>r", function()
-            MiniFiles.close()
-            MiniFiles.open()
+            mini_files.close()
+            mini_files.open()
         end, { desc = "Refresh mini.files", buffer = buf })
 
         vim.keymap.set("n", "<C-h>", mini_actions.new_left, { desc = "Open in a new window left", buffer = buf })
