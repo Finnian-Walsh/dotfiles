@@ -158,7 +158,7 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = "alpha",
     callback = function(event)
         local buf = event.buf
-        local opts = { buffer = buf, silent = true, noremap = true }
+        local opts = { buffer = buf, silent = true }
 
         local function merge_opts(t)
             for k, v in pairs(opts) do
@@ -182,13 +182,11 @@ vim.api.nvim_create_autocmd("FileType", {
             vim.cmd.AlphaRedraw()
         end, merge_opts { desc = "Next header value" })
 
-        vim.keymap.set("n", "F", function()
-            vim.cmd.Telescope("find_files", "initial_mode=normal")
-        end, merge_opts { desc = "Find files (start in normal)" })
+        vim.keymap.set("n", "F", "<leader>F", merge_opts { remap = true, desc = "Find files (start in normal)" })
 
-        vim.keymap.set("n", "e", function()
-            vim.cmd.Oil()
-        end, merge_opts { desc = "Open oil" })
+        vim.keymap.set("n", "e", "<leader>e", merge_opts { remap = true, desc = "Open oil" })
+
+        vim.keymap.set("n", "T", "<leader>T", merge_opts { remap = true, desc = "Mini files" })
     end,
 })
 
