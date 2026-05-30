@@ -201,7 +201,7 @@ local buttons = ButtonCreator.new {
             "󱏒 Mini Files",
             "t",
             function()
-                MiniFiles.open() -- don't reference the function directly, since it is likely to be loaded after alpha
+                require("mini.files").open() -- don't reference the function directly, since it is likely to be loaded after alpha
             end,
         },
         {
