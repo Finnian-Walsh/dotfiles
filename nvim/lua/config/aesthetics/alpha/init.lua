@@ -219,16 +219,12 @@ local buttons = ButtonCreator.new {
         {
             " New buffer",
             "e",
-            function()
-                vim.cmd.enew()
-            end,
+            vim.cmd.enew,
         },
         {
             " Header coloring",
             "c",
-            function()
-                vim.cmd.HeaderColor()
-            end,
+            vim.cmd.HeaderColor,
         },
         {
             " Minimize",
