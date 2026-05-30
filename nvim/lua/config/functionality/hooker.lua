@@ -134,7 +134,7 @@ end
 
 vim.keymap.set("n", "<leader>H", load_hooker_telescope, { desc = "Load hooker using telescope" })
 
-local function make_bound(i)
+local function make_bound_creator(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
     return function(f)
         return function()
@@ -149,12 +149,12 @@ end
 
 for i = 1, 20 do
     local navigation_key = nav_keys[i]
-    local bound_function = make_bound(i)
+    local bound_creator = make_bound_creator(i)
 
     vim.keymap.set(
         "n",
         "<leader>" .. navigation_key,
-        bound_function(function()
+        bound_creator(function()
             hooker.select(i)
         end),
         { desc = "Hooker " .. i }
@@ -163,7 +163,7 @@ for i = 1, 20 do
     vim.keymap.set(
         "n",
         "<leader>n" .. navigation_key,
-        bound_function(function()
+        bound_creator(function()
             vim.cmd("vs | wincmd l")
             hooker.select(i)
         end),
@@ -173,7 +173,7 @@ for i = 1, 20 do
     vim.keymap.set(
         "n",
         "<leader>N" .. navigation_key,
-        bound_function(function()
+        bound_creator(function()
             vim.cmd("sp | wincmd j")
             hooker.select(i)
         end),
@@ -183,7 +183,7 @@ for i = 1, 20 do
     vim.keymap.set(
         "n",
         "<leader>o" .. navigation_key,
-        bound_function(function()
+        bound_creator(function()
             hooker.select(i)
             vim.cmd.BufOnly()
         end),
@@ -195,7 +195,7 @@ for i = 1, 20 do
     vim.keymap.set(
         "n",
         "<leader>O" .. navigation_key,
-        bound_function(function()
+        bound_creator(function()
             hooker.select(i)
             vim.cmd.BufCurrentOnly()
         end),
