@@ -7,3 +7,9 @@ require("let-it-snow").setup {
 }
 
 vim.keymap.set("n", "<leader>S", vim.cmd.LetItSnow, { desc = "Let it snow!" })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function()
+        vim.cmd.LetItSnow()
+    end,
+})
