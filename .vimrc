@@ -27,6 +27,14 @@ nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
 
+tnoremap <silent> <C-h> <C-\><C-n>:wincmd h<CR>
+tnoremap <silent> <C-j> <C-\><C-n>:wincmd j<CR>
+tnoremap <silent> <C-k> <C-\><C-n>:wincmd k<CR>
+tnoremap <silent> <C-l> <C-\><C-n>:wincmd l<CR>
+
+nnoremap <silent> <leader><CR> :term<CR>
+tnoremap <silent> <C-q> :confirm close<CR>
+
 if has('termguicolors')
 	set termguicolors
 endif
