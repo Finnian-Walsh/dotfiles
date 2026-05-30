@@ -297,7 +297,7 @@ local function query_synced_colorscheme()
         table.insert(message, { key .. ": " .. value .. "\n", QUERY_HIGHLIGHT })
     end
 
-    vim.notify(message)
+    vim.api.nvim_echo(message, true, {})
 end
 
 local function get_colorscheme_data()
