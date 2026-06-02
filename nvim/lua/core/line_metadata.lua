@@ -1,7 +1,11 @@
 local VIRTUAL_DIAGNOSTIC_MODE = {
-    VirtualText = 1,
-    VirtualLines = 2,
-    None = 3,
+    VirtualText = {
+        virtual_text = true,
+    },
+    VirtualLines = {
+        virtual_lines = true,
+    },
+    None = {},
 }
 
 local virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
@@ -19,11 +23,7 @@ local function set_diagnostic_config()
     }
 
     if virtual_diagnostics_enabled then
-        if virtual_diagnostic_mode == VIRTUAL_DIAGNOSTIC_MODE.VirtualText then
-            config.virtual_text = true
-        elseif virtual_diagnostic_mode == VIRTUAL_DIAGNOSTIC_MODE.VirtualLines then
-            config.virtual_lines = true
-        end
+        vim.tbl_extend("force", config, virtual_diagnostic_mode)
     end
 
     vim.diagnostic.config(config)
