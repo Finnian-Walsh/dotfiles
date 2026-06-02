@@ -4,7 +4,13 @@ hooker.setup {
     open_directory = require("oil").open,
 }
 
-vim.keymap.set("n", "<leader>a", hooker.add_file, { desc = "Add current file to hooker" })
+vim.keymap.set("n", "<leader>a", function()
+    if vim.bo.filetype == "oil" then
+        hooker.add_file(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
+    else
+        hooker.add_file()
+    end
+end, { desc = "Add current file to hooker" })
 
 vim.keymap.set("n", "<leader>h", hooker.menu)
 
