@@ -21,7 +21,8 @@ end
 
 vim.api.nvim_create_autocmd("UIEnter", {
     callback = function()
-        vim.system({ "make", find_telescope_fzf() }, {}, function(res)
+        local command = { "make", "-C", find_telescope_fzf() }
+        vim.system(command, {}, function(res)
             if res.code ~= 0 then
                 error(
                     string.format("Failed to build telescope-fzf-native.nvim with code: %d\n%s", res.code, res.stderr),
@@ -30,7 +31,22 @@ vim.api.nvim_create_autocmd("UIEnter", {
                 return
             end
 
-            telescope.load_extension("fzf")
+            local success, result = pcall(function()
+                telescope.load_extension("fzf")
+            end)
+
+            if not success then
+                vim.schedule(function()
+                    vim.notify(
+                        string.format(
+                            "Unable to load fzf extension; stderr from make command: \n%s\nstdout from make command:\n%s\nerror from loading fzf extension:\n%s",
+                            res.stderr,
+                            res.stdout,
+                            result
+                        )
+                    )
+                end)
+            end
         end)
     end,
 })
