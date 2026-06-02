@@ -11,7 +11,7 @@ local ensure_installed = {
     "ruff",
 }
 
-if not vim.uv.os_getenv("NO_CLANGD") then
+if vim.uv.os_getenv("NO_CLANGD") ~= "1" then
     table.insert(ensure_installed, "clangd")
 end
 
