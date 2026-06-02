@@ -222,8 +222,19 @@ local buttons = ButtonCreator.new {
             vim.cmd.enew,
         },
         {
-            " Header coloring",
+            " Config",
             "c",
+            function()
+                local dir = vim.fs.normalize(
+                    vim.fn.resolve(vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, vim.env.NVIM_APPNAME or "nvim"))
+                )
+                require("hooker").options.target_directory = dir
+                vim.cmd.edit(dir)
+            end,
+        },
+        {
+            " Header coloring",
+            "h",
             vim.cmd.HeaderColor,
         },
         {
