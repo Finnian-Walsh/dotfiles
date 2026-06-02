@@ -80,4 +80,6 @@ vim.keymap.set({ "n", "t" }, "<C-l>", "<cmd>wincmd l<CR>", { desc = "Move to win
 vim.keymap.set({ "n", "t" }, "<C-`>", "<cmd>wincmd =<CR>", { desc = "Equalize windows" })
 
 vim.keymap.set("n", "<leader>Q", vim.cmd.restart, { desc = "Restart neovim" })
-vim.keymap.set("n", "<leader>P", vim.pack.update, { desc = "Update plugins" })
+vim.keymap.set("n", "<leader>P", function() -- don't reference the function directly since the field lazily evaluates
+    vim.pack.update()
+end, { desc = "Update plugins" })
