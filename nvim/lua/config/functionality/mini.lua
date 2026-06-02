@@ -10,7 +10,11 @@ mini_files.setup {
 }
 
 vim.keymap.set("n", "<leader>t", function()
-    mini_files.open(vim.api.nvim_buf_get_name(0))
+    if vim.bo.filetype == "oil" then
+        mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
+    else
+        mini_files.open(vim.api.nvim_buf_get_name(0))
+    end
 end, { desc = "Mini files" })
 
 vim.keymap.set("n", "<leader>T", mini_files.open, { desc = "Mini files" })
