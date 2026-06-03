@@ -21,6 +21,22 @@ end
 local move_new_vert_split = "vs | wincmd l"
 local move_new_horizontal_split = "sp | wincmd j"
 
+-- enew buffer keymaps
+
+vim.keymap.set(
+    "n",
+    "<leader>nw",
+    "<cmd>vs | wincmd l | enew<CR>",
+    { desc = "Create new scratch buffer in a window to the left" }
+)
+
+vim.keymap.set(
+    "n",
+    "<leader>Nw",
+    "<cmd>sp | wincmd j | enew<CR>",
+    { desc = "Create new scratch buffer in a window below" }
+)
+
 -- previous buffer keymaps
 
 vim.keymap.set("n", "<leader>[", function()
