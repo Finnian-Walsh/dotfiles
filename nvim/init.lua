@@ -9,12 +9,11 @@ require("core.tabs")
 require("core.line_metadata")
 require("core.keymap_inspector")
 
-vim.pack.add(require("plugins.aesthetics"))
+vim.pack.add(require("plugins"))
 require("config.aesthetics")
 
 require("core.colorschemes")
 
-vim.pack.add(require("plugins.functionality"))
 require("config.functionality")
 
 require("core.after")
