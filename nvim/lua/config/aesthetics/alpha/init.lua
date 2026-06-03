@@ -244,7 +244,12 @@ local buttons = ButtonCreator.new {
             "c",
             function()
                 local dir = vim.fs.normalize(
-                    vim.fn.resolve(vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, vim.env.NVIM_APPNAME or "nvim"))
+                    vim.fn.resolve(
+                        vim.fs.joinpath(
+                            vim.env.XDG_CONFIG_HOME or vim.fs.joinpath(vim.env.HOME, ".config"),
+                            vim.env.NVIM_APPNAME or "nvim"
+                        )
+                    )
                 )
                 require("hooker").options.target_directory = dir
                 vim.cmd.edit(dir)
