@@ -47,7 +47,7 @@ vim.list_extend(plugins, {
 })
 
 vim.list_extend(plugins, {
-    "https://github.com/Finnian-Walsh/plugin-view.nvim",
+    { src = "https://github.com/Finnian-Walsh/plugin-view.nvim", version = "feat/buffer-updation" },
 })
 
 vim.list_extend(plugins, {
