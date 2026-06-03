@@ -16,6 +16,7 @@ if vim.uv.os_getenv("NO_CLANGD") ~= "1" then
 end
 
 vim.api.nvim_create_autocmd("UIEnter", {
+    once = true,
     callback = function()
         require("mason-lspconfig").setup {
             ensure_installed = ensure_installed,
