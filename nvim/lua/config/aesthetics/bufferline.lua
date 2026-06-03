@@ -19,6 +19,7 @@ vim.keymap.set("n", "<leader>B", toggle_bufferline, { desc = "Toggle bufferline"
 vim.api.nvim_create_user_command("ToggleBufferline", toggle_bufferline, { desc = "Toggle bufferline" })
 
 vim.api.nvim_create_autocmd("UIEnter", {
+    once = true,
     callback = function()
         require("bufferline").setup {
             options = {

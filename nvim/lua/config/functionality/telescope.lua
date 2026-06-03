@@ -20,6 +20,7 @@ local function find_telescope_fzf()
 end
 
 vim.api.nvim_create_autocmd("UIEnter", {
+    once = true,
     callback = function()
         local command = { "make", "-C", find_telescope_fzf() }
         vim.system(command, {}, function(res)
@@ -68,6 +69,7 @@ end, { desc = "Find files with telescope" })
 vim.keymap.set("n", "<leader>R", function()
     builtin.resume(initial_mode_normal)
 end, { desc = "Resume previous telescope action" })
+
 vim.keymap.set("n", "<leader>D", function()
     builtin.diagnostics(initial_mode_normal)
 end, { desc = "View diagnostics" })
