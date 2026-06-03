@@ -17,6 +17,22 @@ local Themes = setmetatable({
     end,
 })
 
+local response_key_codes = {
+    affirmative = {
+        [89] = true, -- Y
+        [121] = true, -- y
+    },
+    negative = {
+        [78] = true, -- N
+        [110] = true, -- n
+    },
+    abortive = {
+        [67] = true, -- C
+        [99] = true, -- c
+        [27] = true, -- Esc
+    },
+}
+
 local function get_alpha_config()
     local file = io.open(alpha_config_path, "r")
 
@@ -186,6 +202,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
         vim.keymap.set("n", "e", "<leader>e", merge_opts { remap = true, desc = "Open oil" })
 
+        vim.keymap.set("n", "E", "<leader>E", merge_opts { remap = true, desc = "Open oil at root" })
+
         vim.keymap.set("n", "T", "<leader>T", merge_opts { remap = true, desc = "Mini files" })
     end,
 })
@@ -218,7 +236,7 @@ local buttons = ButtonCreator.new {
         },
         {
             " New buffer",
-            "e",
+            "b",
             vim.cmd.enew,
         },
         {

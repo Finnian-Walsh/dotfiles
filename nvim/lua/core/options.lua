@@ -9,6 +9,8 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.mouse = ""
+vim.opt.smartcase = true
+vim.opt.ignorecase = true
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
@@ -16,22 +18,6 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt.formatoptions:remove { "r", "o" }
     end,
 })
-
-_G.response_key_codes = {
-    affirmative = {
-        [89] = true, -- Y
-        [121] = true, -- y
-    },
-    negative = {
-        [78] = true, -- N
-        [110] = true, -- n
-    },
-    abortive = {
-        [67] = true, -- C
-        [99] = true, -- c
-        [27] = true, -- Esc
-    },
-}
 
 -- stylua: ignore
 _G.nav_keys = {
