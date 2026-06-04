@@ -1,18 +1,33 @@
-local hooker = require("hooker")
+local hooker
 
-hooker.setup {
-    open_directory = require("oil").open,
-}
+local keymaps = require("core.lazy_keymaps").new(function()
+    hooker = require("hooker")
 
-vim.keymap.set("n", "<leader>a", function()
-    if vim.bo.filetype == "oil" then
-        hooker.add_file(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
-    else
-        hooker.add_file()
+    hooker.setup {
+        open_directory = vim.cmd.Oil,
+    }
+
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "hooker",
+        callback = function(event)
+            vim.b[event.buf].completion = false
+        end,
+    })
+end)
+
+keymaps:add("n", "<leader>a", function()
+    return function()
+        if vim.bo.filetype == "oil" then
+            hooker.add_file(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
+        else
+            hooker.add_file()
+        end
     end
 end, { desc = "Add current file to hooker" })
 
-vim.keymap.set("n", "<leader>h", hooker.menu)
+keymaps:add("n", "<leader>h", function()
+    return hooker.menu
+end, { desc = "Open hooker menu" })
 
 local function make_bound_creator(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
@@ -31,61 +46,39 @@ for i = 1, 20 do
     local navigation_key = nav_keys[i]
     local bound_creator = make_bound_creator(i)
 
-    vim.keymap.set(
-        "n",
-        "<leader>" .. navigation_key,
-        bound_creator(function()
+    keymaps:add("n", "<leader>" .. navigation_key, function()
+        return bound_creator(function()
             hooker.select(i)
-        end),
-        { desc = "Hooker " .. i }
-    )
+        end)
+    end, { desc = "Hooker " .. i })
 
-    vim.keymap.set(
-        "n",
-        "<leader>n" .. navigation_key,
-        bound_creator(function()
+    keymaps:add("n", "<leader>n" .. navigation_key, function()
+        return bound_creator(function()
             vim.cmd("vs | wincmd l")
             hooker.select(i)
-        end),
-        { desc = "Hooker " .. i .. " (vertical split)" }
-    )
+        end)
+    end, { desc = "Hooker " .. i .. " (vertical split)" })
 
-    vim.keymap.set(
-        "n",
-        "<leader>N" .. navigation_key,
-        bound_creator(function()
+    keymaps:add("n", "<leader>N" .. navigation_key, function()
+        return bound_creator(function()
             vim.cmd("sp | wincmd j")
             hooker.select(i)
-        end),
-        { desc = "Hooker " .. i .. " (horizontal split)" }
-    )
+        end)
+    end, { desc = "Hooker " .. i .. " (horizontal split)" })
 
-    vim.keymap.set(
-        "n",
-        "<leader>o" .. navigation_key,
-        bound_creator(function()
+    keymaps:add("n", "<leader>o" .. navigation_key, function()
+        return bound_creator(function()
             hooker.select(i)
             vim.cmd.BufOnly()
-        end),
-        {
-            desc = "Hooker switch to only " .. i .. " and displayed",
-        }
-    )
+        end)
+    end, {
+        desc = "Hooker switch to only " .. i .. " and displayed",
+    })
 
-    vim.keymap.set(
-        "n",
-        "<leader>O" .. navigation_key,
-        bound_creator(function()
+    keymaps:add("n", "<leader>O" .. navigation_key, function()
+        return bound_creator(function()
             hooker.select(i)
             vim.cmd.BufCurrentOnly()
-        end),
-        { desc = "Hooker switch to only " .. i }
-    )
+        end)
+    end, { desc = "Hooker switch to only " .. i })
 end
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "hooker",
-    callback = function(event)
-        vim.b[event.buf].completion = false
-    end,
-})
