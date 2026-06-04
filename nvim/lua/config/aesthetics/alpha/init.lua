@@ -200,9 +200,9 @@ vim.api.nvim_create_autocmd("FileType", {
 
         vim.keymap.set("n", "F", "<leader>F", merge_opts { remap = true, desc = "Find files (start in normal)" })
 
-        vim.keymap.set("n", "e", "<leader>e", merge_opts { remap = true, desc = "Open oil" })
+        vim.keymap.set("n", "e", "<leader>e", merge_opts { remap = true, desc = "Open oil file tree" })
 
-        vim.keymap.set("n", "E", "<leader>E", merge_opts { remap = true, desc = "Open oil at root" })
+        vim.keymap.set("n", "E", "<leader>E", merge_opts { remap = true, desc = "Open oil file tree at cwd" })
 
         vim.keymap.set("n", "T", "<leader>T", merge_opts { remap = true, desc = "Mini files" })
     end,
