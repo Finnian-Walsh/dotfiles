@@ -1,6 +1,7 @@
 local show_hidden_files = false
 
 local mini_files = require("mini.files")
+
 mini_files.setup {
     content = {
         filter = function(file)
@@ -29,8 +30,7 @@ local mini_actions = {
     new_below = function()
         local path = mini_files.get_fs_entry().path
         mini_files.close()
-        vim.cmd.split()
-        vim.cmd.wincmd("j")
+        vim.cmd("split | wincmd j")
         vim.cmd.edit(path)
     end,
 
@@ -43,8 +43,7 @@ local mini_actions = {
     new_right = function()
         local path = mini_files.get_fs_entry().path
         mini_files.close()
-        vim.cmd.vsplit()
-        vim.cmd.wincmd("l")
+        vim.cmd("vsplit | wincmd l")
         vim.cmd.edit(path)
     end,
 }

@@ -10,10 +10,6 @@ todo_comments.setup {}
 vim.keymap.set("n", "[t", todo_comments.jump_prev, { desc = "Jump to the previous todo comment" })
 vim.keymap.set("n", "]t", todo_comments.jump_next, { desc = "Jump to the next todo comment" })
 
-function _G.reset_todo_signs()
-    todo_comments.reset()
-end
+_G.reset_todo_signs = todo_comments.reset
 
-function _G.disable_todo_signs()
-    todo_comments.disable()
-end
+_G.disable_todo_signs = todo_comments.disable
