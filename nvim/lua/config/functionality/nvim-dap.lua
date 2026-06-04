@@ -1,28 +1,45 @@
-local dap = require("dap")
+local dap
 
-vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
-vim.keymap.set("n", "<leader>dB", dap.clear_breakpoints, { desc = "Toggle breakpoint" })
-vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue debugging" })
-vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step into" })
-vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "Step over" })
-vim.keymap.set("n", "<leader>dO", dap.step_out, { desc = "Step out" })
+local keymaps = require("core.lazy_keymaps").new(function()
+    dap = require("dap")
+    require("dap-python").setup("python3")
 
-local widgets
+    vim.fn.sign_define("DapBreakpoint", {
+        text = "🔴", -- symbol
+        texthl = "DapBreakpoint",
+    })
 
-vim.keymap.set("n", "<leader>dw", function()
-    if not widgets then
-        widgets = require("dap.ui.widgets")
+    vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#FF0000", bg = "", bold = true })
+end)
+
+keymaps:add("n", "<leader>db", function()
+    return dap.toggle_breakpoint
+end, { desc = "Toggle breakpoint" })
+
+keymaps:add("n", "<leader>dB", function()
+    return dap.clear_breakpoints
+end, { desc = "Toggle breakpoint" })
+
+keymaps:add("n", "<leader>dc", function()
+    return dap.continue
+end, { desc = "Continue debugging" })
+
+keymaps:add("n", "<leader>di", function()
+    return dap.step_into
+end, { desc = "Step into" })
+
+keymaps:add("n", "<leader>do", function()
+    return dap.step_over
+end, { desc = "Step over" })
+
+keymaps:add("n", "<leader>dO", function()
+    return dap.step_out
+end, { desc = "Step out" })
+
+keymaps:add("n", "<leader>dw", function()
+    local widgets = require("dap.ui.widgets")
+    return function()
+        local sidebar = widgets.sidebar(widgets.scopes)
+        sidebar.open()
     end
-
-    local sidebar = widgets.sidebar(widgets.scopes)
-    sidebar.open()
 end, { desc = "Open dap widgets" })
-
-vim.fn.sign_define("DapBreakpoint", {
-    text = "🔴", -- symbol
-    texthl = "DapBreakpoint",
-})
-
-vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#FF0000", bg = "", bold = true })
-
-require("dap-python").setup("python3")

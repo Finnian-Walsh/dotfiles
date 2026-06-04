@@ -198,6 +198,10 @@ vim.api.nvim_create_autocmd("FileType", {
             vim.cmd.AlphaRedraw()
         end, merge_opts { desc = "Next header value" })
 
+        vim.keymap.set("n", "/", "<leader>/", merge_opts { remap = true, desc = "Live grep with telescope" })
+
+        vim.keymap.set("n", "f", "<leader>f", merge_opts { remap = true, desc = "Find files with telescope" })
+
         vim.keymap.set("n", "F", "<leader>F", merge_opts { remap = true, desc = "Find files (start in normal)" })
 
         vim.keymap.set("n", "e", "<leader>e", merge_opts { remap = true, desc = "Open oil file tree" })
@@ -221,22 +225,8 @@ local buttons = ButtonCreator.new {
             end,
         },
         {
-            "󰭎 Live grep",
-            "/",
-            function()
-                vim.cmd.Telescope("live_grep")
-            end,
-        },
-        {
-            " Find files",
-            "f",
-            function()
-                vim.cmd.Telescope("find_files")
-            end,
-        },
-        {
             " New buffer",
-            "b",
+            "w",
             vim.cmd.enew,
         },
         {

@@ -1,15 +1,5 @@
-local telescope = require("telescope")
-
-telescope.setup {
-    extensions = {
-        fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case",
-        },
-    },
-}
+local telescope
+local builtin
 
 local function find_telescope_fzf()
     for _, path in ipairs(vim.opt.rtp:get()) do
@@ -19,75 +9,112 @@ local function find_telescope_fzf()
     end
 end
 
-vim.api.nvim_create_autocmd("UIEnter", {
-    once = true,
-    callback = function()
-        local command = { "make", "-C", find_telescope_fzf() }
-        vim.system(command, {}, function(res)
-            if res.code ~= 0 then
-                error(
-                    string.format("Failed to build telescope-fzf-native.nvim with code: %d\n%s", res.code, res.stderr),
-                    vim.log.levels.ERROR
-                )
-                return
-            end
+local keymaps = require("core.lazy_keymaps").new(function()
+    print("setup")
+    telescope = require("telescope")
+    builtin = require("telescope.builtin")
 
-            local success, result = pcall(function()
-                telescope.load_extension("fzf")
-            end)
+    telescope.setup {
+        extensions = {
+            fzf = {
+                fuzzy = true,
+                override_generic_sorter = true,
+                override_file_sorter = true,
+                case_mode = "smart_case",
+            },
+        },
+    }
 
-            if not success then
-                vim.schedule(function()
-                    vim.notify(
-                        string.format(
-                            "Unable to load fzf extension; stderr from make command: \n%s\nstdout from make command:\n%s\nerror from loading fzf extension:\n%s",
-                            res.stderr,
-                            res.stdout,
-                            result
-                        )
-                    )
-                end)
-            end
+    local fzf_make_command = { "make", "-C", find_telescope_fzf() }
+
+    vim.system(fzf_make_command, {}, function(res)
+        if res.code ~= 0 then
+            error(
+                string.format("Failed to build telescope-fzf-native.nvim with code: %d\n%s", res.code, res.stderr),
+                vim.log.levels.ERROR
+            )
+            return
+        end
+
+        local success, result = pcall(function()
+            telescope.load_extension("fzf")
         end)
-    end,
-})
+
+        if not success then
+            vim.schedule(function()
+                vim.notify(
+                    string.format(
+                        "Unable to load fzf extension; stderr from make command: \n%s\nstdout from make command:\n%s\nerror from loading fzf extension:\n%s",
+                        res.stderr,
+                        res.stdout,
+                        result
+                    )
+                )
+            end)
+        end
+    end)
+end)
 
 if vim.fn.executable("rg") == 0 then
     vim.notify("Warning: ripgrep is not available, so live grep will not work", vim.log.levels.WARN)
 end
 
-local builtin = require("telescope.builtin")
 local initial_mode_normal = { initial_mode = "normal" }
 
-vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Live grep with telescope" })
+keymaps:add("n", "<leader>/", function()
+    return builtin.live_grep
+end, { desc = "Live grep with telescope" })
 
-vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "Find files with telescope" })
-vim.keymap.set("n", "<leader>F", function()
-    builtin.find_files(initial_mode_normal)
+keymaps:add("n", "<leader>f", function()
+    return builtin.find_files
 end, { desc = "Find files with telescope" })
 
-vim.keymap.set("n", "<leader>R", function()
-    builtin.resume(initial_mode_normal)
+keymaps:add("n", "<leader>F", function()
+    return function()
+        builtin.find_files(initial_mode_normal)
+    end
+end, { desc = "Find files with telescope" })
+
+keymaps:add("n", "<leader>R", function()
+    return function()
+        builtin.resume(initial_mode_normal)
+    end
 end, { desc = "Resume previous telescope action" })
 
-vim.keymap.set("n", "<leader>D", function()
-    builtin.diagnostics(initial_mode_normal)
+keymaps:add("n", "<leader>D", function()
+    return function()
+        builtin.diagnostics(initial_mode_normal)
+    end
 end, { desc = "View diagnostics" })
 
-vim.keymap.set("n", "<leader>C", function()
-    builtin.colorscheme(initial_mode_normal)
+keymaps:add("n", "<leader>C", function()
+    return function()
+        builtin.colorscheme(initial_mode_normal)
+    end
 end, { desc = "View colorschemes" })
 
-vim.keymap.set("n", "<leader>b/", builtin.buffers, { desc = "Search for buffer with telescope" })
+keymaps:add("n", "<leader>b/", function()
+    return builtin.buffers
+end, { desc = "Search for buffer with telescope" })
+
 vim.keymap.set("n", "<leader>b?", function()
-    builtin.buffers(initial_mode_normal)
+    return function()
+        builtin.buffers(initial_mode_normal)
+    end
 end, { desc = "View buffers with telescope" })
 
-vim.keymap.set("n", "<leader>k/", builtin.keymaps, { desc = "Search for keymaps with telescope" })
-vim.keymap.set("n", "<leader>k?", function()
-    builtin.keymaps(initial_mode_normal)
+keymaps:add("n", "<leader>k/", function()
+    return builtin.keymaps
 end, { desc = "Search for keymaps with telescope" })
 
-vim.keymap.set("n", "<leader>i", function()
-    vim.cmd.TodoTelescope("initial_mode=normal")
+keymaps:add("n", "<leader>k?", function()
+    return function()
+        builtin.keymaps(initial_mode_normal)
+    end
+end, { desc = "Search for keymaps with telescope" })
+
+keymaps:add("n", "<leader>L", function()
+    return function()
+        vim.cmd.TodoTelescope("initial_mode=normal")
+    end
 end, { desc = "View todo comments" })
