@@ -17,11 +17,9 @@ vim.list_extend(plugins, {
     "https://github.com/nvim-tree/nvim-web-devicons",
 })
 
-if current_month == 12 then
-    vim.list_extend(plugins, {
-        "marcussimonsen/let-it-snow.nvim",
-    })
-end
+vim.list_extend(plugins, {
+    "https://github.com/marcussimonsen/let-it-snow.nvim",
+})
 
 vim.list_extend(plugins, {
     "https://github.com/nvim-tree/nvim-web-devicons",
