@@ -39,9 +39,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
 -- Automatic tabline updation
 
 local function schedule_tabline_redraw()
-    vim.schedule(function()
-        vim.cmd.redrawtabline()
-    end)
+    vim.schedule(vim.cmd.redrawtabline)
 end
 
 vim.api.nvim_create_autocmd("BufLeave", {
