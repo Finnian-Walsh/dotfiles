@@ -106,7 +106,7 @@
       "version": "'feat/buffer-updation'"
     },
     "rustaceanvim": {
-      "rev": "e4a22656056c568a577a2a64ecbc4fb602215792",
+      "rev": "8e87073774fda6b6b055675ef7154553ff324db4",
       "src": "https://github.com/mrcjkb/rustaceanvim"
     },
     "telescope-fzf-native.nvim": {
