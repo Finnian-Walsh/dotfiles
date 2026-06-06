@@ -4,10 +4,12 @@ local function add(additional_plugins)
     vim.list_extend(plugins, additional_plugins)
 end
 
+-- Aesthetical plugins
+
 add {
-    "https://github.com/ChaseRensberger/christmas.nvim",
     "https://github.com/folke/tokyonight.nvim",
     { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+    "https://github.com/ChaseRensberger/christmas.nvim",
     "https://github.com/ellisonleao/gruvbox.nvim",
 }
 
@@ -30,19 +32,17 @@ add {
     "https://github.com/nvim-tree/nvim-web-devicons",
 }
 
+-- Functional plugins
+
+add {
+    "https://github.com/windwp/nvim-autopairs",
+}
+
 add {
     "https://github.com/saghen/blink.cmp",
     "https://github.com/saghen/blink.lib",
     "https://github.com/rafamadriz/friendly-snippets",
     "https://github.com/saghen/blink.compat",
-}
-
-add {
-    "https://github.com/windwp/nvim-autopairs",
-    "https://github.com/nvim-mini/mini.files",
-    "https://github.com/nvim-mini/mini.surround",
-    "https://github.com/folke/todo-comments.nvim",
-    "https://github.com/nvim-lua/plenary.nvim",
 }
 
 add {
@@ -54,12 +54,24 @@ add {
 }
 
 add {
+    "https://github.com/neovim/nvim-lspconfig",
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/mason-org/mason-lspconfig.nvim",
-    "https://github.com/neovim/nvim-lspconfig",
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/mrcjkb/rustaceanvim",
     "https://github.com/neovim/nvim-lspconfig",
+}
+
+add {
+    "https://github.com/nvim-mini/mini.files",
+    "https://github.com/nvim-mini/mini.surround",
+}
+
+add {
+    "https://github.com/nvim-neo-tree/neo-tree.nvim",
+    "https://github.com/nvim-lua/plenary.nvim",
+    "https://github.com/MunifTanjim/nui.nvim",
+    "https://github.com/nvim-tree/nvim-web-devicons",
 }
 
 add {
@@ -89,6 +101,11 @@ add {
     "https://github.com/nvim-telescope/telescope.nvim",
     "https://github.com/nvim-lua/plenary.nvim",
     "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+}
+
+add {
+    "https://github.com/folke/todo-comments.nvim",
+    "https://github.com/nvim-lua/plenary.nvim",
 }
 
 add {
