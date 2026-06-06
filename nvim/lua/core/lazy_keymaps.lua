@@ -34,14 +34,19 @@ end
 ---@param key string The key for the key mapping
 ---@param fn function A function that returns the keymap's function (not the keymap's function itself)
 ---@param opts table The keymap options
+---@return self To allow chaining
 function M:add(mode, key, fn, opts)
     local keymap = { mode = mode, key = key, fn = fn, opts = opts }
     table.insert(self._keys, keymap)
     vim.keymap.set(mode, key, function()
         self:setup(keymap)()
     end, opts)
+
+    return self
 end
 
+---@param name string The name of the command
+---@return self To allow chaining
 function M:cmd(name)
     vim.api.nvim_create_user_command(name, function(opts)
         self:setup()
@@ -63,6 +68,8 @@ function M:cmd(name)
         nargs = "*",
         range = true,
     })
+
+    return self
 end
 
 return M
