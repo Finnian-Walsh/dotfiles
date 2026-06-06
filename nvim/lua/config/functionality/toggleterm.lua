@@ -3,3 +3,4 @@ require("lazy_loader")
         require("toggleterm").setup {}
     end)
     :map("n", "<leader><CR>", vim.cmd.ToggleTerm, { desc = "Toggle terminal" })
+    :cmd("ToggleTerm")
