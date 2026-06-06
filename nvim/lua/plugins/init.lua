@@ -77,6 +77,10 @@ add {
 }
 
 add {
+    "https://github.com/toppair/peek.nvim",
+}
+
+add {
     { src = "https://github.com/Finnian-Walsh/plugin-view.nvim", version = "feat/buffer-updation" },
 }
 
