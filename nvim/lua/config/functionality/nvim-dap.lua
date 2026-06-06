@@ -1,6 +1,6 @@
 local dap
 
-local keymaps = require("core.lazy_keymaps").new(function()
+local loader = require("lazy_loader").new(function()
     dap = require("dap")
     require("dap-python").setup("python3")
 
@@ -12,31 +12,31 @@ local keymaps = require("core.lazy_keymaps").new(function()
     vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#FF0000", bg = "", bold = true })
 end)
 
-keymaps:add("n", "<leader>db", function()
+loader:map("n", "<leader>db", function()
     return dap.toggle_breakpoint
 end, { desc = "Toggle breakpoint" })
 
-keymaps:add("n", "<leader>dB", function()
+loader:map("n", "<leader>dB", function()
     return dap.clear_breakpoints
 end, { desc = "Toggle breakpoint" })
 
-keymaps:add("n", "<leader>dc", function()
+loader:map("n", "<leader>dc", function()
     return dap.continue
 end, { desc = "Continue debugging" })
 
-keymaps:add("n", "<leader>di", function()
+loader:map("n", "<leader>di", function()
     return dap.step_into
 end, { desc = "Step into" })
 
-keymaps:add("n", "<leader>do", function()
+loader:map("n", "<leader>do", function()
     return dap.step_over
 end, { desc = "Step over" })
 
-keymaps:add("n", "<leader>dO", function()
+loader:map("n", "<leader>dO", function()
     return dap.step_out
 end, { desc = "Step out" })
 
-keymaps:add("n", "<leader>dw", function()
+loader:map("n", "<leader>dw", function()
     local widgets = require("dap.ui.widgets")
     return function()
         local sidebar = widgets.sidebar(widgets.scopes)

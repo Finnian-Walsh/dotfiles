@@ -1,5 +1,5 @@
-require("core.lazy_keymaps")
+require("lazy_loader")
     .new(function()
         require("toggleterm").setup {}
     end)
-    :add("n", "<leader><CR>", vim.cmd.ToggleTerm, { desc = "Toggle terminal" })
+    :map("n", "<leader><CR>", vim.cmd.ToggleTerm, { desc = "Toggle terminal" })

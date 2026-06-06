@@ -1,6 +1,6 @@
 local hooker
 
-local keymaps = require("core.lazy_keymaps").new(function()
+local loader = require("lazy_loader").new(function()
     hooker = require("hooker")
 
     hooker.setup {
@@ -13,9 +13,9 @@ local keymaps = require("core.lazy_keymaps").new(function()
             vim.b[event.buf].completion = false
         end,
     })
-end)
+end, "Hooker")
 
-keymaps:add("n", "<leader>a", function()
+loader:map("n", "<leader>a", function()
     return function()
         if vim.bo.filetype == "oil" then
             hooker.add_file(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
@@ -25,7 +25,7 @@ keymaps:add("n", "<leader>a", function()
     end
 end, { desc = "Add current file to hooker" })
 
-keymaps:add("n", "<leader>h", function()
+loader:map("n", "<leader>h", function()
     return hooker.menu
 end, { desc = "Open hooker menu" })
 
@@ -46,25 +46,25 @@ for i = 1, 20 do
     local navigation_key = nav_keys[i]
     local bound_creator = make_bound_creator(i)
 
-    keymaps
-        :add("n", "<leader>" .. navigation_key, function()
+    loader
+        :map("n", "<leader>" .. navigation_key, function()
             return bound_creator(function()
                 hooker.select(i)
             end)
         end, { desc = "Hooker " .. i })
-        :add("n", "<leader>n" .. navigation_key, function()
+        :map("n", "<leader>n" .. navigation_key, function()
             return bound_creator(function()
                 vim.cmd("vs | wincmd l")
                 hooker.select(i)
             end)
         end, { desc = "Hooker " .. i .. " (vertical split)" })
-        :add("n", "<leader>N" .. navigation_key, function()
+        :map("n", "<leader>N" .. navigation_key, function()
             return bound_creator(function()
                 vim.cmd("sp | wincmd j")
                 hooker.select(i)
             end)
         end, { desc = "Hooker " .. i .. " (horizontal split)" })
-        :add("n", "<leader>o" .. navigation_key, function()
+        :map("n", "<leader>o" .. navigation_key, function()
             return bound_creator(function()
                 hooker.select(i)
                 vim.cmd.BufOnly()
@@ -72,7 +72,7 @@ for i = 1, 20 do
         end, {
             desc = "Hooker switch to only " .. i .. " and displayed",
         })
-        :add("n", "<leader>O" .. navigation_key, function()
+        :map("n", "<leader>O" .. navigation_key, function()
             return bound_creator(function()
                 hooker.select(i)
                 vim.cmd.BufCurrentOnly()

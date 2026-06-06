@@ -9,7 +9,7 @@ local function find_telescope_fzf()
     end
 end
 
-local keymaps = require("core.lazy_keymaps").new(function()
+local loader = require("lazy_loader").new(function()
     telescope = require("telescope")
     builtin = require("telescope.builtin")
 
@@ -34,8 +34,7 @@ local keymaps = require("core.lazy_keymaps").new(function()
         if not success then
             vim.schedule(function()
                 vim.notify(
-                    string.format(
-                        "Unable to load fzf extension; stderr from make command: \n%s\nstdout from make command:\n%s\nerror from loading fzf extension:\n%s",
+                    ("Unable to load fzf extension; stderr from make command: \n%s\nstdout from make command:\n%s\nerror from loading fzf extension:\n%s"):format(
                         res.stderr,
                         res.stdout,
                         result
@@ -52,59 +51,59 @@ end
 
 local initial_mode_normal = { initial_mode = "normal" }
 
-keymaps:add("n", "<leader>/", function()
+loader:map("n", "<leader>/", function()
     return builtin.live_grep
 end, { desc = "Live grep with telescope" })
 
-keymaps
-    :add("n", "<leader>f", function()
+loader
+    :map("n", "<leader>f", function()
         return builtin.find_files
     end, { desc = "Find files with telescope" })
-    :add("n", "<leader>F", function()
+    :map("n", "<leader>F", function()
         return function()
             builtin.find_files(initial_mode_normal)
         end
     end, { desc = "Find files with telescope" })
 
-keymaps:add("n", "<leader>R", function()
+loader:map("n", "<leader>R", function()
     return function()
         builtin.resume(initial_mode_normal)
     end
 end, { desc = "Resume previous telescope action" })
 
-keymaps:add("n", "<leader>D", function()
+loader:map("n", "<leader>D", function()
     return function()
         builtin.diagnostics(initial_mode_normal)
     end
 end, { desc = "View diagnostics" })
 
-keymaps:add("n", "<leader>C", function()
+loader:map("n", "<leader>C", function()
     return function()
         builtin.colorscheme(initial_mode_normal)
     end
 end, { desc = "View colorschemes" })
 
-keymaps
-    :add("n", "<leader>b/", function()
+loader
+    :map("n", "<leader>b/", function()
         return builtin.buffers
     end, { desc = "Search for buffer with telescope" })
-    :add("n", "<leader>b?", function()
+    :map("n", "<leader>b?", function()
         return function()
             builtin.buffers(initial_mode_normal)
         end
     end, { desc = "View buffers with telescope" })
 
-keymaps
-    :add("n", "<leader>k/", function()
+loader
+    :map("n", "<leader>k/", function()
         return builtin.keymaps
     end, { desc = "Search for keymaps with telescope" })
-    :add("n", "<leader>k?", function()
+    :map("n", "<leader>k?", function()
         return function()
             builtin.keymaps(initial_mode_normal)
         end
     end, { desc = "Search for keymaps with telescope" })
 
-keymaps:add("n", "<leader>L", function()
+loader:map("n", "<leader>L", function()
     return function()
         vim.cmd.TodoTelescope("initial_mode=normal")
     end
