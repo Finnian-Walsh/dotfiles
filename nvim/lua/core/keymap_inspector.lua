@@ -130,13 +130,13 @@ local function set_global_keys_check(char)
 
         for _, map in matched_keys("n", "^" .. vim.g.mapleader .. "[" .. char .. "]") do
             table.insert(mappings, {
-                string.format("<leader>%s: %s\n", map.lhs:sub(2), map.desc or "[no description]"),
+                ("<leader>%s: %s\n"):format(map.lhs:sub(2), map.desc or "[no description]"),
                 "DiagnosticInfo",
             })
         end
 
         if #mappings == 0 then
-            mappings[1] = { string.format("<leader>%s is not mapped", char), "DiagnosticInfo" }
+            mappings[1] = { ("<leader>%s is not mapped"):format(char), "DiagnosticInfo" }
         else
             local last_mapping = mappings[#mappings]
             last_mapping[1] = last_mapping[1]:sub(0, -2)
