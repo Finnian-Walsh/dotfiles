@@ -320,19 +320,41 @@ end
 
 -- favorites functionality
 
-local telescope_modules
+local telescope_modules_spec = {
+    pickers = function()
+        return require("telescope.pickers")
+    end,
+    finders = function()
+        return require("telescope.finders")
+    end,
+    conf = function()
+        return require("telescope.config").values
+    end,
+    actions = function()
+        require("telescope.actions")
+    end,
+    action_state = function()
+        require("telescope.actions.state")
+    end,
+}
+
+---@class TelescopeModules
+---@field pickers table
+---@field finders table
+---@field conf table
+---@field actions table
+---@field action_state table
+
+---@type TelescopeModules
+local telescope_modules = setmetatable({}, {
+    __index = function(self, key)
+        local module = telescope_modules_spec[key]()
+        self[key] = module
+        return module
+    end,
+})
 
 local function open_favorites(opts)
-    if not telescope_modules then
-        telescope_modules = {
-            pickers = require("telescope.pickers"),
-            finders = require("telescope.finders"),
-            conf = require("telescope.config").values,
-            actions = require("telescope.actions"),
-            action_state = require("telescope.actions.state"),
-        }
-    end
-
     opts = opts or {}
 
     local actions = telescope_modules.actions
