@@ -1,8 +1,5 @@
-local toggleterm_keymap = "<leader><CR>"
-local toggleterm_opts = { desc = "Toggle terminal" }
-
-vim.keymap.set("n", toggleterm_keymap, function()
-    require("toggleterm").setup {}
-    vim.keymap.set("n", toggleterm_keymap, vim.cmd.ToggleTerm, toggleterm_opts)
-    vim.cmd.ToggleTerm()
-end, toggleterm_opts)
+require("core.lazy_keymaps")
+    .new(function()
+        require("toggleterm").setup {}
+    end)
+    :add("n", "<leader><CR>", vim.cmd.ToggleTerm, { desc = "Toggle terminal" })
