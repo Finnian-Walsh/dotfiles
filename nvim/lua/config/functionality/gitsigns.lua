@@ -1,4 +1,5 @@
 vim.api.nvim_create_autocmd("UIEnter", {
+    once = true,
     callback = function()
         local gitsigns = require("gitsigns")
 
