@@ -29,7 +29,7 @@ local mini_actions = {
     end,
 }
 
-require("core.lazy_keymaps")
+require("lazy_loader")
     .new(function()
         mini_files = require("mini.files")
 
@@ -85,7 +85,7 @@ require("core.lazy_keymaps")
             end,
         })
     end)
-    :add("n", "<leader>t", function()
+    :map("n", "<leader>t", function()
         return function()
             if vim.bo.filetype == "oil" then
                 mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
@@ -94,7 +94,7 @@ require("core.lazy_keymaps")
             end
         end
     end, { desc = "Mini files" })
-    :add("n", "<leader>T", function()
+    :map("n", "<leader>T", function()
         return mini_files.open
     end, { desc = "Mini files" })
 

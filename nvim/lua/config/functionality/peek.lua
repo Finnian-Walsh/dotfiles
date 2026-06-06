@@ -8,7 +8,7 @@ local function find_peek()
     end
 end
 
-require("core.lazy_keymaps")
+require("lazy_loader")
     .new(function()
         peek = require("peek")
         peek.setup {
@@ -23,9 +23,9 @@ require("core.lazy_keymaps")
             end
         end)
     end)
-    :add("n", "<localleader>p", function()
+    :map("n", "<localleader>p", function()
         return peek.open
     end, { desc = "Open peek" })
-    :add("n", "<localleader>P", function()
+    :map("n", "<localleader>P", function()
         return peek.close
     end, { desc = "Close peek" })
