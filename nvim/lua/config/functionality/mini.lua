@@ -1,24 +1,5 @@
 local show_hidden_files = false
-
-local mini_files = require("mini.files")
-
-mini_files.setup {
-    content = {
-        filter = function(file)
-            return show_hidden_files or not vim.startswith(file.name, ".")
-        end,
-    },
-}
-
-vim.keymap.set("n", "<leader>t", function()
-    if vim.bo.filetype == "oil" then
-        mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
-    else
-        mini_files.open(vim.api.nvim_buf_get_name(0))
-    end
-end, { desc = "Mini files" })
-
-vim.keymap.set("n", "<leader>T", mini_files.open, { desc = "Mini files" })
+local mini_files
 
 local mini_actions = {
     new_left = function()
@@ -48,29 +29,74 @@ local mini_actions = {
     end,
 }
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "minifiles",
-    callback = function(event)
-        local buf = event.buf
-        vim.b[buf].completion = false
+require("core.lazy_keymaps")
+    .new(function()
+        mini_files = require("mini.files")
 
-        vim.keymap.set("n", "<leader>.", function()
-            show_hidden_files = not show_hidden_files
-            mini_files.close()
-            mini_files.open()
-        end, { desc = "Toggle hidden files", buffer = buf })
+        mini_files.setup {
+            content = {
+                filter = function(file)
+                    return show_hidden_files or not vim.startswith(file.name, ".")
+                end,
+            },
+        }
 
-        vim.keymap.set("n", "<leader>r", function()
-            mini_files.close()
-            mini_files.open()
-        end, { desc = "Refresh mini.files", buffer = buf })
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "minifiles",
+            callback = function(event)
+                local buf = event.buf
+                vim.b[buf].completion = false
 
-        vim.keymap.set("n", "<C-h>", mini_actions.new_left, { desc = "Open in a new window left", buffer = buf })
-        vim.keymap.set("n", "<C-j>", mini_actions.new_below, { desc = "Open in a new window below", buffer = buf })
-        vim.keymap.set("n", "<C-k>", mini_actions.new_above, { desc = "Open in a new window above", buffer = buf })
-        vim.keymap.set("n", "<C-l>", mini_actions.new_right, { desc = "Open in a new window right", buffer = buf })
-    end,
-})
+                vim.keymap.set("n", "<leader>.", function()
+                    show_hidden_files = not show_hidden_files
+                    mini_files.close()
+                    mini_files.open()
+                end, { desc = "Toggle hidden files", buffer = buf })
+
+                vim.keymap.set("n", "<leader>r", function()
+                    mini_files.close()
+                    mini_files.open()
+                end, { desc = "Refresh mini.files", buffer = buf })
+
+                vim.keymap.set(
+                    "n",
+                    "<C-h>",
+                    mini_actions.new_left,
+                    { desc = "Open in a new window left", buffer = buf }
+                )
+                vim.keymap.set(
+                    "n",
+                    "<C-j>",
+                    mini_actions.new_below,
+                    { desc = "Open in a new window below", buffer = buf }
+                )
+                vim.keymap.set(
+                    "n",
+                    "<C-k>",
+                    mini_actions.new_above,
+                    { desc = "Open in a new window above", buffer = buf }
+                )
+                vim.keymap.set(
+                    "n",
+                    "<C-l>",
+                    mini_actions.new_right,
+                    { desc = "Open in a new window right", buffer = buf }
+                )
+            end,
+        })
+    end)
+    :add("n", "<leader>t", function()
+        return function()
+            if vim.bo.filetype == "oil" then
+                mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
+            else
+                mini_files.open(vim.api.nvim_buf_get_name(0))
+            end
+        end
+    end, { desc = "Mini files" })
+    :add("n", "<leader>T", function()
+        return mini_files.open
+    end, { desc = "Mini files" })
 
 require("mini.surround").setup {
     -- Add custom surroundings to be used on top of builtin ones. For more
