@@ -51,20 +51,20 @@ function M:setup(keymap_caller, skip_setup)
         self._load_autocmd_id = nil
     end
 
-    local caller_fn
+    local target_callback
 
     for _, keymap in ipairs(self._keys) do
-        local fn = keymap.fn()
+        local callback = keymap.fn()
         if keymap == keymap_caller then
-            caller_fn = fn
+            target_callback = callback
         end
 
-        vim.keymap.set(keymap.mode, keymap.key, keymap.fn(), keymap.opts)
+        vim.keymap.set(keymap.mode, keymap.key, callback, keymap.opts)
     end
 
     self._initialization_state = InitializationState.FULLY_COMPLETE
 
-    return caller_fn
+    return target_callback
 end
 
 function M:ensure_initialized()
@@ -86,7 +86,15 @@ function M:map(mode, key, fn, opts)
     local keymap = { mode = mode, key = key, fn = fn, opts = opts }
     table.insert(self._keys, keymap)
     vim.keymap.set(mode, key, function()
-        self:setup(keymap)()
+        local callback = self:setup(keymap)
+
+        if type(callback) == "function" then
+            callback()
+        elseif type(callback) == "string" then
+            vim.api.nvim_feedkeys(vim.keycode(callback), "t", false)
+        else
+            vim.notify("Invalid callback", vim.log.levels.ERROR)
+        end
     end, opts)
 
     return self
