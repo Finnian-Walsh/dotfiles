@@ -82,6 +82,7 @@ add {
 
 add {
     { src = "https://github.com/Finnian-Walsh/plugin-view.nvim", version = "feat/buffer-updation" },
+    -- { src = "https://github.com/Finnian-Walsh/plugin-testing.nvim", version = "✨" },
 }
 
 add {
@@ -105,12 +106,5 @@ add {
 add {
     "https://github.com/pogyomo/winresize.nvim",
 }
-
--- add {
---     {
---         src = "https://github.com/Finnian-Walsh/plugin-testing.nvim",
---         version = "✨",
---     },
--- }
 
 return plugins
