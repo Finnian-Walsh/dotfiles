@@ -45,7 +45,7 @@ local JsonFields = setmetatable({
     FAVORITES = "favorites",
 }, {
     __index = function(_, key)
-        error(string.format("No such json field `%s`", key))
+        error(("No such json field `%s`"):format(key))
     end,
 
     __newindex = function()
@@ -212,8 +212,7 @@ local function enable_modified_day_colorscheme(silent, delta)
     vim.schedule(function()
         vim.api.nvim_echo({
             {
-                string.format(
-                    "Displaying %s colorscheme for %s (day %d)",
+                ("Displaying %s colorscheme for %s (day %d)"):format(
                     current_colorscheme_name,
                     days_of_week[current_colorscheme.day],
                     current_colorscheme.day
@@ -239,8 +238,7 @@ local function enable_default_colorscheme(silent)
     vim.schedule(function()
         vim.api.nvim_echo({
             {
-                string.format(
-                    "Displaying %s colorscheme for current day (%s, day %d)",
+                ("Displaying %s colorscheme for current day (%s, day %d)"):format(
                     current_colorscheme_name,
                     days_of_week[current_week_day],
                     current_week_day
@@ -279,7 +277,7 @@ local function enable_festive_colorscheme(silent)
     vim.schedule(function()
         vim.api.nvim_echo({
             {
-                string.format("Displaying %s colorscheme for month %s", colorscheme, current_month),
+                ("Displaying %s colorscheme for month %s"):format(colorscheme, current_month),
                 UPDATION_HIGHLIGHT,
             },
         }, true, {})
@@ -380,14 +378,14 @@ end
 local function add_to_favorites()
     for _, colorscheme in ipairs(favorite_colorschemes) do
         if current_colorscheme_name == colorscheme then
-            vim.notify(string.format("Colorscheme `%s` is already in your favorites", colorscheme), vim.log.levels.WARN)
+            vim.notify(("Colorscheme `%s` is already in your favorites"):format(colorscheme), vim.log.levels.WARN)
             return
         end
     end
 
     vim.api.nvim_echo({
         {
-            string.format("Added colorscheme `%s` to favorites", current_colorscheme_name),
+            ("Added colorscheme `%s` to favorites"):format(current_colorscheme_name),
             UPDATION_HIGHLIGHT,
         },
     }, true, {})
@@ -400,7 +398,7 @@ local function remove_from_favorites()
             table.remove(favorite_colorschemes, i)
             vim.api.nvim_echo({
                 {
-                    string.format("Removed colorscheme `%s` from favorites", colorscheme),
+                    ("Removed colorscheme `%s` from favorites"):format(colorscheme),
                     UPDATION_HIGHLIGHT,
                 },
             }, true, {})
@@ -408,10 +406,7 @@ local function remove_from_favorites()
         end
     end
 
-    vim.notify(
-        string.format("Colorscheme `%s` is not in your favorites", current_colorscheme_name),
-        vim.log.levels.WARN
-    )
+    vim.notify(("Colorscheme `%s` is not in your favorites"):format(current_colorscheme_name), vim.log.levels.WARN)
 end
 
 -- keymaps
