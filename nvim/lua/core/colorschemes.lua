@@ -329,10 +329,10 @@ local telescope_modules_spec = {
         return require("telescope.config").values
     end,
     actions = function()
-        require("telescope.actions")
+        return require("telescope.actions")
     end,
     action_state = function()
-        require("telescope.actions.state")
+        return require("telescope.actions.state")
     end,
 }
 
