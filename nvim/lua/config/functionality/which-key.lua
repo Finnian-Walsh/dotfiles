@@ -1,7 +1,7 @@
-vim.keymap.set("n", "<leader>?", function()
-    require("which-key").show()
-end, { desc = "Buffer Local Keymaps (which-key)" })
+local which_key = require("which-key")
 
-require("which-key").setup {
+which_key.setup {
     preset = "helix",
 }
+
+vim.keymap.set("n", "<leader>?", which_key.show, { desc = "Buffer Local Keymaps (which-key)" })
