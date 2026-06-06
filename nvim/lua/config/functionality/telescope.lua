@@ -10,7 +10,6 @@ local function find_telescope_fzf()
 end
 
 local keymaps = require("core.lazy_keymaps").new(function()
-    print("setup")
     telescope = require("telescope")
     builtin = require("telescope.builtin")
 
@@ -25,20 +24,12 @@ local keymaps = require("core.lazy_keymaps").new(function()
         },
     }
 
-    local fzf_make_command = { "make", "-C", find_telescope_fzf() }
-
-    vim.system(fzf_make_command, {}, function(res)
+    vim.system({ "make" }, { cwd = find_telescope_fzf() }, function(res)
         if res.code ~= 0 then
-            error(
-                string.format("Failed to build telescope-fzf-native.nvim with code: %d\n%s", res.code, res.stderr),
-                vim.log.levels.ERROR
-            )
-            return
+            error(("Failed to build telescope-fzf-native.nvim with code: %d\n%s"):format(res.code, res.stderr))
         end
 
-        local success, result = pcall(function()
-            telescope.load_extension("fzf")
-        end)
+        local success, result = pcall(telescope.load_extension, "fzf")
 
         if not success then
             vim.schedule(function()
