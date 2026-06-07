@@ -16,5 +16,4 @@ require("core.colorschemes")
 
 require("config.functionality")
 
-require("core.after")
 require("custom.snake")
