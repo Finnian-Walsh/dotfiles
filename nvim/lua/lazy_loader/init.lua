@@ -1,39 +1,12 @@
 local M = {}
 M.__index = M
 
-local InitializationState = setmetatable({
-    UNSTARTED = 0,
-    SETUP_COMPLETE = 1,
-    FULLY_COMPLETE = 2,
-}, {
-    __newindex = function()
-        error("InitializationState is immutable")
-    end,
-
-    __index = function(_, key)
-        error(("Variant %s does not exist"):format(key))
-    end,
-})
-
 ---@param on_setup function? A function to be called on setup
----@param name string? The name of the system
-function M.new(on_setup, name)
-    local self = setmetatable({
+function M.new(on_setup)
+    return setmetatable({
         _keys = {},
-        _initialization_state = InitializationState.UNSTARTED,
         on_setup = on_setup,
     }, M)
-
-    if name then
-        self._load_autocmd_id = vim.api.nvim_create_autocmd("User", {
-            pattern = ("Load%s"):format(name),
-            callback = function()
-                self:ensure_initialized()
-            end,
-        })
-    end
-
-    return self
 end
 
 ---@param keymap_caller table? The keymap that is calling setup
@@ -42,13 +15,6 @@ end
 function M:setup(keymap_caller, skip_setup)
     if self.on_setup and not skip_setup then
         self.on_setup()
-    end
-
-    self._initialization_state = InitializationState.SETUP_COMPLETE
-
-    if self._load_autocmd_id then
-        vim.api.nvim_del_autocmd(self._load_autocmd_id)
-        self._load_autocmd_id = nil
     end
 
     local target_callback
@@ -62,19 +28,7 @@ function M:setup(keymap_caller, skip_setup)
         vim.keymap.set(keymap.mode, keymap.key, callback, keymap.opts)
     end
 
-    self._initialization_state = InitializationState.FULLY_COMPLETE
-
     return target_callback
-end
-
-function M:ensure_initialized()
-    if self._initialization_state == InitializationState.FULLY_COMPLETE then
-        return
-    elseif self._initialization_state == InitializationState.SETUP_COMPLETE then
-        self:setup(nil, true)
-    elseif self._initialization_state == InitializationState.UNSTARTED then
-        self:setup()
-    end
 end
 
 ---@param mode string|string[] The mode(s) that the key can be pressed in

@@ -242,12 +242,7 @@ local buttons = ButtonCreator.new {
                     )
                 )
 
-                vim.api.nvim_exec_autocmds("User", {
-                    pattern = "LoadHooker",
-                })
-
-                require("hooker").options.target_directory = dir
-
+                vim.cmd.ChangeHookerDirectory(dir)
                 vim.cmd.Oil(dir)
             end,
         },
