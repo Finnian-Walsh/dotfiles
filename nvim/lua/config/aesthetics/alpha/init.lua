@@ -388,21 +388,6 @@ end
 
 update_padding_values()
 
-vim.api.nvim_create_autocmd("VimResized", {
-    callback = function()
-        update_padding_values()
-        vim.cmd.AlphaRedraw()
-    end,
-})
-
-vim.api.nvim_create_autocmd("WinNew", {
-    callback = function()
-        if vim.api.nvim_win_get_config(0).relative == "" then
-            vim.cmd.AlphaRedraw()
-        end
-    end,
-})
-
 local maximize_button = minimal_buttons._buttons
 local minimal_layout = {
     minimal_buttons:build(
@@ -463,6 +448,21 @@ end
 theme.layout = build_layout()
 
 require("alpha").setup(theme)
+
+vim.api.nvim_create_autocmd("VimResized", {
+    callback = function()
+        update_padding_values()
+        vim.cmd.AlphaRedraw()
+    end,
+})
+
+vim.api.nvim_create_autocmd("WinNew", {
+    callback = function()
+        if vim.api.nvim_win_get_config(0).relative == "" then
+            vim.cmd.AlphaRedraw()
+        end
+    end,
+})
 
 vim.keymap.set("n", "<leader>A", vim.cmd.Alpha, { desc = "Toggle Alpha" })
 
