@@ -185,6 +185,23 @@ local header = {
     },
 }
 
+local function update_header()
+    local selected = header_values.selected
+    header.val = selected.text
+    alpha_config.header_value = selected.name
+    theme.layout = build_layout()
+    vim.cmd.AlphaRedraw()
+end
+
+vim.api.nvim_create_user_command("SetHeader", function(args)
+    if #args.fargs == 0 then
+        vim.notify(("The `%s` header is currently in use"):format(alpha_config.header_value), vim.log.levels.INFO)
+    else
+        header_values:select(args.args)
+        update_header()
+    end
+end, { nargs = "?" })
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "alpha",
     callback = function(event)
@@ -199,14 +216,6 @@ vim.api.nvim_create_autocmd("FileType", {
             end
 
             return t
-        end
-
-        local function update_header()
-            local selected = header_values.selected
-            header.val = selected.text
-            alpha_config.header_value = selected.name
-            theme.layout = build_layout()
-            vim.cmd.AlphaRedraw()
         end
 
         vim.keymap.set("n", "{", function()
@@ -428,8 +437,7 @@ local function reset_alpha_buffers()
         end
 
         vim.api.nvim_win_call(win, function()
-            vim.cmd.enew()
-            vim.cmd.Alpha()
+            vim.cmd("enew | Alpha")
         end)
 
         ::continue::
