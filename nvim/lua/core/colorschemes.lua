@@ -159,6 +159,8 @@ function ColorschemeAction:append_and_apply()
 end
 
 local function on_colorscheme_changed(event)
+    vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", {})
+
     current_colorscheme_name = event.match
     vim.api.nvim_set_hl(0, UPDATION_HIGHLIGHT, { fg = "#5fafff" })
     vim.api.nvim_set_hl(0, QUERY_HIGHLIGHT, { fg = "#fcae1e" })
@@ -177,7 +179,8 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     callback = on_colorscheme_changed,
 })
 
-local function save_colorscheme_data()
+---@param no_log any
+local function save_colorscheme_data(no_log)
     local file = io.open(colorscheme_path, "w")
 
     if not file then
@@ -188,7 +191,14 @@ local function save_colorscheme_data()
         [JsonFields.LAST_COLORSCHEME] = current_colorscheme,
         [JsonFields.FAVORITES] = favorite_colorschemes,
     })
+
     file:close()
+
+    if no_log then
+        return
+    end
+
+    vim.api.nvim_echo({ { "Colorscheme data saved", UPDATION_HIGHLIGHT } }, true, {})
 end
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
@@ -266,6 +276,9 @@ local function enable_festive_colorscheme(silent)
     elseif current_month == 10 then
         -- halloween
         colorscheme = "nightfall"
+    elseif 6 <= current_month and current_month <= 8 then
+        -- summer
+        colorscheme = "sunset"
     else
         vim.notify("Currently, there are no festive colorschemes", vim.log.levels.WARN)
         return
@@ -436,7 +449,7 @@ vim.keymap.set("n", "<Down>", query_synced_colorscheme, { desc = "Query the sync
 vim.keymap.set("n", "<Left>", undo_colorscheme_action, { desc = "Undo the colorscheme action" })
 vim.keymap.set("n", "<Right>", redo_colorscheme_action, { desc = "Redo the colorscheme action" })
 
--- vim.keymap.set("n", "<leader>=", save_colorscheme_data, { desc = "Open favorite colorschemes" })
+vim.keymap.set("n", "<leader>_", save_colorscheme_data, { desc = "Open favorite colorschemes" })
 vim.keymap.set("n", "<leader>~", open_favorites, { desc = "Open favorite colorschemes" })
 vim.keymap.set("n", "<leader>#", function()
     open_favorites { initial_mode = "normal" }
