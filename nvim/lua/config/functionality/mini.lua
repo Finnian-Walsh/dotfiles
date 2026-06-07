@@ -24,7 +24,7 @@ local mini_actions = {
     new_right = function()
         local path = mini_files.get_fs_entry().path
         mini_files.close()
-        vim.cmd("vsplit | wincmd l")
+        vim.cmd("vs | wincmd l")
         vim.cmd.edit(path)
     end,
 }
