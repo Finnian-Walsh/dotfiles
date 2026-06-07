@@ -11,6 +11,7 @@ vim.opt.cursorline = true
 vim.opt.mouse = ""
 vim.opt.smartcase = true
 vim.opt.ignorecase = true
+vim.opt.termguicolors = true
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
