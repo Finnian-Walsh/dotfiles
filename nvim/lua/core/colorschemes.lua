@@ -4,27 +4,30 @@
 --------------------------------------------------------
 --]]
 
-local COLORSCHEME_MODE = {
-    Default = "default",
-    ModifiedDay = "modified_day",
-    Festive = "festive",
-    Custom = "custom",
+local ColorschemeMode = {
+    DEFAULT = "default",
+    MODIFIED_DAY = "modified_day",
+    FESTIVE = "festive",
+    CUSTOM = "custom",
 }
 
-setmetatable(COLORSCHEME_MODE, {
+setmetatable(ColorschemeMode, {
     __index = function(_, index)
         error("No such index: " .. index)
+    end,
+    __newindex = function()
+        error("Colorscheme mode is immutable")
     end,
 })
 
 local daily_colorschemes = {
-    "catppuccin-mocha", -- Sunday
-    "tokyonight", -- Monday
-    "habamax", -- Tuesday
-    "unokai", -- Wednesday
-    "sorbet", -- Thursday
-    "catppuccin-frappe", -- Friday
-    "catppuccin-macchiato", -- Saturday
+    "catppuccin-macchiato", -- Sunday
+    "catppuccin-macchiato", -- Monday
+    "tokyonight-moon", -- Tuesday
+    "catppuccin-nvim", -- Wednesday
+    "tokyonight-night", -- Thursday
+    "tokyonight-night", -- Friday
+    "tokyonight-night", -- Saturday
 }
 
 local days_of_week = {
@@ -63,7 +66,7 @@ ColorschemeState.__index = ColorschemeState
 
 function ColorschemeState.default()
     return setmetatable(
-        { colorscheme = daily_colorschemes[current_week_day], mode = COLORSCHEME_MODE.Default },
+        { colorscheme = daily_colorschemes[current_week_day], mode = ColorschemeMode.DEFAULT },
         ColorschemeState
     )
 end
@@ -164,7 +167,7 @@ local function on_colorscheme_changed(event)
         return
     end
 
-    current_colorscheme:switch(COLORSCHEME_MODE.Custom)
+    current_colorscheme:switch(ColorschemeMode.CUSTOM)
     current_colorscheme.colorscheme = current_colorscheme_name
 
     ColorschemeAction.from_current():append()
@@ -195,11 +198,16 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 local function enable_modified_day_colorscheme(silent, delta)
     delta = delta or 0
 
-    if current_colorscheme.mode == COLORSCHEME_MODE.ModifiedDay then
+    if current_colorscheme.mode == ColorschemeMode.MODIFIED_DAY then
         current_colorscheme.day = (current_colorscheme.day + delta - 1) % 7 + 1
     else
-        current_colorscheme:switch(COLORSCHEME_MODE.ModifiedDay)
-        current_colorscheme.day = (current_day + delta - 1) % 7 + 1
+        current_colorscheme:switch(ColorschemeMode.MODIFIED_DAY)
+
+        if current_colorscheme.mode == ColorschemeMode.DEFAULT then
+            current_colorscheme.day = (current_week_day + delta - 1) % 7 + 1
+        else
+            current_colorscheme.day = current_week_day
+        end
     end
 
     current_colorscheme.colorscheme = daily_colorschemes[current_colorscheme.day]
@@ -226,7 +234,7 @@ end
 local function enable_default_colorscheme(silent)
     update_date()
 
-    current_colorscheme:switch(COLORSCHEME_MODE.Default)
+    current_colorscheme:switch(ColorschemeMode.DEFAULT)
     current_colorscheme.colorscheme = daily_colorschemes[current_week_day]
 
     ColorschemeAction.from_current():append_and_apply()
@@ -265,7 +273,7 @@ local function enable_festive_colorscheme(silent)
 
     assert(type(colorscheme) == "string", "Expected a colorscheme")
 
-    current_colorscheme:switch(COLORSCHEME_MODE.Festive)
+    current_colorscheme:switch(ColorschemeMode.FESTIVE)
     current_colorscheme.colorscheme = colorscheme
 
     ColorschemeAction.from_current():append_and_apply()
