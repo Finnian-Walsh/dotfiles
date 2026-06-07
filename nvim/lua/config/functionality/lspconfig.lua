@@ -93,13 +93,23 @@ local function assert_files_written()
     return not changes
 end
 
+local function handle_format_command(proc)
+    local obj = proc:wait()
+
+    if obj.code == 0 then
+        vim.cmd.edit()
+        return
+    end
+
+    vim.notify("Failed to format files:\n" .. obj.stderr, vim.log.levels.ERROR)
+end
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "rust",
     callback = function(ev)
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
-                vim.fn.system { "cargo", "fmt" }
-                vim.cmd.edit()
+                handle_format_command(vim.system { "cargo", "fmt" })
             end
         end, { desc = "Globally format files", buffer = ev.buf })
 
@@ -117,8 +127,7 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function(ev)
         vim.keymap.set("n", "<leader>gf", function()
             if assert_files_written() then
-                vim.fn.system { "stylua", "." }
-                vim.cmd.edit()
+                handle_format_command(vim.system { "stylua", "." })
             end
         end, { desc = "Globally format files", buffer = ev.buf })
     end,
