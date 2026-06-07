@@ -40,7 +40,7 @@ end)
 
 setmetatable(Direction, {
     __index = function(_, key)
-        error(("%s is not a recognized direction"):format(key))
+        error(key .. " is not a recognized direction")
     end,
     __newindex = function()
         error("Direction enum is read-only")
@@ -212,7 +212,7 @@ local function snake(opts)
         -- new_tail.prev = nil
 
         local line = grid[y]
-        grid[y] = line:sub(1, x - 1) .. "s" .. line:sub(x + 1)
+        grid[y] = ("%ds%d"):format(line:sub(1, x - 1), line:sub(x + 1))
         print(grid[y])
         vim.api.nvim_buf_set_lines(buf, 1, -1, false, grid)
     end
