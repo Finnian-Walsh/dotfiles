@@ -1,19 +1,25 @@
 local hooker
 
-local loader = require("lazy_loader").new(function()
-    hooker = require("hooker")
+local loader = require("lazy_loader")
+    .new(function()
+        hooker = require("hooker")
 
-    hooker.setup {
-        open_directory = vim.cmd.Oil,
-    }
+        hooker.setup {
+            open_directory = vim.cmd.Oil,
+        }
 
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "hooker",
-        callback = function(event)
-            vim.b[event.buf].completion = false
-        end,
-    })
-end, "Hooker")
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "hooker",
+            callback = function(event)
+                vim.b[event.buf].completion = false
+            end,
+        })
+
+        vim.api.nvim_create_user_command("ChangeHookerDirectory", function(args)
+            hooker.options.directory = args.args
+        end, { nargs = 1 })
+    end)
+    :cmd("ChangeHookerDirectory")
 
 loader:map("n", "<leader>a", function()
     return function()
