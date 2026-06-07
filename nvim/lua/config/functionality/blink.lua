@@ -34,8 +34,8 @@ build_task:on_resolve(function()
             cmdline = {
                 keymap = {
                     preset = "none",
-                    ["<Tab>"] = { "insert_next", "fallback" },
-                    ["<S-Tab>"] = { "insert_prev", "fallback" },
+                    ["<Tab>"] = { "show_and_insert_or_accept_single", "insert_next", "fallback" },
+                    ["<S-Tab>"] = { "show_and_insert_or_accept_single", "insert_prev", "fallback" },
 
                     ["<C-space>"] = { "show", "show_documentation", "fallback" },
                     ["<C-u>"] = { "scroll_documentation_up", "fallback" },
@@ -43,6 +43,8 @@ build_task:on_resolve(function()
 
                     ["<C-e>"] = { "cancel" },
                 },
+
+                completion = { list = { selection = { preselect = false, auto_insert = true } } },
             },
 
             term = {
