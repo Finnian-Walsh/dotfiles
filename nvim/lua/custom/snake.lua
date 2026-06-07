@@ -39,6 +39,9 @@ end, function()
 end)
 
 setmetatable(Direction, {
+    __index = function(_, key)
+        error(("%s is not a recognized direction"):format(key))
+    end,
     __newindex = function()
         error("Direction enum is read-only")
     end,
