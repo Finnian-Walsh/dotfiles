@@ -4,35 +4,36 @@ local M = {}
 
 function M.__index(self, key)
     if key == "selected" then
-        return self._headers[rawget(self, "_selected_index")]
+        -- ensure that there is no recursive chain if the object has been tampered with
+        return rawget(self, "_headers")[rawget(self, "_selected_index")]
     else
         return M[key]
     end
 end
 
-function M.new(...)
-    local raw_values = { ... }
+function M.new(mapped_values)
     local ordered_values = {}
+    local references = {}
 
-    for _, value in ipairs(raw_values) do
+    for ref, value in pairs(mapped_values) do
         table.insert(ordered_values, {
-            name = value[1],
-            text = value[2],
-            width = vim.fn.strdisplaywidth(value[2][1]),
+            name = ref,
+            text = value,
+            width = vim.fn.strdisplaywidth(value[1]),
         })
+
+        references[ref] = #ordered_values
     end
 
     return setmetatable({
         _headers = ordered_values,
+        _references = references,
     }, M)
 end
 
 function M:select(name)
-    for index, header in ipairs(self._headers) do
-        if header.name == name then
-            self._selected_index = index
-        end
-    end
+    self._selected_index = self._references[name]
+    -- print(self._references[name])
 end
 
 function M:select_next()

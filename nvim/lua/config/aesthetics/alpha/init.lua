@@ -8,12 +8,17 @@ local HeaderValues = require("config.aesthetics.alpha.header_values")
 
 local alpha_config_path = vim.fs.joinpath(vim.fn.stdpath("data"), "alpha_config.json")
 
-local Themes = setmetatable({
+local Themes = {
     NORMAL = "normal",
     MINIMAL = "minimal",
-}, {
+}
+
+setmetatable(Themes, {
     __index = function(_, index)
         error("No such variant `" .. index .. "`")
+    end,
+    __newindex = function()
+        error("Illegal operation")
     end,
 })
 
@@ -49,7 +54,7 @@ local function get_alpha_config()
     return config
 end
 
-local function set_alpha_config(config)
+local function sync_alpha_config(config)
     local file = io.open(alpha_config_path, "w")
 
     if not file then
@@ -78,10 +83,13 @@ local function get_confirmation(message)
     end
 end
 
--- #33D5C1 very neon
--- #33D5C1 too dark
--- #33D7BE lighter
--- #33D0C3 pretty nice
+local theme = {}
+local build_layout
+
+-- "#33D5C1" very neon
+-- "#33D5C1" too dark
+-- "#33D7BE" lighter
+-- "#33D0C3" pretty nice
 
 local header_colors = {
     "#33D0C3",
@@ -136,14 +144,21 @@ vim.api.nvim_create_autocmd("BufLeave", {
     end,
 })
 
-local header_values = HeaderValues.new(unpack(require("config.aesthetics.alpha.headers")))
+local alpha_config = get_alpha_config()
 
-header_values:select([[straight]])
+vim.api.nvim_create_autocmd("VimLeavePre", {
+    callback = function()
+        sync_alpha_config(alpha_config)
+    end,
+})
+
+local header_values = HeaderValues.new(require("config.aesthetics.alpha.headers"))
+
+header_values:select(alpha_config.header_value or "ansi_shadow")
 
 local header_extensions = {}
 
 if current_month == 9 then
-    header_values:select([[spooky]])
     table.insert(header_extensions, { "" })
     table.insert(header_extensions, {
         days_until_halloween <= 0 and "Happy Halloween!" or days_until_halloween .. " days until Halloween!",
@@ -186,16 +201,22 @@ vim.api.nvim_create_autocmd("FileType", {
             return t
         end
 
+        local function update_header()
+            local selected = header_values.selected
+            header.val = selected.text
+            alpha_config.header_value = selected.name
+            theme.layout = build_layout()
+            vim.cmd.AlphaRedraw()
+        end
+
         vim.keymap.set("n", "{", function()
             header_values:select_next()
-            header.val = header_values.selected.text
-            vim.cmd.AlphaRedraw()
+            update_header()
         end, merge_opts { desc = "Previous header value" })
 
         vim.keymap.set("n", "}", function()
             header_values:select_previous()
-            header.val = header_values.selected.text
-            vim.cmd.AlphaRedraw()
+            update_header()
         end, merge_opts { desc = "Next header value" })
 
         vim.keymap.set("n", "/", "<leader>/", merge_opts { remap = true, desc = "Live grep with telescope" })
@@ -228,6 +249,13 @@ local buttons = ButtonCreator.new {
             " New buffer",
             "w",
             vim.cmd.enew,
+        },
+        {
+            " View Directory",
+            "d",
+            function()
+                vim.cmd("vs | wincmd l | Oil")
+            end,
         },
         {
             " Config",
@@ -266,6 +294,21 @@ local buttons = ButtonCreator.new {
     },
 }
 
+local ferris = {
+    type = "text",
+    val = {
+        [[█ █           █ █]],
+        [[▀█  ▄███████▄  █▀]],
+        [[ ▀▄████▀█▀████▄▀ ]],
+        [[ ▄▀████▀▀▀████▀▄ ]],
+        [[ █ ▄▀▀▀▀▀▀▀▀▀▄ █ ]],
+    },
+    opts = {
+        position = "center",
+        hl = "Ferris",
+    },
+}
+
 local minimal_buttons = ButtonCreator.new {
     padding = 0,
     buttons = {
@@ -281,21 +324,6 @@ local minimal_buttons = ButtonCreator.new {
             "q",
             vim.cmd.quit,
         },
-    },
-}
-
-local ferris = {
-    type = "text",
-    val = {
-        [[█ █           █ █]],
-        [[▀█  ▄███████▄  █▀]],
-        [[ ▀▄████▀█▀████▄▀ ]],
-        [[ ▄▀████▀▀▀████▀▄ ]],
-        [[ █ ▄▀▀▀▀▀▀▀▀▀▄ █ ]],
-    },
-    opts = {
-        position = "center",
-        hl = "Ferris",
     },
 }
 
@@ -358,15 +386,13 @@ vim.api.nvim_create_autocmd("VimResized", {
     end,
 })
 
-local layout = {
-    padding_values.top,
-    header,
-    padding_values.header,
-    buttons:build(header_values.selected.width),
-    padding_values.buttons,
-    ferris,
-    padding_values.bottom,
-}
+vim.api.nvim_create_autocmd("WinNew", {
+    callback = function()
+        if vim.api.nvim_win_get_config(0).relative == "" then
+            vim.cmd.AlphaRedraw()
+        end
+    end,
+})
 
 local maximize_button = minimal_buttons._buttons
 local minimal_layout = {
@@ -377,7 +403,21 @@ local minimal_layout = {
     ),
 }
 
-local theme = {}
+function build_layout()
+    if alpha_config.theme == Themes.MINIMAL then
+        return minimal_layout -- static layout, so can be built once
+    else
+        return {
+            padding_values.top,
+            header,
+            padding_values.header,
+            buttons:build(header_values.selected.width),
+            padding_values.buttons,
+            ferris,
+            padding_values.bottom,
+        }
+    end
+end
 
 local function reset_alpha_buffers()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -398,27 +438,21 @@ end
 
 function minimize_alpha()
     if get_confirmation("Minimize alpha screen? (Y)es, (N)o ") then
+        alpha_config.theme = Themes.MINIMAL
         theme.layout = minimal_layout
-        set_alpha_config { theme = Themes.MINIMAL }
         reset_alpha_buffers()
     end
 end
 
 function maximize_alpha()
     if get_confirmation("Maximize alpha screen? (Y)es, (N)o ") then
-        theme.layout = layout
-        set_alpha_config { theme = Themes.NORMAL }
+        alpha_config.theme = Themes.NORMAL
+        theme.layout = build_layout()
         reset_alpha_buffers()
     end
 end
 
-local alpha_config = get_alpha_config()
-
-if alpha_config.theme == Themes.MINIMAL then
-    theme.layout = minimal_layout
-elseif alpha_config.theme == Themes.NORMAL or true then
-    theme.layout = layout
-end
+theme.layout = build_layout()
 
 require("alpha").setup(theme)
 
