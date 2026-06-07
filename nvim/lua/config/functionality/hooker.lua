@@ -63,20 +63,20 @@ for i = 1, 20 do
                 vim.cmd("vs | wincmd l")
                 hooker.select(i)
             end)
-        end, { desc = "Hooker " .. i .. " (vertical split)" })
+        end, { desc = ("Hooker %d (vertical split)"):format(i) })
         :map("n", "<leader>N" .. navigation_key, function()
             return bound_creator(function()
                 vim.cmd("sp | wincmd j")
                 hooker.select(i)
             end)
-        end, { desc = "Hooker " .. i .. " (horizontal split)" })
+        end, { desc = ("Hooker %d (horizontal split)"):format(i) })
         :map("n", "<leader>o" .. navigation_key, function()
             return bound_creator(function()
                 hooker.select(i)
                 vim.cmd.BufOnly()
             end)
         end, {
-            desc = "Hooker switch to only " .. i .. " and displayed",
+            desc = ("Hooker switch to only %d and displayed"):format(i),
         })
         :map("n", "<leader>O" .. navigation_key, function()
             return bound_creator(function()

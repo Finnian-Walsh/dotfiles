@@ -22,7 +22,7 @@ setmetatable(Themes, {
     end,
 })
 
-local response_key_codes = {
+local response_keycodes = {
     affirmative = {
         [89] = true, -- Y
         [121] = true, -- y
@@ -75,9 +75,9 @@ local function get_confirmation(message)
     while true do
         local response = vim.fn.getchar()
 
-        if response_key_codes.affirmative[response] then
+        if response_keycodes.affirmative[response] then
             return true
-        elseif response_key_codes.negative[response] or response_key_codes.abortive[response] then
+        elseif response_keycodes.negative[response] or response_keycodes.abortive[response] then
             return false
         end
     end
@@ -195,7 +195,7 @@ end
 
 vim.api.nvim_create_user_command("SetHeader", function(args)
     if #args.fargs == 0 then
-        vim.notify(("The `%s` header is currently in use"):format(alpha_config.header_value), vim.log.levels.INFO)
+        vim.notify("The `" .. alpha_config.header_value .. "` header is currently in use", vim.log.levels.INFO)
     else
         header_values:select(args.args)
         update_header()

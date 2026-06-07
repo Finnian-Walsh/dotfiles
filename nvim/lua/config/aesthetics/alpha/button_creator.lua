@@ -50,7 +50,7 @@ function M:build(text_width)
         local spaces = text_width
             - (vim.fn.strdisplaywidth(button_name) + vim.fn.strdisplaywidth(button_key) + square_brackets_width)
 
-        local button_val = button_name .. string.rep(" ", spaces) .. "[" .. button.key .. "]"
+        local button_val = ("%s%s[%s]"):format(button_name, string.rep(" ", spaces), button.key)
 
         table.insert(value, {
             on_press = button_fn,

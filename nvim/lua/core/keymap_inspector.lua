@@ -41,9 +41,9 @@ local function group_sorted_ascii_characters(chars)
     local current_table = groups[index][2]
 
     for _, key in ipairs(chars) do
-        local key_byte = string.byte(key)
+        local keybyte = string.byte(key)
 
-        while key_byte > groups[index][1] do
+        while keybyte > groups[index][1] do
             index = index + 1
             current_table = groups[index][2]
         end
@@ -64,7 +64,7 @@ vim.keymap.set("n", "<leader>kk", function()
 
     local unused_keys = {}
 
-    for key, _ in pairs(chars) do
+    for key in pairs(chars) do
         table.insert(unused_keys, key)
     end
 
@@ -128,7 +128,7 @@ local function set_global_keys_check(char)
             char = special_match
         end
 
-        for _, map in matched_keys("n", "^" .. vim.g.mapleader .. "[" .. char .. "]") do
+        for _, map in matched_keys("n", ("^%s[%s]"):format(vim.g.mapleader, char)) do
             table.insert(mappings, {
                 ("<leader>%s: %s\n"):format(map.lhs:sub(2), map.desc or "[no description]"),
                 "DiagnosticInfo",
