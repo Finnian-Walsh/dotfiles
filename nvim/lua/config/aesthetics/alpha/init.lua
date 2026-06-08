@@ -5,6 +5,7 @@ end
 local CycleSystem = require("config.aesthetics.alpha.cycle_system")
 local ButtonCreator = require("config.aesthetics.alpha.button_creator")
 local HeaderValues = require("config.aesthetics.alpha.header_values")
+local EventProcessor = require("config.aesthetics.alpha.event_processor")
 
 local alpha_config_path = vim.fs.joinpath(vim.fn.stdpath("data"), "alpha_config.json")
 
@@ -46,6 +47,7 @@ local function get_alpha_config()
     end
 
     local ok, config = pcall(vim.json.decode, file:read("*a"))
+    file:close()
 
     if not ok then
         vim.notify("Failed to decode alpha config file", vim.log.levels.ERROR)
@@ -54,15 +56,47 @@ local function get_alpha_config()
     return config
 end
 
-local function sync_alpha_config(config)
-    local file = io.open(alpha_config_path, "w")
+local function get_deep_changes(updated, base)
+    local changes = {}
 
-    if not file then
-        vim.notify("Failed to save theme layout", vim.log.levels.ERROR)
+    for key, value in pairs(updated) do
+        if type(value) == "table" then
+            local value_changes = get_deep_changes(value, base[key])
+
+            if #value_changes > 0 then
+                changes[key] = value_changes
+            end
+        elseif base[key] ~= value then
+            changes[key] = value
+        end
+    end
+
+    return changes
+end
+
+---@param config table The final configuration
+---@param base table The initial configuration
+local function sync_alpha_config(config, base)
+    if type(config) ~= "table" then
+        vim.notify("Config is not a table", vim.log.levels.ERROR)
+        return
+    elseif type(base) ~= "table" then
+        vim.notify("Base is not a table", vim.log.levels.ERROR)
         return
     end
 
-    file:write(vim.json.encode(config))
+    local config_updates = get_deep_changes(config, base)
+
+    if #config_updates == 0 then
+        return
+    end
+
+    local current_config = get_alpha_config()
+    local updated_config = vim.tbl_deep_extend("force", current_config, config_updates)
+
+    local file = assert(io.open(alpha_config_path, "w"), "Failed to open alpha configuration file")
+    file:write(vim.json.encode(updated_config))
+    file:close()
 end
 
 local function uninitialized_padding()
@@ -145,18 +179,30 @@ vim.api.nvim_create_autocmd("BufLeave", {
 })
 
 local alpha_config = get_alpha_config()
+local immutable_alpha_config_copy = vim.deepcopy(alpha_config)
+
+local function save_config()
+    sync_alpha_config(alpha_config, immutable_alpha_config_copy)
+end
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
-    callback = function()
-        sync_alpha_config(alpha_config)
-    end,
+    callback = save_config,
 })
+
+vim.api.nvim_create_user_command("AlphaSave", save_config, {})
 
 local header_values = HeaderValues.new(require("config.aesthetics.alpha.headers"))
 
 header_values:select(alpha_config.header_value or "ansi_shadow")
 
 local header_extensions = {}
+
+local upcoming_event = alpha_config.upcoming_event
+
+if upcoming_event then
+    local displayed_event = EventProcessor.new(upcoming_event.date, upcoming_event.text):display()
+    vim.list_extend(header_extensions, displayed_event)
+end
 
 if current_month == 9 then
     table.insert(header_extensions, { "" })
