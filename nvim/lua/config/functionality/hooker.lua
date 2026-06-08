@@ -16,7 +16,7 @@ local loader = require("lazy_loader")
         })
 
         vim.api.nvim_create_user_command("ChangeHookerDirectory", function(args)
-            hooker.options.directory = args.args
+            hooker.options.target_directory = args.args
         end, { nargs = 1 })
     end)
     :cmd("ChangeHookerDirectory")
