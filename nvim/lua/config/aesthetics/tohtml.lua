@@ -1,0 +1,5 @@
+require("lazy_loader")
+    .new(function()
+        vim.cmd.packadd("nvim.tohtml")
+    end)
+    :cmd("TOhtml")
