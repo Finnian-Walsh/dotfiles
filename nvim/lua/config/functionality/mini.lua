@@ -95,11 +95,19 @@ require("lazy_loader")
                 mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
             else
                 local buf_name = vim.api.nvim_buf_get_name(0)
-                local ok, err = pcall(mini_files.open, buf_name)
 
-                if not ok then
-                    vim.notify(err, vim.log.levels.ERROR)
-                    mini_files.open(vim.fs.dirname(buf_name))
+                if vim.uv.fs_stat(buf_name) then
+                    mini_files.open(buf_name)
+                else
+                    -- highly likely that the buffer open references a file since directories are delegated to oil,
+                    -- which are handled separately, so parent_dir variable is ok
+                    local parent_dir = vim.fs.dirname(buf_name)
+
+                    if vim.uv.fs_stat(parent_dir) then
+                        mini_files.open(parent_dir)
+                    else
+                        mini_files.open()
+                    end
                 end
             end
         end
