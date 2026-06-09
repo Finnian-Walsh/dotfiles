@@ -242,12 +242,12 @@ vim.api.nvim_create_autocmd("FileType", {
         end
 
         vim.keymap.set("n", "{", function()
-            header_values:select_next()
+            header_values:select_previous()
             update_header()
         end, merge_opts { desc = "Previous header value" })
 
         vim.keymap.set("n", "}", function()
-            header_values:select_previous()
+            header_values:select_next()
             update_header()
         end, merge_opts { desc = "Next header value" })
 
