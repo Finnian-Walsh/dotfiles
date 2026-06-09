@@ -5,5 +5,6 @@ safe_loader:load("config.aesthetics.bufferline")
 safe_loader:load("config.aesthetics.colorschemes")
 safe_loader:load("config.aesthetics.let-it-snow")
 safe_loader:setup("lualine")
+safe_loader:load("config.aesthetics.tohtml")
 
 return safe_loader
