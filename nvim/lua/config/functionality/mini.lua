@@ -1,3 +1,5 @@
+require("mini.test").setup {}
+
 local show_hidden_files = false
 local mini_files
 
@@ -49,13 +51,15 @@ require("lazy_loader")
 
                 vim.keymap.set("n", "<leader>.", function()
                     show_hidden_files = not show_hidden_files
+                    local state = mini_files.get_explorer_state()
                     mini_files.close()
-                    mini_files.open()
+                    mini_files.open(state.anchor)
                 end, { desc = "Toggle hidden files", buffer = buf })
 
                 vim.keymap.set("n", "<leader>r", function()
+                    local state = mini_files.get_explorer_state()
                     mini_files.close()
-                    mini_files.open()
+                    mini_files.open(state.anchor)
                 end, { desc = "Refresh mini.files", buffer = buf })
 
                 vim.keymap.set(
@@ -90,7 +94,13 @@ require("lazy_loader")
             if vim.bo.filetype == "oil" then
                 mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
             else
-                mini_files.open(vim.api.nvim_buf_get_name(0))
+                local buf_name = vim.api.nvim_buf_get_name(0)
+                local ok, err = pcall(mini_files.open, buf_name)
+
+                if not ok then
+                    vim.notify(err, vim.log.levels.ERROR)
+                    mini_files.open(vim.fs.dirname(buf_name))
+                end
             end
         end
     end, { desc = "Mini files" })
