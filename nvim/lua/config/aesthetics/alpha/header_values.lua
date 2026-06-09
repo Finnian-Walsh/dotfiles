@@ -11,18 +11,18 @@ function M.__index(self, key)
     end
 end
 
-function M.new(mapped_values)
+function M.new(listed_values)
     local ordered_values = {}
     local references = {}
 
-    for ref, value in pairs(mapped_values) do
+    for index, value in pairs(listed_values) do
         table.insert(ordered_values, {
-            name = ref,
-            text = value,
-            width = vim.fn.strdisplaywidth(value[1]),
+            name = value.name,
+            text = value.text,
+            width = vim.fn.strdisplaywidth(value.text[1]),
         })
 
-        references[ref] = #ordered_values
+        references[value.name] = index
     end
 
     return setmetatable({
