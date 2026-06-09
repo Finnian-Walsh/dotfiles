@@ -23,22 +23,6 @@ setmetatable(Themes, {
     end,
 })
 
-local response_keycodes = {
-    affirmative = {
-        [89] = true, -- Y
-        [121] = true, -- y
-    },
-    negative = {
-        [78] = true, -- N
-        [110] = true, -- n
-    },
-    abortive = {
-        [67] = true, -- C
-        [99] = true, -- c
-        [27] = true, -- Esc
-    },
-}
-
 local function get_alpha_config()
     local file = io.open(alpha_config_path, "r")
 
@@ -87,7 +71,14 @@ local function sync_alpha_config(config, base)
 
     local config_updates = get_deep_changes(config, base)
 
-    if #config_updates == 0 then
+    local no_updates = true
+
+    for _ in pairs(config_updates) do
+        no_updates = false
+        break
+    end
+
+    if no_updates then
         return
     end
 
@@ -101,20 +92,6 @@ end
 
 local function uninitialized_padding()
     return { type = "padding" }
-end
-
-local function get_confirmation(message)
-    vim.notify(message)
-
-    while true do
-        local response = vim.fn.getchar()
-
-        if response_keycodes.affirmative[response] then
-            return true
-        elseif response_keycodes.negative[response] or response_keycodes.abortive[response] then
-            return false
-        end
-    end
 end
 
 local theme = {}
@@ -436,6 +413,7 @@ update_padding_values()
 
 local maximize_button = minimal_buttons._buttons
 local minimal_layout = {
+    { type = "padding", val = 1 },
     minimal_buttons:build(
         vim.fn.strdisplaywidth(maximize_button.name)
             + vim.fn.strdisplaywidth(maximize_button.key)
@@ -476,7 +454,7 @@ local function reset_alpha_buffers()
 end
 
 function minimize_alpha()
-    if get_confirmation("Minimize alpha screen? (Y)es, (N)o ") then
+    if vim.fn.confirm("Minimize alpha screen?", "&Yes\n&No") == 1 then
         alpha_config.theme = Themes.MINIMAL
         theme.layout = minimal_layout
         reset_alpha_buffers()
@@ -484,7 +462,7 @@ function minimize_alpha()
 end
 
 function maximize_alpha()
-    if get_confirmation("Maximize alpha screen? (Y)es, (N)o ") then
+    if vim.fn.confirm("Maximize alpha screen?", "&Yes\n&No") == 1 then
         alpha_config.theme = Themes.NORMAL
         theme.layout = build_layout()
         reset_alpha_buffers()
