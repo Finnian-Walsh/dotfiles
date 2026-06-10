@@ -25,6 +25,7 @@ A highly customized configuration for the highly extensible modal text editor, [
 - [mason.nvim](https://github.com/mason-org/mason.nvim)
 - [mini.files](https://github.com/nvim-mini/mini.files)
 - [mini.surround](https://github.com/nvim-mini/mini.surround)
+- [mini.test](https://github.com/nvim-mini/mini.test)
 - [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim)
 - [neorg](https://github.com/nvim-neorg/neorg)
 - [neovim](https://github.com/rose-pine/neovim)
