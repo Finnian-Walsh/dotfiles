@@ -5,7 +5,11 @@ Pls no hate
 A highly customized configuration for the highly extensible modal text editor, [Neovim](https://neovim.io/)
 
 <!-- START PLUGIN LIST -->
+
 ### Plugins
+<details>
+<summary>Plugn list</summary>
+
 - [alpha-nvim](https://github.com/goolord/alpha-nvim)
 - [blink.cmp](https://github.com/saghen/blink.cmp)
 - [blink.compat](https://github.com/saghen/blink.compat)
@@ -50,6 +54,7 @@ A highly customized configuration for the highly extensible modal text editor, [
 - [undotree](https://github.com/mbbill/undotree)
 - [which-key.nvim](https://github.com/folke/which-key.nvim)
 - [winresize.nvim](https://github.com/pogyomo/winresize.nvim)
+</details>
 <!-- END PLUGIN LIST -->
 
 ## [Zellij Configuration](zellij)
