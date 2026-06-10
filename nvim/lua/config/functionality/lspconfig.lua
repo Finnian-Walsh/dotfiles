@@ -57,10 +57,20 @@ vim.keymap.set("n", "gnd", function()
     vim.lsp.buf.definition()
 end, { desc = "Go to definition in a new buffer" })
 
+vim.keymap.set("n", "gNd", function()
+    vim.cmd("sp | wincmd j")
+    vim.lsp.buf.definition()
+end, { desc = "Go to definition in a new buffer" })
+
 vim.keymap.set("n", "gnD", function()
     vim.cmd("vs | wincmd l")
     vim.lsp.buf.declaration()
 end, { desc = "Go to declaration in a new buffer" })
+
+vim.keymap.set("n", "gNd", function()
+    vim.cmd("sp | wincmd j")
+    vim.lsp.buf.declaration()
+end, { desc = "Go to definition in a new buffer" })
 
 local function assert_files_written()
     local message_type = "ErrorMsg"
