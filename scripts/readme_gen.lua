@@ -5,13 +5,19 @@ local lockfile = assert(io.open("nvim/nvim-pack-lock.json", "r"), "Failed to ope
 local plugins = lunajson.decode(lockfile:read("*a"))
 lockfile:close()
 
-local lines = { "### Plugins" }
+local lines = { "\
+### Plugins\
+<details>\
+<summary>Plugn list</summary>\
+" }
 
 for name, data in pairs(plugins.plugins) do
 	table.insert(lines, ("- [%s](%s)"):format(name, data.src or "no src"))
 end
 
 table.sort(lines)
+
+table.insert(lines, "</details>")
 
 local readme_file = assert(io.open("README.md", "r"), "Failed to open readme file for reading")
 local readme_content = readme_file:read("*a")
