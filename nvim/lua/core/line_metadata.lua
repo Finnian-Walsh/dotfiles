@@ -13,20 +13,20 @@ local virtual_diagnostics_enabled = true
 local sign_diagnostics_enabled = true
 local underline_diagnostics_enabled = true
 
+local base_diagnostic_config = {
+    signs = sign_diagnostics_enabled,
+    underline = underline_diagnostics_enabled,
+    update_in_insert = true,
+    virtual_lines = false,
+    virtual_text = false,
+}
+
 local function set_diagnostic_config()
-    local config = {
-        signs = sign_diagnostics_enabled,
-        underline = underline_diagnostics_enabled,
-        update_in_insert = true,
-        virtual_lines = false,
-        virtual_text = false,
-    }
-
     if virtual_diagnostics_enabled then
-        vim.tbl_extend("force", config, virtual_diagnostic_mode)
+        vim.diagnostic.config(vim.tbl_extend("force", base_diagnostic_config, virtual_diagnostic_mode))
+    else
+        vim.diagnostic.config(base_diagnostic_config)
     end
-
-    vim.diagnostic.config(config)
 end
 
 set_diagnostic_config()
