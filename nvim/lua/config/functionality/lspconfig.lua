@@ -3,12 +3,24 @@ require("mason").setup {}
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Open Mason" })
 
 local ensure_installed = {
+    -- Vimscript
+    "vimls",
+    -- Lua
     "stylua",
+    -- Rust
     "rust_analyzer",
+    -- Lua
     "lua_ls",
+    -- Python
     "pyright",
-    "asm_lsp",
     "ruff",
+    -- Asm
+    "asm_lsp",
+    -- Web dev
+    "ts_ls",
+    "html",
+    "cssls",
+    "eslint",
 }
 
 if vim.uv.os_getenv("NO_CLANGD") ~= "1" then
