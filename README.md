@@ -5,10 +5,9 @@ Pls no hate
 A highly customized configuration for the highly extensible modal text editor, [Neovim](https://neovim.io/)
 
 <!-- START PLUGIN LIST -->
-
 ### Plugins
 <details>
-<summary>Plugn list</summary>
+<summary>Plugin list</summary>
 
 - [alpha-nvim](https://github.com/goolord/alpha-nvim)
 - [blink.cmp](https://github.com/saghen/blink.cmp)
