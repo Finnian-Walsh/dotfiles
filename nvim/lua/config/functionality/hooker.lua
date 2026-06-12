@@ -35,6 +35,13 @@ loader:map("n", "<leader>h", function()
     return hooker.menu
 end, { desc = "Open hooker menu" })
 
+loader:map("n", "<leader>H", function()
+    return function()
+        hooker.options.target_directory = vim.uv.cwd()
+        vim.notify("Synchronized hooker target directory with cwd", vim.log.levels.INFO)
+    end
+end, { desc = "Synchronize hooker target directory with current working directory" })
+
 local function make_bound_creator(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
     return function(f)
