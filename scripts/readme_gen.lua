@@ -8,7 +8,7 @@ lockfile:close()
 local lines = {}
 
 for name, data in pairs(plugins.plugins) do
-	table.insert(lines, ("- [%s](%s)"):format(name, data.src or "no src"))
+    table.insert(lines, ("- [%s](%s)"):format(name, data.src or "no src"))
 end
 
 table.sort(lines)
@@ -18,8 +18,8 @@ local readme_content = readme_file:read("*a")
 readme_file:close()
 
 local new_readme_content = readme_content:gsub(
-	"<!%-%- START PLUGIN LIST %-%->[%s%S]*<!%-%- END PLUGIN LIST %-%->",
-	([[<!-- START PLUGIN LIST -->
+    "<!%-%- START PLUGIN LIST %-%->[%s%S]*<!%-%- END PLUGIN LIST %-%->",
+    ([[<!-- START PLUGIN LIST -->
 ### Plugins
 <details>
 <summary>Plugin list</summary>
