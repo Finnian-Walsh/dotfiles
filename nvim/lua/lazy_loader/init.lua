@@ -6,15 +6,29 @@ function M.new(on_setup)
     return setmetatable({
         _keys = {},
         on_setup = on_setup,
+        setup_called = false,
     }, M)
 end
 
+function M:__call()
+    if self.setup_called then
+        return
+    end
+
+    self:setup()
+end
+
 ---@param keymap_caller table? The keymap that is calling setup
----@param skip_setup boolean? Whether setup should be mandatorily skipped
 ---@return function The function of the keymap
-function M:setup(keymap_caller, skip_setup)
-    if self.on_setup and not skip_setup then
-        self.on_setup()
+function M:setup(keymap_caller)
+    self.setup_called = true
+
+    if self.on_setup then
+        local ok, err = pcall(self.on_setup)
+
+        if not ok then
+            vim.notify("Failed to call setup function with error\n" .. err, vim.log.levels.ERROR)
+        end
     end
 
     local target_callback
