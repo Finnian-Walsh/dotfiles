@@ -1,3 +1,8 @@
+if select("#", vim.uv.cwd()) > 1 then
+    vim.notify("Invalid current directory", vim.log.levels.ERROR)
+    return
+end
+
 local mount_file_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "mount_points")
 local mount_file_path = vim.fs.joinpath(mount_file_dir, vim.fn.sha256(vim.uv.cwd()) .. ".txt")
 
@@ -24,7 +29,12 @@ local function mount()
                 vim.notify(("Successfully mounted %s to %s"):format(cwd, mount_fs), vim.log.levels.INFO)
             else
                 vim.notify(
-                    ("Failed to mount to %s (code %d) with error:\n%s"):format(cwd, result.code, result.stderr),
+                    ("Failed to mount %s to %s (code %d) with error:\n%s"):format(
+                        cwd,
+                        mount_fs,
+                        result.code,
+                        result.stderr
+                    ),
                     vim.log.levels.ERROR
                 )
             end
@@ -34,6 +44,22 @@ end
 
 local function unmount()
     local cwd = vim.uv.cwd()
+    local unwritten_files = {}
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        local name = vim.api.nvim_buf_get_name(buf)
+        if name:find(cwd, 1, true) == 1 and vim.bo[buf].modified then
+            table.insert(unwritten_files, vim.fs.relpath(cwd, name))
+        end
+    end
+
+    if #unwritten_files > 0 then
+        vim.notify(
+            "Write any mounted files before unmounting\nUnwritten file(s): " .. table.concat(unwritten_files, ", "),
+            vim.log.levels.WARN
+        )
+        return
+    end
 
     vim.system({
         "umount",
