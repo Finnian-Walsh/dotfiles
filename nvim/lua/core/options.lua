@@ -45,18 +45,6 @@ vim.keymap.set("t", "<C-n>", [[<C-\><C-n>]])
 vim.keymap.set("t", "<C-q>", "<cmd>confirm close<CR>", { desc = "Close current terminal" })
 vim.keymap.set("n", "<Esc>", vim.cmd.nohlsearch, { desc = "Turn highlight off" })
 
--- Miscellaneous keymaps
-
-vim.keymap.set("n", "<leader>m", function()
-    if vim.g.syntax_on then
-        vim.cmd("syntax off")
-        vim.treesitter.stop()
-    else
-        vim.cmd("syntax enable")
-        vim.treesitter.start()
-    end
-end, { desc = "Toggle Linus syntax highlighting" })
-
 -- General keymaps
 
 -- wincmd shortcuts
