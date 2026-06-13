@@ -6,6 +6,12 @@ end
 local mount_file_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "mount_points")
 local mount_file_path = vim.fs.joinpath(mount_file_dir, vim.fn.sha256(vim.uv.cwd()) .. ".txt")
 
+local function read_and_close_mount_file(mount_file)
+    local raw_contents = mount_file:read("*a")
+    mount_file:close()
+    return raw_contents:gsub("\n$", "")
+end
+
 local function mount()
     local mount_file = io.open(mount_file_path, "r")
 
@@ -13,9 +19,7 @@ local function mount()
         error("Failed to open " .. mount_file_path)
     end
 
-    local mount_fs = mount_file:read("*a")
-
-    mount_file:close()
+    local mount_fs = read_and_close_mount_file(mount_file)
 
     local cwd = vim.uv.cwd()
 
@@ -86,14 +90,14 @@ local function create_mount_point()
     local default
 
     if vim.uv.fs_stat(mount_file_path) then
-        local mount_fs_file = io.open(mount_file_path, "r")
+        local mount_file = io.open(mount_file_path, "r")
 
-        if not mount_fs_file then
+        if not mount_file then
             vim.notify("Failed to open mount file", vim.log.levels.ERROR)
             return
         end
 
-        default = mount_fs_file:read("*a")
+        default = read_and_close_mount_file(mount_file)
     end
 
     vim.ui.input({
@@ -106,15 +110,15 @@ local function create_mount_point()
         end
 
         vim.fn.mkdir(mount_file_dir, "p")
-        local mount_fs_file = io.open(mount_file_path, "w")
+        local mount_file = io.open(mount_file_path, "w")
 
-        if not mount_fs_file then
+        if not mount_file then
             vim.notify("Failed to open mount file", vim.log.levels.ERROR)
             return
         end
 
-        mount_fs_file:write(input)
-        mount_fs_file:close()
+        mount_file:write(input)
+        mount_file:close()
 
         if default then
             vim.notify("Successfully updated mount file for " .. vim.uv.cwd(), vim.log.levels.INFO)
@@ -137,8 +141,7 @@ local function delete_mount_point()
         return
     end
 
-    local mount_fs = mount_file:read("*a")
-    mount_file:close()
+    local mount_fs = read_and_close_mount_file(mount_file)
 
     local answer = vim.fn.confirm(
         ("Are you sure you would like to delete the mount point?\nFile system pointed to: `%s`"):format(mount_fs),
@@ -165,10 +168,9 @@ local function query_mount_point()
         return
     end
 
-    local contents = mount_file:read("*a")
-    mount_file:close()
+    local mount_fs = read_and_close_mount_file(mount_file)
 
-    vim.notify(("The mount fs used by the current directory is: `%s`"):format(contents))
+    vim.notify(("The mount fs used by the current directory is: `%s`"):format(mount_fs))
 end
 
 vim.keymap.set("n", "<leader>mm", mount, { desc = "Mount the current directory" })
