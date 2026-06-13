@@ -55,7 +55,10 @@ vim.keymap.set({ "n", "t" }, "<C-l>", "<cmd>wincmd l<CR>", { desc = "Move to win
 vim.keymap.set({ "n", "t" }, "<C-`>", "<cmd>wincmd =<CR>", { desc = "Equalize windows" })
 
 vim.keymap.set("n", "<leader>Q", function()
-    vim.cmd.windo("confirm bwipe")
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        vim.cmd("confirm bwipe " .. buf)
+    end
+
     vim.cmd.restart()
 end, { desc = "Restart neovim" })
 
