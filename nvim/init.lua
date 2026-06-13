@@ -8,12 +8,19 @@ require("core.buffers")
 require("core.tabs")
 require("core.line_metadata")
 require("core.keymap_inspector")
+require("core.mount_points")
 
 vim.pack.add(require("plugins"))
-require("config.aesthetics")
+
+local aesthetics = require("config.aesthetics")
 
 require("core.colorschemes")
 
-require("config.functionality")
+local functionality = require("config.functionality")
 
 require("custom.snake")
+
+return {
+    aesthetics = aesthetics,
+    functionality = functionality,
+}
