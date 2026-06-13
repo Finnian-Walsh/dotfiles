@@ -218,7 +218,11 @@ vim.api.nvim_create_user_command(
 
 vim.keymap.set("n", "<leader>bd", "<cmd>confirm bwipeout<CR>", { desc = "Delete current buffer" })
 
-vim.keymap.set("n", "<leader>bD", "<cmd>windo confirm bwipe<CR>", { desc = "Delete all buffers" })
+vim.keymap.set("n", "<leader>bD", function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        vim.cmd("confirm bwipe " .. buf)
+    end
+end, { desc = "Delete all buffers" })
 
 -- Buffer moving
 
