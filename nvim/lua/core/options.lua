@@ -15,8 +15,22 @@ vim.opt.termguicolors = true
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
-    callback = function()
+    callback = function(event)
         vim.opt.formatoptions:remove { "r", "o" }
+
+        local o_active = false
+
+        vim.keymap.set("n", "<leader>lc", function()
+            if o_active then
+                vim.opt_local.formatoptions:remove("o")
+                o_active = false
+                vim.notify("Off", vim.log.levels.INFO)
+            else
+                o_active = true
+                vim.opt_local.formatoptions:append("o")
+                vim.notify("On", vim.log.levels.INFO)
+            end
+        end, { buf = event.buf })
     end,
 })
 
