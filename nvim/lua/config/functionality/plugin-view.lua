@@ -5,6 +5,6 @@ require("lazy_loader")
         plugin_view = require("plugin-view")
         plugin_view.setup {}
     end)
-    :map("n", "<leader>p", function()
+    :map("n", "<leader>P", function()
         return plugin_view.open
     end, { desc = "View and manage plugins" })
