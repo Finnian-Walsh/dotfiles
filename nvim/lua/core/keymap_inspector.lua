@@ -106,7 +106,7 @@ vim.keymap.set("n", "<leader>kk", function()
     message[#message + 1] = "\nUnused symbols: "
     add_to_message(unused_symbols)
 
-    vim.notify(table.concat(message), vim.log.levels.INFO, { hl_group = "DiagnosticInfo" })
+    Snacks.notify.info(table.concat(message), { hl = { msg = "DiagnosticInfo" } })
 end, { desc = "Check unused leader keymaps" })
 
 local function set_global_keys_check(char)
@@ -133,7 +133,7 @@ local function set_global_keys_check(char)
             mappings[1] = ("<leader>%s is not mapped"):format(char)
         end
 
-        vim.notify(table.concat(mappings, "\n"), vim.log.levels.INFO, { hl_group = "DiagnosticInfo" })
+        Snacks.notify.info(table.concat(mappings, "\n"), { hl = { msg = "DiagnosticInfo" } })
     end, { desc = "Check normal mode leader keys for `" .. char .. "` key" })
 end
 
