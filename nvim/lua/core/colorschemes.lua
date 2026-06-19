@@ -448,13 +448,13 @@ vim.keymap.set("n", "<Down>", query_synced_colorscheme, { desc = "Query the sync
 vim.keymap.set("n", "<Left>", undo_colorscheme_action, { desc = "Undo the colorscheme action" })
 vim.keymap.set("n", "<Right>", redo_colorscheme_action, { desc = "Redo the colorscheme action" })
 
-vim.keymap.set("n", "<leader>_", save_colorscheme_data, { desc = "Open favorite colorschemes" })
-vim.keymap.set("n", "<leader>~", open_favorites, { desc = "Open favorite colorschemes" })
+vim.keymap.set("n", "<leader>_", save_colorscheme_data, { desc = "Save favorite colorschemes" })
+vim.keymap.set("n", "<leader>~", open_favorites, { desc = "Open favorite colorschemes (insert)" })
 vim.keymap.set("n", "<leader>#", function()
     open_favorites { initial_mode = "normal" }
-end, { desc = "Open favorite colorschemes" })
-vim.keymap.set("n", "<leader>=", add_to_favorites, { desc = "Open favorite colorschemes" })
-vim.keymap.set("n", "<leader>-", remove_from_favorites, { desc = "Open favorite colorschemes" })
+end, { desc = "Open favorite colorschemes (normal)" })
+vim.keymap.set("n", "<leader>=", add_to_favorites, { desc = "Add colorscheme to favorites" })
+vim.keymap.set("n", "<leader>-", remove_from_favorites, { desc = "Remove colorscheme from favorites" })
 
 -- startup
 
