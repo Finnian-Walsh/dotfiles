@@ -46,6 +46,8 @@ require("conform").setup {
             python = { "ruff_format" },
             -- You can customize some of the format options for the filetype (:help conform.format)
             rust = { "rustfmt" },
+
+            json = { "prettierd" },
         },
         format_on_save = {
             timeout_ms = 5000,
@@ -85,15 +87,11 @@ vim.keymap.set("n", "gNd", function()
 end, { desc = "Go to definition in a new buffer" })
 
 local function assert_files_written()
-    local message_type = "ErrorMsg"
-    local file_changes = { { "Open files have changes:", message_type } }
+    local file_changes = { "Open files have changes:" }
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.bo[buf].modified then
-            table.insert(
-                file_changes,
-                { "\n" .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."), message_type }
-            )
+            table.insert(file_changes, vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":."))
         end
     end
 
@@ -102,14 +100,14 @@ local function assert_files_written()
     if changes then
         if #file_changes == 2 then
             if vim.bo.modified then
-                file_changes[1][1] = "The current file has changes"
+                file_changes[1] = "The current file has changes"
                 file_changes[2] = nil
             else
-                file_changes[1][1] = "An open file has changes:"
+                file_changes[1] = "An open file has changes:"
             end
         end
 
-        vim.api.nvim_echo(file_changes, true, {})
+        vim.notify(table.concat(file_changes, "\n"), vim.log.levels.ERROR)
     end
 
     return not changes
@@ -134,13 +132,6 @@ vim.api.nvim_create_autocmd("FileType", {
                 handle_format_command(vim.system { "cargo", "fmt" })
             end
         end, { desc = "Globally format files", buffer = ev.buf })
-
-        vim.keymap.set(
-            "n",
-            "<leader>`",
-            "<cmd>edit Cargo.toml<CR>",
-            { desc = "Go to the cargo.toml file", buffer = ev.buf }
-        )
     end,
 })
 
