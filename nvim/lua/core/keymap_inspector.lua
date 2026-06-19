@@ -117,15 +117,12 @@ local function set_global_keys_check(char)
             ["["] = "%[",
             ["-"] = "%-",
             ["^"] = "%^",
+            ["%"] = "%%",
         }
 
-        local special_match = special_cases[char]
+        local char_pattern = special_cases[char] or char
 
-        if special_match then
-            char = special_match
-        end
-
-        for _, map in matched_keys("n", ("^%s[%s]"):format(vim.g.mapleader, char)) do
+        for _, map in matched_keys("n", ("^%s[%s]"):format(vim.g.mapleader, char_pattern)) do
             mappings[#mappings + 1] = ("<leader>%s: %s"):format(map.lhs:sub(2), map.desc or "[no description]")
         end
 
