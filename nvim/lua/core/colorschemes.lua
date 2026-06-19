@@ -334,17 +334,17 @@ end
 -- favorites functionality
 
 local function open_favorites(focus)
+    local favorites_set = {}
+
+    for _, colorscheme in ipairs(favorite_colorschemes) do
+        favorites_set[colorscheme] = true
+    end
+
     Snacks.picker.colorschemes {
         title = "Favorite Colorschemes",
         focus = focus or "list",
         transform = function(item)
-            for _, colorscheme in ipairs(favorite_colorschemes) do
-                if colorscheme == item.text then
-                    return true
-                end
-            end
-
-            return false
+            return favorites_set[item.text] or false
         end,
     }
 end
