@@ -3,24 +3,26 @@ local oil
 local oil_autocmd_group = vim.api.nvim_create_augroup("OilLoadEvents", {})
 local group_deleted = false
 
-local loader = require("lazy_loader").new(function()
-    if not group_deleted then
-        vim.api.nvim_del_augroup_by_id(oil_autocmd_group)
-    end
+local loader = require("lazy_loader").new {
+    callback = function()
+        if not group_deleted then
+            vim.api.nvim_del_augroup_by_id(oil_autocmd_group)
+        end
 
-    oil = require("oil")
-    oil.setup {
-        keymaps = {
-            ["<leader>."] = "actions.toggle_hidden",
-            ["<C-l>"] = false,
-            ["<leader>r"] = "actions.refresh",
-            ["<C-h>"] = false,
-        },
-        devicons = {
-            icons = require("nvim-web-devicons").get_icons(),
-        },
-    }
-end)
+        oil = require("oil")
+        oil.setup {
+            keymaps = {
+                ["<leader>."] = "actions.toggle_hidden",
+                ["<C-l>"] = false,
+                ["<leader>r"] = "actions.refresh",
+                ["<C-h>"] = false,
+            },
+            devicons = {
+                icons = require("nvim-web-devicons").get_icons(),
+            },
+        }
+    end,
+}
 
 loader:cmd("Oil")
 

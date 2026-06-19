@@ -1,13 +1,34 @@
 local M = {}
 M.__index = M
 
----@param on_setup function? A function to be called on setup
-function M.new(on_setup)
-    return setmetatable({
+---@class LazyLoaderOptions
+---@field callback function?
+---@field keymaps any[][]?
+---@field cmds string[]?
+
+---@param opts LazyLoaderOptions? The options
+function M.new(opts)
+    opts = opts or {}
+
+    local self = setmetatable({
         _keys = {},
-        on_setup = on_setup,
+        callback = opts.callback,
         setup_called = false,
     }, M)
+
+    if opts.keymaps then
+        for _, keymap in ipairs(opts.keymaps) do
+            self:map(unpack(keymap))
+        end
+    end
+
+    if opts.cmds then
+        for _, cmd in ipairs(opts.cmds) do
+            self:cmd(cmd)
+        end
+    end
+
+    return self
 end
 
 function M:__call()
@@ -23,8 +44,8 @@ end
 function M:setup(keymap_caller)
     self.setup_called = true
 
-    if self.on_setup then
-        local ok, err = pcall(self.on_setup)
+    if self.callback then
+        local ok, err = pcall(self.callback)
 
         if not ok then
             vim.notify("Failed to call setup function with error\n" .. err, vim.log.levels.ERROR)
@@ -49,7 +70,7 @@ end
 ---@param key string The key for the key mapping
 ---@param fn function A function that returns the keymap's function (not the keymap's function itself)
 ---@param opts table The keymap options
----@return self To allow chaining
+---@return self self allow chaining
 function M:map(mode, key, fn, opts)
     local keymap = { mode = mode, key = key, fn = fn, opts = opts }
     table.insert(self._keys, keymap)
@@ -69,7 +90,7 @@ function M:map(mode, key, fn, opts)
 end
 
 ---@param name string The name of the command
----@return self To allow chaining
+---@return self self To allow chaining
 function M:cmd(name)
     vim.api.nvim_create_user_command(name, function(opts)
         self:setup()

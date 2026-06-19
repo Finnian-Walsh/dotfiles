@@ -1,16 +1,18 @@
 local dap
 
-local loader = require("lazy_loader").new(function()
-    dap = require("dap")
-    require("dap-python").setup("python3")
+local loader = require("lazy_loader").new {
+    callback = function()
+        dap = require("dap")
+        require("dap-python").setup("python3")
 
-    vim.fn.sign_define("DapBreakpoint", {
-        text = "🔴", -- symbol
-        texthl = "DapBreakpoint",
-    })
+        vim.fn.sign_define("DapBreakpoint", {
+            text = "🔴", -- symbol
+            texthl = "DapBreakpoint",
+        })
 
-    vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#FF0000", bg = "", bold = true })
-end)
+        vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#FF0000", bg = "", bold = true })
+    end,
+}
 
 loader:map("n", "<leader>db", function()
     return dap.toggle_breakpoint

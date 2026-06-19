@@ -1,10 +1,12 @@
 local winresize, resize
 
 require("lazy_loader")
-    .new(function()
-        winresize = require("winresize")
-        resize = winresize.resize
-    end)
+    .new({
+        callback = function()
+            winresize = require("winresize")
+            resize = winresize.resize
+        end,
+    })
     :map("n", "<C-left>", function()
         return function()
             resize(0, 5, "left")

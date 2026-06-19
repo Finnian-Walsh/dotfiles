@@ -1,119 +1,118 @@
 require("mini.test").setup {}
 
 local show_hidden_files = false
-local mini_files
 
 local mini_actions = {
     new_left = function()
-        local path = mini_files.get_fs_entry().path
-        mini_files.close()
+        local path = MiniFiles.get_fs_entry().path
+        MiniFiles.close()
         vim.cmd.vsplit(path)
     end,
 
     new_below = function()
-        local path = mini_files.get_fs_entry().path
-        mini_files.close()
+        local path = MiniFiles.get_fs_entry().path
+        MiniFiles.close()
         vim.cmd("split | wincmd j")
         vim.cmd.edit(path)
     end,
 
     new_above = function()
-        local path = mini_files.get_fs_entry().path
-        mini_files.close()
+        local path = MiniFiles.get_fs_entry().path
+        MiniFiles.close()
         vim.cmd.split(path)
     end,
 
     new_right = function()
-        local path = mini_files.get_fs_entry().path
-        mini_files.close()
+        local path = MiniFiles.get_fs_entry().path
+        MiniFiles.close()
         vim.cmd("vs | wincmd l")
         vim.cmd.edit(path)
     end,
 }
 
 require("lazy_loader")
-    .new(function()
-        mini_files = require("mini.files")
+    .new({
+        callback = function()
+            require("mini.files").setup {
+                content = {
+                    filter = function(file)
+                        return show_hidden_files or not vim.startswith(file.name, ".")
+                    end,
+                },
+            }
 
-        mini_files.setup {
-            content = {
-                filter = function(file)
-                    return show_hidden_files or not vim.startswith(file.name, ".")
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "minifiles",
+                callback = function(event)
+                    local buf = event.buf
+                    vim.b[buf].completion = false
+
+                    vim.keymap.set("n", "<leader>.", function()
+                        show_hidden_files = not show_hidden_files
+                        local state = MiniFiles.get_explorer_state()
+                        MiniFiles.close()
+                        MiniFiles.open(state.anchor)
+                    end, { desc = "Toggle hidden files", buffer = buf })
+
+                    vim.keymap.set("n", "<leader>r", function()
+                        local state = MiniFiles.get_explorer_state()
+                        MiniFiles.close()
+                        MiniFiles.open(state.anchor)
+                    end, { desc = "Refresh mini.files", buffer = buf })
+
+                    vim.keymap.set(
+                        "n",
+                        "<C-h>",
+                        mini_actions.new_left,
+                        { desc = "Open in a new window left", buffer = buf }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<C-j>",
+                        mini_actions.new_below,
+                        { desc = "Open in a new window below", buffer = buf }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<C-k>",
+                        mini_actions.new_above,
+                        { desc = "Open in a new window above", buffer = buf }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<C-l>",
+                        mini_actions.new_right,
+                        { desc = "Open in a new window right", buffer = buf }
+                    )
                 end,
-            },
-        }
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "minifiles",
-            callback = function(event)
-                local buf = event.buf
-                vim.b[buf].completion = false
-
-                vim.keymap.set("n", "<leader>.", function()
-                    show_hidden_files = not show_hidden_files
-                    local state = mini_files.get_explorer_state()
-                    mini_files.close()
-                    mini_files.open(state.anchor)
-                end, { desc = "Toggle hidden files", buffer = buf })
-
-                vim.keymap.set("n", "<leader>r", function()
-                    local state = mini_files.get_explorer_state()
-                    mini_files.close()
-                    mini_files.open(state.anchor)
-                end, { desc = "Refresh mini.files", buffer = buf })
-
-                vim.keymap.set(
-                    "n",
-                    "<C-h>",
-                    mini_actions.new_left,
-                    { desc = "Open in a new window left", buffer = buf }
-                )
-                vim.keymap.set(
-                    "n",
-                    "<C-j>",
-                    mini_actions.new_below,
-                    { desc = "Open in a new window below", buffer = buf }
-                )
-                vim.keymap.set(
-                    "n",
-                    "<C-k>",
-                    mini_actions.new_above,
-                    { desc = "Open in a new window above", buffer = buf }
-                )
-                vim.keymap.set(
-                    "n",
-                    "<C-l>",
-                    mini_actions.new_right,
-                    { desc = "Open in a new window right", buffer = buf }
-                )
-            end,
-        })
-    end)
+            })
+        end,
+    })
     :map("n", "<leader>t", function()
         return function()
             if vim.bo.filetype == "oil" then
-                mini_files.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
+                MiniFiles.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
             else
                 local buf_name = vim.api.nvim_buf_get_name(0)
 
                 if vim.uv.fs_stat(buf_name) then
-                    mini_files.open(buf_name)
+                    MiniFiles.open(buf_name)
                 else
                     -- highly likely that the buffer open references a file since directories are delegated to oil,
                     -- which are handled separately, so parent_dir variable is ok
                     local parent_dir = vim.fs.dirname(buf_name)
 
                     if vim.uv.fs_stat(parent_dir) then
-                        mini_files.open(parent_dir)
+                        MiniFiles.open(parent_dir)
                     else
-                        mini_files.open()
+                        MiniFiles.open()
                     end
                 end
             end
         end
     end, { desc = "Mini files" })
     :map("n", "<leader>T", function()
-        return mini_files.open
+        return MiniFiles.open
     end, { desc = "Mini files" })
 
 require("mini.surround").setup {

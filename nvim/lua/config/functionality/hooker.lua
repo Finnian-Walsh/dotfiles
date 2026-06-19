@@ -1,7 +1,7 @@
 local hooker
 
-local loader = require("lazy_loader")
-    .new(function()
+local loader = require("lazy_loader").new {
+    callback = function()
         hooker = require("hooker")
 
         hooker.setup {
@@ -18,8 +18,9 @@ local loader = require("lazy_loader")
         vim.api.nvim_create_user_command("ChangeHookerDirectory", function(args)
             hooker.options.target_directory = args.args
         end, { nargs = 1 })
-    end)
-    :cmd("ChangeHookerDirectory")
+    end,
+    cmds = { "ChangeHookerDirectory" },
+}
 
 loader:map("n", "<leader>a", function()
     return function()
