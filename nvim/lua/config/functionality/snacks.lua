@@ -36,7 +36,7 @@ local focus_list = { focus = "list" }
 ---- General picker
 
 vim.keymap.set("n", "<leader>L", function()
-    Snacks.picker(focus_list)
+    Snacks.picker { focus = "list" }
 end, { desc = "Open Snacks picker" })
 
 vim.keymap.set("n", "<leader>R", function()
@@ -52,13 +52,13 @@ vim.keymap.set("n", "<leader>/", Snacks.picker.grep, { desc = "Open explorer" })
 vim.keymap.set("n", "<leader>f", Snacks.picker.files, { desc = "Open explorer" })
 
 vim.keymap.set("n", "<leader>F", function()
-    Snacks.picker.files(focus_list)
+    Snacks.picker.files { focus = "list" }
 end, { desc = "Open explorer" })
 
 ---- Colorschemes
 
 vim.keymap.set("n", "<leader>C", function()
-    Snacks.picker.colorschemes(focus_list)
+    Snacks.picker.colorschemes { focus = "list" }
 end, { desc = "Open colorschemes picker" })
 
 -- TODO: impl favorite colorschemes picker
@@ -66,18 +66,18 @@ end, { desc = "Open colorschemes picker" })
 ---- Git
 
 vim.keymap.set("n", "<leader>gs", function()
-    Snacks.picker.git_status(focus_list)
+    Snacks.picker.git_status { focus = "list" }
 end, { desc = "Open git status picker" })
 
 vim.keymap.set("n", "<leader>gc", function()
-    Snacks.picker.git_log(focus_list)
+    Snacks.picker.git_log { focus = "list" }
 end, { desc = "Open git log picker" })
 
 ---- Buffers
 
 vim.keymap.set("n", "<leader>b/", Snacks.picker.grep_buffers, { desc = "Grep buffers" })
 vim.keymap.set("n", "<leader>b?", function()
-    Snacks.picker.grep_buffers(focus_list)
+    Snacks.picker.grep_buffers { focus = "list" }
 end, { desc = "Grep buffers (in list)" })
 
 ---- Keymaps
@@ -92,19 +92,19 @@ vim.keymap.set("n", "<leader>u", Snacks.picker.undo, { desc = "View undo history
 ---- Diagnostics
 
 vim.keymap.set("n", "<leader>D", function()
-    Snacks.picker.diagnostics(focus_list)
+    Snacks.picker.diagnostics { focus = "list" }
 end, { desc = "View diagnostics" })
 
 ---- Notifications
 
 vim.keymap.set("n", "<leader>`", function()
-    Snacks.picker.notifications(focus_list)
+    Snacks.picker.notifications { focus = "list" }
 end, { desc = "Open snacks notifications in list mode" })
 
 ---- Todo Comments
 
 vim.keymap.set("n", "<leader>#", function()
-    Snacks.picker.todo_comments(focus_list)
+    Snacks.picker.todo_comments { focus = "list" }
 end, { desc = "View todo comments" })
 
 ---- Checks
