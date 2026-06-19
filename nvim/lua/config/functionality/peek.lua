@@ -8,8 +8,8 @@ local function find_peek()
     end
 end
 
-require("lazy_loader")
-    .new(function()
+require("lazy_loader").new {
+    callback = function()
         peek = require("peek")
         peek.setup {
             app = "browser",
@@ -22,10 +22,23 @@ require("lazy_loader")
                 error(("Failed to build peek with code: %d\n%s"):format(res.code, res.stderr))
             end
         end)
-    end)
-    :map("n", "<localleader>p", function()
-        return peek.open
-    end, { desc = "Open peek" })
-    :map("n", "<localleader>P", function()
-        return peek.close
-    end, { desc = "Close peek" })
+    end,
+    keymaps = {
+        {
+            "n",
+            "<localleader>p",
+            function()
+                return peek.open
+            end,
+            { desc = "Open peek" },
+        },
+        {
+            "n",
+            "<localleader>P",
+            function()
+                return peek.close
+            end,
+            { desc = "Close peek" },
+        },
+    },
+}
