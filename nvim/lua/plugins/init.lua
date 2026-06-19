@@ -73,13 +73,6 @@ add {
 }
 
 add {
-    "https://github.com/nvim-neo-tree/neo-tree.nvim",
-    "https://github.com/nvim-lua/plenary.nvim",
-    "https://github.com/MunifTanjim/nui.nvim",
-    "https://github.com/nvim-tree/nvim-web-devicons",
-}
-
-add {
     "https://github.com/nvim-neorg/neorg",
 }
 
@@ -103,22 +96,12 @@ add {
 }
 
 add {
-    "https://github.com/nvim-telescope/telescope.nvim",
-    "https://github.com/nvim-lua/plenary.nvim",
-    "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+    "https://github.com/folke/snacks.nvim",
 }
 
 add {
     "https://github.com/folke/todo-comments.nvim",
     "https://github.com/nvim-lua/plenary.nvim",
-}
-
-add {
-    "https://github.com/akinsho/toggleterm.nvim",
-}
-
-add {
-    "https://github.com/mbbill/undotree",
 }
 
 add {
