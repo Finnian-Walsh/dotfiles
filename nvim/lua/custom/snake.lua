@@ -248,13 +248,13 @@ vim.api.nvim_create_user_command("Snake", snake, {
         if count == 2 then
             for _, difficulty in ipairs(difficulties) do
                 if difficulty:match("^" .. arg) then
-                    table.insert(matches, difficulty)
+                    matches[#matches + 1] = difficulty
                 end
             end
         elseif count == 3 then
             for _, game_size in ipairs(game_sizes) do
                 if game_size:match("^" .. arg) then
-                    table.insert(matches, game_size)
+                    matches[#matches + 1] = game_size
                 end
             end
         end
@@ -263,4 +263,4 @@ vim.api.nvim_create_user_command("Snake", snake, {
     end,
 })
 
-vim.keymap.set("n", "<leader>s", vim.cmd.Snake, { desc = "Play snake" })
+vim.keymap.set("n", "<leader><Up>", vim.cmd.Snake, { desc = "Play snake" })
