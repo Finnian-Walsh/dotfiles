@@ -1,6 +1,6 @@
 require("snacks").setup {
     bigfile = { enabled = true },
-    dashboard = { enabled = true },
+    dashboard = { enabled = false },
     explorer = { enabled = true },
     gitbrowse = { enabled = true },
     indent = { enabled = true },
@@ -82,8 +82,8 @@ end, { desc = "Grep buffers (in list)" })
 
 ---- Keymaps
 
-vim.keymap.set("n", "k/", Snacks.picker.keymaps, { desc = "Search for keymaps with a Snacks picker" })
-vim.keymap.set("n", "k?", Snacks.picker.keymaps, { desc = "View keymaps with a Snacks picker" })
+vim.keymap.set("n", "<leader>k/", Snacks.picker.keymaps, { desc = "Search for keymaps with a Snacks picker" })
+vim.keymap.set("n", "<leader>k?", Snacks.picker.keymaps, { desc = "View keymaps with a Snacks picker" })
 
 ---- Undo history
 
