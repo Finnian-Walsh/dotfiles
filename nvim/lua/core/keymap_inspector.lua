@@ -48,7 +48,7 @@ local function group_sorted_ascii_characters(chars)
             current_table = groups[index][2]
         end
 
-        table.insert(current_table, key)
+        current_table[#current_table + 1] = key
     end
 
     return uppercase_chars, lowercase_chars, numbers, symbols
@@ -65,7 +65,7 @@ vim.keymap.set("n", "<leader>kk", function()
     local unused_keys = {}
 
     for key in pairs(chars) do
-        table.insert(unused_keys, key)
+        unused_keys[#unused_keys + 1] = key
     end
 
     table.sort(unused_keys)
@@ -73,43 +73,40 @@ vim.keymap.set("n", "<leader>kk", function()
     local unused_uppercase, unused_lowercase, unused_numbers, unused_symbols =
         group_sorted_ascii_characters(unused_keys)
 
-    local echo_message = {}
+    local message = {}
 
-    local edge_message = { "'" }
-    local middle_message = { "', '" }
-
-    local function add_to_message(t)
-        if #t == 0 then
+    local function add_to_message(tbl)
+        if #tbl == 0 then
+            message[#message + 1] = "''"
             return
         end
 
-        table.insert(echo_message, edge_message)
+        message[#message + 1] = "'"
 
         local i = 1
-        local length = #t
+        local length = #tbl
+
         while i < length do
-            table.insert(echo_message, { t[i], "DiagnosticInfo" })
-            table.insert(echo_message, middle_message)
+            message[#message + 1] = tbl[i] .. ", "
             i = i + 1
         end
 
-        table.insert(echo_message, { t[i], "DiagnosticInfo" })
-        table.insert(echo_message, edge_message)
+        message[#message + 1] = tbl[i] .. "'"
     end
 
-    table.insert(echo_message, { "Unused uppercase: " })
+    message[#message + 1] = "Unused uppercase: "
     add_to_message(unused_uppercase)
 
-    table.insert(echo_message, { "\nUnused lowercase: " })
+    message[#message + 1] = "\nUnused lowercase: "
     add_to_message(unused_lowercase)
 
-    table.insert(echo_message, { "\nUnused numbers: " })
+    message[#message + 1] = "\nUnused numbers: "
     add_to_message(unused_numbers)
 
-    table.insert(echo_message, { "\nUnused symbols: " })
+    message[#message + 1] = "\nUnused symbols: "
     add_to_message(unused_symbols)
 
-    vim.api.nvim_echo(echo_message, true, {})
+    vim.notify(table.concat(message), vim.log.levels.INFO, { hl_group = "DiagnosticInfo" })
 end, { desc = "Check unused leader keymaps" })
 
 local function set_global_keys_check(char)
@@ -117,9 +114,9 @@ local function set_global_keys_check(char)
         local mappings = {}
 
         local special_cases = {
-            ["["] = "\\[",
-            ["-"] = "\\-",
-            ["^"] = "\\^",
+            ["["] = "%[",
+            ["-"] = "%-",
+            ["^"] = "%^",
         }
 
         local special_match = special_cases[char]
@@ -129,21 +126,15 @@ local function set_global_keys_check(char)
         end
 
         for _, map in matched_keys("n", ("^%s[%s]"):format(vim.g.mapleader, char)) do
-            table.insert(mappings, {
-                ("<leader>%s: %s\n"):format(map.lhs:sub(2), map.desc or "[no description]"),
-                "DiagnosticInfo",
-            })
+            mappings[#mappings + 1] = ("<leader>%s: %s"):format(map.lhs:sub(2), map.desc or "[no description]")
         end
 
         if #mappings == 0 then
-            mappings[1] = { ("<leader>%s is not mapped"):format(char), "DiagnosticInfo" }
-        else
-            local last_mapping = mappings[#mappings]
-            last_mapping[1] = last_mapping[1]:sub(0, -2)
+            mappings[1] = ("<leader>%s is not mapped"):format(char)
         end
 
-        vim.api.nvim_echo(mappings, true, {})
-    end, { desc = "Check normal mode leader keys for " .. char .. " key" })
+        vim.notify(table.concat(mappings, "\n"), vim.log.levels.INFO, { hl_group = "DiagnosticInfo" })
+    end, { desc = "Check normal mode leader keys for `" .. char .. "` key" })
 end
 
 for i = 32, 126 do
