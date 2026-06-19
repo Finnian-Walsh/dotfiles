@@ -53,7 +53,7 @@ local function unmount()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         local name = vim.api.nvim_buf_get_name(buf)
         if name:find(cwd, 1, true) == 1 and vim.bo[buf].modified then
-            table.insert(unwritten_files, vim.fs.relpath(cwd, name))
+            unwritten_files[#unwritten_files + 1] = vim.fs.relpath(cwd, name)
         end
     end
 

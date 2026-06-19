@@ -16,11 +16,11 @@ function M.new(listed_values)
     local references = {}
 
     for index, value in pairs(listed_values) do
-        table.insert(ordered_values, {
+        ordered_values[#ordered_values + 1] = {
             name = value.name,
             text = value.text,
             width = vim.fn.strdisplaywidth(value.text[1]),
-        })
+        }
 
         references[value.name] = index
     end
@@ -72,9 +72,9 @@ function M:add_extensions(extensions)
 
         for _, addition in ipairs(extensions) do
             if addition.center then
-                table.insert(text, center_text(addition[1], header_width))
+                text[#text + 1] = center_text(addition[1], header_width)
             else
-                table.insert(text, addition[1])
+                text[#text + 1] = addition[1]
             end
         end
     end
