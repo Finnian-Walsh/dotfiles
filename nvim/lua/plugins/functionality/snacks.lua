@@ -31,8 +31,6 @@ require("snacks").setup {
 ------ Pickers
 ------
 
-local focus_list = { focus = "list" }
-
 ---- General picker
 
 vim.keymap.set("n", "<leader>L", function()
@@ -128,3 +126,5 @@ end, { desc = "Toggle snacks terminal" })
 vim.keymap.set("n", "<leader>G", function()
     Snacks.lazygit()
 end, { desc = "Open Lazygit" })
+
+vim.keymap.set("n", "gu", Snacks.gitbrowse.open, { desc = "Open the repository URL" })
