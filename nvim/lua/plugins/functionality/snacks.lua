@@ -40,7 +40,11 @@ end, { desc = "Resume snacks picker" })
 
 ---- File-related
 
-vim.keymap.set("n", "<leader>e", Snacks.picker.explorer, { desc = "Open explorer" })
+vim.keymap.set("n", "<leader>e", function()
+    Snacks.explorer.open { cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0)) }
+end, { desc = "Open explorer" })
+
+vim.keymap.set("n", "<leader>E", Snacks.explorer.open, { desc = "Open explorer" })
 
 vim.keymap.set("n", "<leader>/", Snacks.picker.grep, { desc = "Open explorer" })
 
