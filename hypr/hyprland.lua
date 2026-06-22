@@ -29,6 +29,7 @@ hl.monitor {
 local terminal = "ghostty"
 local fileManager = "dolphin"
 local menu = "hyprlauncher"
+local browser = "firefox"
 
 -------------------
 ---- AUTOSTART ----
@@ -258,16 +259,16 @@ hl.bind(
     mainMod .. " + ALT + M",
     hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
 )
-hl.bind(mainMod .. "  L", hl.dsp.exec_cmd('notif-send -t 1600 "Locking" && hyprlock'))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd('notif-send -t 1600 "Locking" && hyprlock'))
 
 -- TODO: add screenshotting (use Print key)
 
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + V", hl.dsp.window.float { action = "toggle" })
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + F", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
+hl.bind(mainMod .. " + S", hl.dsp.layout("togglesplit")) -- dwindle only
 
 -- TODO: add gap toggling
 
