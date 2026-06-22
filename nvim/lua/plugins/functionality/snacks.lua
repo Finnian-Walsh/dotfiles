@@ -43,7 +43,7 @@ end, { desc = "Resume snacks picker" })
 
 ---- File-related
 
-vim.keymap.set("n", "<leader>y", Snacks.picker.explorer, { desc = "Open explorer" })
+vim.keymap.set("n", "<leader>e", Snacks.picker.explorer, { desc = "Open explorer" })
 
 vim.keymap.set("n", "<leader>/", Snacks.picker.grep, { desc = "Open explorer" })
 
@@ -127,4 +127,4 @@ vim.keymap.set("n", "<leader>G", function()
     Snacks.lazygit()
 end, { desc = "Open Lazygit" })
 
-vim.keymap.set("n", "gu", Snacks.gitbrowse.open, { desc = "Open the repository URL" })
+vim.keymap.set("n", "<leader>gu", Snacks.gitbrowse.open, { desc = "Open the repository URL" })
