@@ -5,11 +5,18 @@ local loader = require("lazy_loader").new {
         hooker = require("hooker")
 
         hooker.setup {
-            -- open_directory = function()
-            --     if Snacks.picker.get() then
-            --         print("tood")
-            --     end
-            -- end,
+            open_directory = function(dir)
+                local pickers = Snacks.picker.get()
+
+                for _, picker in ipairs(pickers) do
+                    if picker.opts.source == "explorer" then
+                        Snacks.explorer.open()
+                        break
+                    end
+                end
+
+                Snacks.explorer.open { cwd = dir }
+            end,
         }
 
         vim.api.nvim_create_autocmd("FileType", {
@@ -50,8 +57,8 @@ end, { desc = "Synchronize hooker target directory with current working director
 
 local function make_bound_creator(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
-    return function(f_normal, f_explorer)
-        f_explorer = f_explorer or f_normal
+    return function(f_normal, f_with_explorer)
+        f_with_explorer = f_with_explorer or f_normal
         return function()
             if hooker.length() < i then
                 vim.notify(warning_message, vim.log.levels.WARN)
@@ -59,7 +66,7 @@ local function make_bound_creator(i)
             end
 
             if vim.bo.filetype == "snacks_file_explorer" and Snacks.picker.get()[1].opts.source == "explorer" then
-                f_explorer()
+                f_with_explorer()
             else
                 f_normal()
             end
