@@ -216,7 +216,7 @@ hl.config {
         kb_layout = "gb",
         kb_variant = "",
         kb_model = "",
-        kb_options = "",
+        kb_options = "caps:super",
         kb_rules = "",
 
         follow_mouse = 1,
@@ -301,6 +301,11 @@ hl.bind(mainMod .. " + mouse_up", hl.dsp.focus { workspace = "e-1" })
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move { direction = "l" })
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move { direction = "d" })
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move { direction = "u" })
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move { direction = "r" })
 
 -- Laptop multimedia keys for volume and LCD brightness
 hl.bind(
