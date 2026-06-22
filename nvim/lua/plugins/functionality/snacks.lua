@@ -1,6 +1,5 @@
 require("snacks").setup {
     bigfile = { enabled = true },
-    dashboard = { enabled = false },
     explorer = { enabled = true },
     gitbrowse = { enabled = true },
     indent = { enabled = true },
@@ -21,7 +20,6 @@ require("snacks").setup {
     profiler = { enabled = true },
     quickfile = { enabled = true },
     scope = { enabled = true },
-    scroll = { enabled = false },
     terminal = { enabled = true },
     words = { enabled = true },
 }
