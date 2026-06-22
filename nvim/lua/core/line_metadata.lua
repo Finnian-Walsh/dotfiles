@@ -67,6 +67,8 @@ vim.keymap.set("n", "<leader>x", function()
 
         gitsigns.toggle_signs(false)
         disable_todo_signs()
+
+        Snacks.indent.disable()
     else
         line_data = true
 
@@ -102,6 +104,8 @@ vim.keymap.set("n", "<leader>x", function()
 
         gitsigns.toggle_signs(true)
         reset_todo_signs()
+
+        Snacks.indent.enable()
     end
 end, { desc = "Toggle line metadata" })
 
