@@ -105,13 +105,19 @@ vim.keymap.set("n", "<leader>#", function()
     Snacks.picker.todo_comments { focus = "list" }
 end, { desc = "View todo comments" })
 
+---- Commands
+
+vim.keymap.set("n", "<leader>:", function()
+    Snacks.picker.commands { focus = "list" }
+end, { desc = "View commands with a picker" })
+
 ---- Checks
 
-if vim.fn.executable("rg") == 0 then
+if vim.fn.exepath("rg") == "" then
     Snacks.notify.warn("Warning: ripgrep is not available, so live grep will not work")
 end
 
-if vim.fn.executable("fdfind") == 0 then
+if vim.fn.exepath("fdfind") == "" and vim.fn.exepath("fd") == "" then
     Snacks.notify.warn("Warning: fdfind is not available, so file grep will be significantly slower")
 end
 
