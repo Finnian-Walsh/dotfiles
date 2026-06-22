@@ -1,4 +1,4 @@
-local safe_loader = require("plugins.safe_loader").new()
+local safe_loader = require("plugins.safe_setup").new()
 
 safe_loader:load("plugins.functionality.autopairs")
 safe_loader:load("plugins.functionality.blink")
