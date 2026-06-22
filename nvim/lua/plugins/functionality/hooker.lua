@@ -5,7 +5,11 @@ local loader = require("lazy_loader").new {
         hooker = require("hooker")
 
         hooker.setup {
-            open_directory = vim.cmd.Oil,
+            -- open_directory = function()
+            --     if Snacks.picker.get() then
+            --         print("tood")
+            --     end
+            -- end,
         }
 
         vim.api.nvim_create_autocmd("FileType", {
@@ -24,8 +28,9 @@ local loader = require("lazy_loader").new {
 
 loader:map("n", "<leader>a", function()
     return function()
-        if vim.bo.filetype == "oil" then
-            hooker.add_file(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
+        if vim.bo.filetype == "snacks_picker_list" then
+            -- TODO: implement this
+            error("Not yet implemented")
         else
             hooker.add_file()
         end
@@ -45,12 +50,18 @@ end, { desc = "Synchronize hooker target directory with current working director
 
 local function make_bound_creator(i)
     local warning_message = "There is no item " .. i .. " in the hooker list"
-    return function(f)
+    return function(f_normal, f_explorer)
+        f_explorer = f_explorer or f_normal
         return function()
-            if hooker.length() >= i then
-                f()
-            else
+            if hooker.length() < i then
                 vim.notify(warning_message, vim.log.levels.WARN)
+                return
+            end
+
+            if vim.bo.filetype == "snacks_file_explorer" and Snacks.picker.get()[1].opts.source == "explorer" then
+                f_explorer()
+            else
+                f_normal()
             end
         end
     end
@@ -60,29 +71,31 @@ for i = 1, 20 do
     local navigation_key = nav_keys[i]
     local bound_creator = make_bound_creator(i)
 
+    local function select_i()
+        hooker.select(i)
+    end
+
     loader
         :map("n", "<leader>" .. navigation_key, function()
-            return bound_creator(function()
-                hooker.select(i)
-            end)
+            return bound_creator(select_i)
         end, { desc = "Hooker " .. i })
         :map("n", "<leader>n" .. navigation_key, function()
             return bound_creator(function()
                 vim.cmd("vs | wincmd l")
                 hooker.select(i)
-            end)
+            end, select_i)
         end, { desc = ("Hooker %d (vertical split)"):format(i) })
         :map("n", "<leader>N" .. navigation_key, function()
             return bound_creator(function()
                 vim.cmd("sp | wincmd j")
                 hooker.select(i)
-            end)
+            end, select_i)
         end, { desc = ("Hooker %d (horizontal split)"):format(i) })
         :map("n", "<leader>o" .. navigation_key, function()
             return bound_creator(function()
                 hooker.select(i)
                 vim.cmd.BufOnly()
-            end)
+            end, select_i)
         end, {
             desc = ("Hooker switch to only %d and displayed"):format(i),
         })
@@ -90,6 +103,6 @@ for i = 1, 20 do
             return bound_creator(function()
                 hooker.select(i)
                 vim.cmd.BufCurrentOnly()
-            end)
+            end, select_i)
         end, { desc = "Hooker switch to only " .. i })
 end

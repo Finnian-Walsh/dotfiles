@@ -82,11 +82,6 @@ add {
 }
 
 add {
-    "https://github.com/stevearc/oil.nvim",
-    "https://github.com/nvim-tree/nvim-web-devicons",
-}
-
-add {
     "https://github.com/toppair/peek.nvim",
 }
 
