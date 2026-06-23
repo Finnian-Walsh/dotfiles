@@ -35,7 +35,7 @@ vim.keymap.set("n", "<leader>L", function()
 end, { desc = "Open Snacks picker" })
 
 vim.keymap.set("n", "<leader>R", function()
-    Snacks.picker.resume {}
+    Snacks.picker.resume { exclude = { "explorer" } }
 end, { desc = "Resume snacks picker" })
 
 ---- File-related
