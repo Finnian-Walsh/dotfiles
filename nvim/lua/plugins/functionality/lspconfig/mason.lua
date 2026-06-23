@@ -21,6 +21,8 @@ local ensure_installed = {
     "html",
     "cssls",
     "eslint",
+    -- Java
+    "jdtls",
 }
 
 if vim.uv.os_getenv("NO_CLANGD") ~= "1" then
@@ -32,8 +34,6 @@ vim.api.nvim_create_autocmd("UIEnter", {
     callback = function()
         require("mason-lspconfig").setup {
             ensure_installed = ensure_installed,
-            automatic_enable = { exclude = { "rust_analyzer" } },
-            -- ignore_install = { "rust_analyzer" },
         }
     end,
 })
