@@ -227,8 +227,8 @@ hl.config {
             natural_scroll = false,
         },
 
-        repeat_delay = 400,
-        repeat_rate = 60,
+        repeat_delay = 300,
+        repeat_rate = 80,
     },
 }
 
@@ -274,7 +274,10 @@ hl.bind(mainMod .. " + S", hl.dsp.layout("togglesplit")) -- dwindle only
 
 -- Notifications
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("makoctl dismiss all"))
-hl.bind(mainMod .. " + D", hl.dsp.exec_cmd('notify-send -t 5000 "🗓️ Date" "$(date \'+%a %d %b\')"'))
+hl.bind(
+    mainMod .. " + D",
+    hl.dsp.exec_cmd('notify-send -t 5000 "🗓️ Time & Date" "$(date \'+%H:%M:%S, %a %d %b\')"')
+)
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + H", hl.dsp.focus { direction = "left" })
