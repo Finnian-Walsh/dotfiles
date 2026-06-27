@@ -17,8 +17,8 @@ build_task:on_resolve(function()
                 ["<Right>"] = { "insert_next", "fallback" },
                 ["<Left>"] = { "insert_prev", "fallback" },
 
-                ["<Tab>"] = { "select_next", "fallback" },
-                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
 
                 ["<CR>"] = { "select_and_accept", "fallback" },
 
