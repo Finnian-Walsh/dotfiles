@@ -1,14 +1,24 @@
-vim.keymap.set("n", "<leader><Tab>n", function()
+local function new_tab_right()
     for _ = 1, vim.v.count1 do
         vim.cmd.tabnew()
     end
-end, { desc = "Open a new tab" })
+end
 
-vim.keymap.set("n", "<leader><Tab>N", function()
+local new_tab_right_opts = { desc = "Open a new tab" }
+
+vim.keymap.set("n", "<leader><Tab>n", new_tab_right, new_tab_right_opts)
+vim.keymap.set("n", "<leader><S-Tab>n", new_tab_right, new_tab_right_opts)
+
+local function new_tab_left()
     for _ = 1, vim.v.count1 do
         vim.cmd("tabnew | tabmove -1")
     end
-end, { desc = "Open a new tab to the left" })
+end
+
+local new_tab_left_opts = { desc = "Open a new tab to the left" }
+
+vim.keymap.set("n", "<leader><Tab>N", new_tab_left, new_tab_left_opts)
+vim.keymap.set("n", "<leader><S-Tab>N", new_tab_left, new_tab_left_opts)
 
 vim.keymap.set("n", "<leader>}", "gt", { desc = "Next tab ", silent = true })
 
