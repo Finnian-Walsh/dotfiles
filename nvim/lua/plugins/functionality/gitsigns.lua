@@ -4,6 +4,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
         local gitsigns = require("gitsigns")
 
         gitsigns.setup {
+
             signs = {
                 add = { text = "┃" },
                 change = { text = "┃" },
@@ -53,14 +54,38 @@ vim.api.nvim_create_autocmd("UIEnter", {
             },
         }
 
-        vim.keymap.set("n", "<leader>gd", gitsigns.diffthis, { desc = "See the git diff for the current file " })
-        vim.keymap.set("n", "<leader>gb", gitsigns.blame, { desc = "Toggle the global git blame" })
-        vim.keymap.set("n", "<leader>gi", gitsigns.blame_line, { desc = "Inspect the commit for the current line" })
-        vim.keymap.set(
-            "n",
-            "<leader>gl",
-            gitsigns.toggle_current_line_blame,
-            { desc = "Toggle the current line blame" }
+        local map = vim.keymap.set
+
+        local function nmap(key, callback, opts)
+            map("n", key, callback, opts)
+        end
+
+        nmap(
+            "<leader>gd",
+            gitsigns.diffthis,
+            { desc = "See the git diff for the current file against the staged/committed changes" }
         )
+
+        nmap("<leader>gD", function()
+            gitsigns.diffthis("~")
+        end, { desc = "See the git diff for the current file against the last commit" })
+
+        nmap("<leader>gb", gitsigns.blame, { desc = "Toggle the global git blame" })
+        nmap("<leader>gi", gitsigns.blame_line, { desc = "Inspect the commit for the current line" })
+        nmap("<leader>gl", gitsigns.toggle_current_line_blame, { desc = "Toggle the current line blame" }) -- never used this practically btw
+
+        map({ "n", "v", "s" }, "[c", gitsigns.prev_hunk, { desc = "Go to the previous hunk" })
+        map({ "n", "v", "s" }, "]c", gitsigns.next_hunk, { desc = "Go to the next hunk" })
+
+        nmap("<leader>hs", gitsigns.stage_hunk, { desc = "Stage current hunk" })
+        nmap("<leader>hu", gitsigns.undo_stage_hunk, { desc = "Unstage current hunk" })
+        nmap("<leader>hr", gitsigns.reset_hunk, { desc = "Reset current hunk" })
+
+        nmap("<leader>hp", gitsigns.preview_hunk_inline, { desc = "Preview the current hunk (inline)" })
+        nmap("<leader>hP", gitsigns.preview_hunk, { desc = "Preview the current hunk (in a floating buffer)" })
+
+        nmap("<leader>bs", gitsigns.stage_buffer, { desc = "Stage current buffer" })
+        nmap("<leader>bu", gitsigns.reset_buffer_index, { desc = "Unstage current buffer" })
+        nmap("<leader>br", gitsigns.reset_buffer, { desc = "Reset current buffer" })
     end,
 })
