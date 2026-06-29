@@ -169,6 +169,12 @@ local function on_colorscheme_changed(event)
         return
     end
 
+    local picker = Snacks.picker.get()[1]
+
+    if picker and picker.opts.source == "colorschemes" then
+        return
+    end
+
     current_colorscheme:switch(ColorschemeMode.CUSTOM)
     current_colorscheme.colorscheme = current_colorscheme_name
 
@@ -390,11 +396,11 @@ vim.keymap.set("n", "<S-Right>", function()
     enable_modified_day_colorscheme(false, vim.v.count1)
 end, { desc = "Cycle through daily colorschemes" })
 
-vim.keymap.set("n", "<S-Down>", enable_default_colorscheme, { desc = "Reset daily colorscheme" })
-vim.keymap.set("n", "<S-Up>", enable_festive_colorscheme, { desc = "Synchronize the current colorscheme" })
+vim.keymap.set("n", "<leader>jn", enable_default_colorscheme, { desc = "Reset daily colorscheme" })
+vim.keymap.set("n", "<leader>jf", enable_festive_colorscheme, { desc = "Synchronize the current colorscheme" })
 
-vim.keymap.set("n", "<Up>", query_colorscheme_name, { desc = "Query the current colorscheme" })
-vim.keymap.set("n", "<Down>", query_synced_colorscheme, { desc = "Query the synced colorscheme info" })
+vim.keymap.set("n", "<leader>jq", query_colorscheme_name, { desc = "Query the current colorscheme" })
+vim.keymap.set("n", "<leader>jQ", query_synced_colorscheme, { desc = "Query the synced colorscheme info" })
 
 vim.keymap.set("n", "<Left>", undo_colorscheme_action, { desc = "Undo the colorscheme action" })
 vim.keymap.set("n", "<Right>", redo_colorscheme_action, { desc = "Redo the colorscheme action" })
