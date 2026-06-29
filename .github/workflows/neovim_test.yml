@@ -27,12 +27,13 @@ jobs:
 
       - name: Clone mini.nvim
         run: |
+          cd nvim && \
           mkdir -p ~/.local/share/nvim/site/pack/deps/start
-          git clone https://github.com/nvim-mini/mini.test \
-            ~/.local/share/nvim/site/pack/deps/start/mini.nvim
+          git clone https://github.com/nvim-mini/mini.test
 
       - name: Run tests
         run: |
-          nvim --headless \
-            -c "lua MiniTest.run_file('minitest.lua')" \
+            cd nvim && \
+            nvim --headless \
+            -u "tests/init.lua" \
             -c "qa!"
