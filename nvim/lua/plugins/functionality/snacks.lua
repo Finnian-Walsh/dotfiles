@@ -126,8 +126,24 @@ end
 ------ Other snacks modules
 ------
 
+vim.keymap.set("n", "<leader>=", function()
+    Snacks.terminal.toggle(nil, {
+        win = {
+            position = "float",
+            relative = "editor",
+            width = 0.85,
+            height = 0.8,
+        },
+    })
+end, { desc = "Toggle snacks terminal" })
+
 vim.keymap.set("n", "<leader><CR>", function()
-    Snacks.terminal()
+    Snacks.terminal.toggle(nil, {
+        win = {
+            position = "bottom",
+            height = 0.25,
+        },
+    })
 end, { desc = "Toggle snacks terminal" })
 
 vim.keymap.set("n", "<leader>G", function()
