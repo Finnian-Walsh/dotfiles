@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-nvim --headless -u "tests/init.lua"
+(cd "$(dirname ${BASH_SOURCE[0]})" && nvim --headless -u "tests/init.lua")
