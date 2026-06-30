@@ -9,6 +9,7 @@ local function trigger_keymap(keys)
     child.lua(([[
     vim.api.nvim_feedkeys(vim.keycode("%s"), "m", false)
     ]]):format(keys))
+    vim.wait(1)
 end
 
 local function trigger_command(cmd)
