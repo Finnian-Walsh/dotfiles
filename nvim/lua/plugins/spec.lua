@@ -69,7 +69,6 @@ add {
 add {
     "https://github.com/nvim-mini/mini.files",
     "https://github.com/nvim-mini/mini.surround",
-    "https://github.com/nvim-mini/mini.test",
 }
 
 add {

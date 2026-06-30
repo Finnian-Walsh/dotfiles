@@ -6,7 +6,7 @@ else
     error(("Cannot run tests (wrong cwd: %s)"):format(cwd))
 end
 
-require("init")
+vim.pack.add { "https://github.com/nvim-mini/mini.test" }
 require("mini.test").setup {}
 
 MiniTest.run_file("tests/mini_test.lua")
