@@ -65,6 +65,26 @@ vim.keymap.set("n", "<leader>N[", function()
     end
 end, { desc = "Previous buffer " })
 
+vim.keymap.set("n", "<leader>o[", function()
+    vim.cmd.BufferLineCyclePrev()
+    vim.cmd.BufOnly()
+end)
+
+vim.keymap.set("n", "<leader>o]", function()
+    vim.cmd.BufferLineCycleNext()
+    vim.cmd.BufOnly()
+end)
+
+vim.keymap.set("n", "<leader>O[", function()
+    vim.cmd.BufferLineCyclePrev()
+    vim.cmd.BufCurrentOnly()
+end)
+
+vim.keymap.set("n", "<leader>O]", function()
+    vim.cmd.BufferLineCycleNext()
+    vim.cmd.BufCurrentOnly()
+end)
+
 -- next buffer keymaps
 
 vim.keymap.set("n", "<leader>]", function()
