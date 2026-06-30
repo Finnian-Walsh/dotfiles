@@ -1,5 +1,3 @@
-require("mini.test").setup {}
-
 local show_hidden_files = false
 
 local mini_actions = {
