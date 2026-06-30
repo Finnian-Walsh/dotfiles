@@ -56,7 +56,7 @@ end
 update_date()
 
 vim.keymap.set({ "n", "t", "v" }, "<S-Space>", "<Space>", { remap = true })
-vim.keymap.set("t", "<C-n>", [[<C-\><C-n>]])
+vim.keymap.set("t", "<M-Esc>", [[<C-\><C-n>]])
 vim.keymap.set("t", "<C-q>", "<cmd>confirm close<CR>", { desc = "Close current terminal" })
 vim.keymap.set("n", "<Esc>", vim.cmd.nohlsearch, { desc = "Turn highlight off" })
 
@@ -71,10 +71,14 @@ vim.keymap.set({ "n", "t" }, "<C-`>", "<cmd>wincmd =<CR>", { desc = "Equalize wi
 
 vim.keymap.set("n", "<leader>Q", function()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        vim.cmd("confirm bwipe " .. buf)
+        if vim.bo[buf].modified then
+            vim.cmd("confirm bwipe" .. buf)
+        elseif vim.bo[buf].buftype == "terminal" then
+            vim.api.nvim_buf_delete(buf, { force = true })
+        end
     end
 
-    vim.cmd.restart()
+    vim.schedule(vim.cmd.restart)
 end, { desc = "Restart neovim" })
 
 vim.keymap.set("n", "<leader>p", function() -- don't reference the function directly since the field lazily evaluates
