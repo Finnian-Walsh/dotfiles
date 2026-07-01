@@ -1,5 +1,6 @@
 require("snacks").setup {
     bigfile = { enabled = true },
+    dashboard = require("plugins.snacks.dashboard"),
     explorer = { enabled = true },
     gitbrowse = { enabled = true },
     indent = { enabled = true },

@@ -2,10 +2,10 @@ if vim.env.DISABLE_ALPHA == "1" then
     return
 end
 
-local CycleSystem = require("plugins.aesthetics.alpha.cycle_system")
-local ButtonCreator = require("plugins.aesthetics.alpha.button_creator")
-local HeaderValues = require("plugins.aesthetics.alpha.header_values")
-local EventProcessor = require("plugins.aesthetics.alpha.event_processor")
+local CycleSystem = require("plugins.alpha.cycle_system")
+local ButtonCreator = require("plugins.alpha.button_creator")
+local HeaderValues = require("plugins.alpha.header_values")
+local EventProcessor = require("plugins.alpha.event_processor")
 
 local alpha_config_path = vim.fs.joinpath(vim.fn.stdpath("data"), "alpha_config.json")
 
@@ -168,7 +168,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 
 vim.api.nvim_create_user_command("AlphaSave", save_config, {})
 
-local header_values = HeaderValues.new(require("plugins.aesthetics.alpha.headers"))
+local header_values = HeaderValues.new(require("plugins.alpha.headers"))
 
 header_values:select(alpha_config.header_value or "ansi_shadow")
 
@@ -286,7 +286,7 @@ local buttons = ButtonCreator.new {
             " View Directory",
             "d",
             function()
-                vim.cmd("vs | wincmd l | Oil")
+                Snacks.explorer()
             end,
         },
         {
@@ -303,7 +303,7 @@ local buttons = ButtonCreator.new {
                 )
 
                 vim.cmd.ChangeHookerDirectory(dir)
-                vim.cmd.Oil(dir)
+                vim.cmd.edit(".")
             end,
         },
         {
