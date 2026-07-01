@@ -89,9 +89,15 @@ add {
     -- { src = "https://github.com/Finnian-Walsh/plugin-testing.nvim", version = "✨" },
 }
 
-add {
-    "https://github.com/folke/snacks.nvim",
-}
+local snacks_path = vim.env.HOME .. "/Dev/snacks.nvim/"
+
+if vim.uv.fs_stat(snacks_path) then
+    vim.opt.rtp:prepend(snacks_path)
+else
+    add {
+        "https://github.com/folke/snacks.nvim",
+    }
+end
 
 add {
     "https://github.com/folke/todo-comments.nvim",
