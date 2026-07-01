@@ -10,7 +10,11 @@ require("core.line_metadata")
 require("core.keymap_inspector")
 require("core.mount_points")
 
+local plugin_load_start = vim.uv.hrtime()
+
 local plugin_status = require("plugins")
+
+_G.PluginLoadTime = (vim.uv.hrtime() - plugin_load_start) / 1e6
 
 require("core.colorschemes")
 require("custom.snake")
