@@ -10,17 +10,9 @@ require("core.line_metadata")
 require("core.keymap_inspector")
 require("core.mount_points")
 
-vim.pack.add(require("plugins.spec"))
-
-local aesthetics = require("plugins.aesthetics")
+local plugin_status = require("plugins")
 
 require("core.colorschemes")
-
-local functionality = require("plugins.functionality")
-
 require("custom.snake")
 
-return {
-    aesthetics = aesthetics,
-    functionality = functionality,
-}
+return plugin_status

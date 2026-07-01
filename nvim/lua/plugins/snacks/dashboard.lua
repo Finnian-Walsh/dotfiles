@@ -1,0 +1,18 @@
+return {
+    enabled = vim.env.DISABLE_ALPHA == "1",
+    preset = {
+        header = [[
+███╗   ██╗██╗   ██╗██╗███╗   ███╗
+████╗  ██║██║   ██║██║████╗ ████║
+██╔██╗ ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
+      ]],
+        keys = {
+            { icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+        },
+    },
+}
