@@ -78,7 +78,7 @@ vim.keymap.set("n", "<leader>Q", function()
         end
     end
 
-    vim.schedule(vim.cmd.restart)
+    vim.cmd.restart()
 end, { desc = "Restart neovim" })
 
 vim.keymap.set("n", "<leader>p", function() -- don't reference the function directly since the field lazily evaluates
