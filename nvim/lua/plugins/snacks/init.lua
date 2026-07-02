@@ -31,7 +31,7 @@ require("snacks").setup {
 
 ---- General picker
 
-vim.keymap.set("n", "<leader>L", function()
+vim.keymap.set("n", "<leader>P", function()
     Snacks.picker { focus = "list" }
 end, { desc = "Open Snacks picker" })
 
@@ -69,7 +69,7 @@ vim.keymap.set("n", "<leader>gs", function()
     Snacks.picker.git_status { focus = "list" }
 end, { desc = "Open git status picker" })
 
-vim.keymap.set("n", "<leader>gc", function()
+vim.keymap.set("n", "<leader>gl", function()
     Snacks.picker.git_log { focus = "list" }
 end, { desc = "Open git log picker" })
 

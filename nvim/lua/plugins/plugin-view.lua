@@ -8,7 +8,7 @@ require("lazy_loader").new {
     keymaps = {
         {
             "n",
-            "<leader>P",
+            "<leader>p",
             function()
                 return plugin_view.open
             end,

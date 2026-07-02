@@ -70,9 +70,8 @@ vim.api.nvim_create_autocmd("UIEnter", {
             gitsigns.diffthis("~")
         end, { desc = "See the git diff for the current file against the last commit" })
 
-        nmap("<leader>gb", gitsigns.blame, { desc = "Toggle the global git blame" })
-        nmap("<leader>gi", gitsigns.blame_line, { desc = "Inspect the commit for the current line" })
-        nmap("<leader>gl", gitsigns.toggle_current_line_blame, { desc = "Toggle the current line blame" }) -- never used this practically btw
+        nmap("<leader>gB", gitsigns.blame, { desc = "Toggle the global git blame" })
+        nmap("<leader>gb", gitsigns.toggle_current_line_blame, { desc = "Toggle the current line blame" }) -- never used this practically btw
 
         map({ "n", "v", "s" }, "[c", gitsigns.prev_hunk, { desc = "Go to the previous hunk" })
         map({ "n", "v", "s" }, "]c", gitsigns.next_hunk, { desc = "Go to the next hunk" })

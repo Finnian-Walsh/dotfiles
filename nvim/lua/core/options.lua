@@ -81,8 +81,4 @@ vim.keymap.set("n", "<leader>Q", function()
     vim.cmd.restart()
 end, { desc = "Restart neovim" })
 
-vim.keymap.set("n", "<leader>p", function() -- don't reference the function directly since the field lazily evaluates
-    vim.pack.update()
-end, { desc = "Update plugins" })
-
 vim.keymap.set("n", "<leader>y", "<cmd>!tokei<CR>", { desc = "Run tokei" })
