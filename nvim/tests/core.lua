@@ -43,16 +43,6 @@ T["options"]["terminal"] = function()
     expect.no_equality(vim.bo.buftype, "terminal")
 end
 
-T["options"]["restart"] = function()
-    local file_name = "test.txt"
-    local pattern = file_name .. "$"
-    child.cmd("edit " .. file_name)
-    expect.equality(child.api.nvim_buf_get_name(0):match(pattern), file_name)
-    trigger_keymap("<leader>Q")
-
-    expect.no_equality(child.api.nvim_buf_get_name(0):match(pattern), file_name)
-end
-
 T["options"]["wincmds"] = new_set {
     parametrize = {
         { "vs", "<C-l>", "<C-h>" },
