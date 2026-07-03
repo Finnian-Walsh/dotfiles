@@ -55,11 +55,30 @@ vim.lsp.config("lua_ls", {
 
 vim.lsp.config("pyright", {})
 
+vim.filetype.add {
+    extension = {
+        asm = "nasm",
+    }
+}
+
 vim.lsp.config('asm_lsp', {
     cmd = { 'asm-lsp' },
     filetypes = { 'asm', 'nasm', 'gas' },
     root_markers = { '.git' },
 })
+
+vim.api.nvim_create_user_command("NasmConfig", function()
+    print([[[default_config]
+version = "0.10.0"
+assembler = "nasm"
+instruction_set = "x86"
+
+[default_config.opts]
+compiler = "nasm"
+compile_flags_txt = []
+diagnostics = true
+default_diagnostics = true]])
+end, { nargs = 0 })
 
 vim.lsp.config("vim-language-server", {
     cmd = { "vim-language-server", "--stdio" },
