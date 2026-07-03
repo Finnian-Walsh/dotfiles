@@ -1,3 +1,7 @@
+if vim.env.AUTO_MASON_INSTALL ~= "1" then
+    return
+end
+
 require("mason").setup {}
 
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Open Mason" })
