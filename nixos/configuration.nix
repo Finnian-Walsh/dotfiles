@@ -132,6 +132,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     asm-lsp
+    basedpyright
     bluetui
     cowsay
     curl
@@ -169,6 +170,7 @@
     tailscale
     unzip
     vim
+    vim-language-server
     wev
     wget
     xdg-desktop-portal-gtk
