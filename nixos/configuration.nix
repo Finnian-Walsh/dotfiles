@@ -12,7 +12,7 @@
 
   nix.settings.experimental-features = [
     "nix-command"
-    "flakes"
+    # "flakes"
   ];
 
   # Bootloader.
@@ -52,18 +52,18 @@
 
   services.xserver.videoDrivers = [ "amdgpu" ];
 
-  # Enable the GNOME Desktop Environment.
   services.desktopManager.gnome.enable = false;
   services.displayManager.gdm.enable = false;
-  services.displayManager.sddm.enable = false;
+  # Enable the Niri Window Manager
+  # services.displayManager.sddm.enable = true;
+
   services.displayManager.defaultSession = "niri";
 
   programs.steam.enable = true;
-  programs.bazecor.enable = true;
   programs.xwayland.enable = true;
   programs.niri.enable = true;
+
   services.tailscale.enable = true;
-  # programs.niri.xwayland.enable = true;
 
   programs.bash = {
     enable = true;
@@ -131,11 +131,11 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    alacritty
     asm-lsp
     bluetui
     cowsay
     curl
+    eslint
     fd
     fuzzel
     gcc
@@ -149,6 +149,7 @@
     lua-language-server
     mako
     neovim
+    nh
     niri
     nixd
     nixfmt
@@ -161,12 +162,14 @@
     python3
     rustup
     ripgrep
+    superhtml
     spotify
     stylua
     swaylock
     tailscale
     unzip
     vim
+    wev
     wget
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome

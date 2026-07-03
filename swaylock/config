@@ -1,0 +1,25 @@
+# Background & Image
+# image=/path/to/your/wallpaper.png
+scaling=fill
+color=1f1f28
+
+# Indicator Settings
+indicator-radius=100
+indicator-thickness=20
+# indicator-idle-visible
+
+# Font, Text
+font=monospace
+font-size=24
+text-color=dcd7ba
+show-failed-attempts
+
+# Colors
+inside-color=181825
+ring-color=00ADB5
+key-hl-color=00949c
+bs-hl-color=f38ba8
+inside-clear-color=45475a
+ring-clear-color=cba6f7
+inside-wrong-color=f38ba8
+ring-wrong-color=f38ba8
