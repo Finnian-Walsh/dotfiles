@@ -5,15 +5,15 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
-    hardware.bluetooth = {
-        enable = true;
-        powerOnBoot = true;
-    };
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -69,12 +69,12 @@
     enable = true;
 
     shellAliases = {
-        view = "nvim -RO";
+      view = "nvim -RO";
     };
 
     interactiveShellInit = ''
-        export EDITOR=nvim
-        set -o vi
+      export EDITOR=nvim
+      set -o vi
     '';
   };
 
@@ -113,9 +113,12 @@
   users.users."finnian" = {
     isNormalUser = true;
     description = "Finnian Walsh";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     packages = with pkgs; [
-    #  thunderbird
+      #  thunderbird
     ];
   };
 
@@ -132,11 +135,11 @@
     asm-lsp
     bluetui
     cowsay
-	curl
+    curl
     fd
     fuzzel
     gcc
-	git
+    git
     ghostty
     gnome-keyring
     jdt-language-server
@@ -145,8 +148,10 @@
     lolcat
     lua-language-server
     mako
-	neovim
+    neovim
     niri
+    nixd
+    nixfmt
     nodejs
     nerd-fonts.jetbrains-mono
     openssl
@@ -166,7 +171,7 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
     xwayland-satellite
-	zellij
+    zellij
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
