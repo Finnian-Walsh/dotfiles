@@ -40,14 +40,8 @@ vim.lsp.config("lua_ls", {
             runtime = {
                 version = "LuaJIT",
             },
-            diagnostics = {
-                -- globals = {
-                --     "vim",
-                -- },
-            },
             workspace = {
                 library = lua_library,
-                -- checkThirdParty = true,
             },
         },
     },
