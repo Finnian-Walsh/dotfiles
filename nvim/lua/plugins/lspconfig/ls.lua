@@ -1,3 +1,12 @@
+vim.lsp.enable {
+    "lua_ls",
+    "vimls",
+    "rust_analyzer",
+    "pyright",
+    "asm_lsp",
+    "jdtls",
+}
+
 local capabilities = require("blink-cmp").get_lsp_capabilities()
 vim.lsp.config("*", { capabilities = capabilities })
 
@@ -30,16 +39,24 @@ vim.lsp.config("lua_ls", {
                 version = "LuaJIT",
             },
             diagnostics = {
-                globals = {
-                    "vim",
-                },
+                -- globals = {
+                --     "vim",
+                -- },
             },
-            -- workspace = {
-            --     library = lua_library,
-            --     -- checkThirdParty = true,
-            -- },
+            workspace = {
+                library = lua_library,
+                -- checkThirdParty = true,
+            },
         },
     },
 })
 
 vim.lsp.config("pyright", {})
+
+vim.lsp.config('asm_lsp', {
+    cmd = { 'asm-lsp' },
+    filetypes = { 'asm', 'nasm', 'gas' },
+    root_markers = { '.git' },
+})
+
+vim.lsp.enable('asm_lsp')
