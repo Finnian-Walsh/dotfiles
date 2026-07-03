@@ -57,6 +57,7 @@
   programs.bazecor.enable = true;
   programs.xwayland.enable = true;
   programs.niri.enable = true;
+  services.tailscale.enable = true;
   # programs.niri.xwayland.enable = true;
 
   programs.bash = {
@@ -152,6 +153,7 @@
     spotify
     stylua
     swaylock
+    tailscale
     unzip
     vim
     wget
