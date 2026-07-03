@@ -60,4 +60,20 @@ vim.lsp.config('asm_lsp', {
     root_markers = { '.git' },
 })
 
-vim.lsp.enable('asm_lsp')
+vim.lsp.config("vim-language-server", {
+    cmd = { "vim-language-server", "--stdio" },
+    filetypes = { "vim" },
+    root_markers = { ".git", "init.vim" },
+    init_options = {
+        diagnostic = { enable = true },
+        indexes = {
+            count = 3,
+            gap = 100,
+            projectRootPatterns = { ".git", "autoload", "plugin" },
+            runtimepath = true,
+        },
+        isNeovim = true,
+        isKeyword = "@,48-57,_,192-255,#",
+        suggest = { fromRuntimepath = true },
+    },
+})
