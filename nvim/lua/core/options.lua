@@ -56,7 +56,7 @@ end
 update_date()
 
 vim.keymap.set({ "n", "t", "v" }, "<S-Space>", "<Space>", { remap = true })
-vim.keymap.set("t", "<M-Esc>", [[<C-\><C-n>]])
+vim.keymap.set("t", "<C-n>", [[<C-\><C-n>]])
 vim.keymap.set("t", "<C-q>", "<cmd>confirm close<CR>", { desc = "Close current terminal" })
 vim.keymap.set("n", "<Esc>", vim.cmd.nohlsearch, { desc = "Turn highlight off" })
 
