@@ -1,11 +1,12 @@
 vim.lsp.enable {
-    "lua_ls",
-    "vimls",
-    "rust_analyzer",
-    "pyright",
     "asm_lsp",
+    "cssls",
+    "eslint",
     "jdtls",
-    "nixd",
+    "lua_ls",
+    "basedpyright",
+    "rust_analyzer",
+    "vim-language-server",
 }
 
 local capabilities = require("blink-cmp").get_lsp_capabilities()
