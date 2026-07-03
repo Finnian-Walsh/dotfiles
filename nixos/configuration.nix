@@ -10,6 +10,11 @@
       ./hardware-configuration.nix
     ];
 
+    hardware.bluetooth = {
+        enable = true;
+        powerOnBoot = true;
+    };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -125,6 +130,7 @@
   environment.systemPackages = with pkgs; [
     alacritty
     asm-lsp
+    bluetui
     cowsay
 	curl
     fd
