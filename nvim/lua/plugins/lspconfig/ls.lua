@@ -5,6 +5,7 @@ vim.lsp.enable {
     "pyright",
     "asm_lsp",
     "jdtls",
+    "nixd",
 }
 
 local capabilities = require("blink-cmp").get_lsp_capabilities()
