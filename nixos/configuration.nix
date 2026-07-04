@@ -69,6 +69,11 @@
 
   services.displayManager.defaultSession = "niri";
 
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.config.common.default = "gtk";
+
+  services.flatpak.enable = true;
+
   programs.steam.enable = true;
   programs.xwayland.enable = true;
   programs.niri.enable = true;
@@ -146,8 +151,12 @@
     bluetui
     cowsay
     curl
+    deno
+    discord
+    discordo
     eslint
     fd
+    flatpak
     fuzzel
     gcc
     git
@@ -174,7 +183,6 @@
     rustup
     ripgrep
     superhtml
-    spotify
     stylua
     swaylock
     tailscale
