@@ -44,6 +44,9 @@ vim.lsp.config("lua_ls", {
             workspace = {
                 library = lua_library,
             },
+            format = {
+                enable = false,
+            },
         },
     },
 })
@@ -53,13 +56,13 @@ vim.lsp.config("pyright", {})
 vim.filetype.add {
     extension = {
         asm = "nasm",
-    }
+    },
 }
 
-vim.lsp.config('asm_lsp', {
-    cmd = { 'asm-lsp' },
-    filetypes = { 'asm', 'nasm', 'gas' },
-    root_markers = { '.git' },
+vim.lsp.config("asm_lsp", {
+    cmd = { "asm-lsp" },
+    filetypes = { "asm", "nasm", "gas" },
+    root_markers = { ".git" },
 })
 
 vim.api.nvim_create_user_command("NasmConfig", function()
