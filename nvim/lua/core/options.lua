@@ -40,7 +40,7 @@ _G.nav_keys = {
     "!", "\"", "£", "$", "%", "^", "&", "*", "(", ")"
 }
 
-function _G.update_date()
+local function update_date()
     _G.current_date = os.date("*t")
     _G.current_month = current_date.month
     _G.current_day = current_date.day
@@ -52,6 +52,8 @@ function _G.update_date()
         _G.days_until_halloween = 31 - current_day
     end
 end
+
+_G.update_date = update_date
 
 update_date()
 

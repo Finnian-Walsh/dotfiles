@@ -329,7 +329,7 @@ local function get_colorscheme_data()
     local ok, parsed_contents = pcall(vim.json.decode, file:read("*a"))
 
     if not ok then
-        Snacks.notify.warn("Failed to decode contents of colorscheme file", vim.log.levels.WARN)
+        Snacks.notify.warn("Failed to decode contents of colorscheme file")
         vim.fn.getchar()
         os.exit(1)
     end
@@ -376,7 +376,6 @@ local function remove_from_favorites()
             table.remove(favorite_colorschemes, i)
             Snacks.notify.info(
                 "Removed colorscheme `" .. colorscheme .. "` from favorites",
-                vim.log.levels.INFO,
                 { hl = { msg = UPDATION_HIGHLIGHT } }
             )
             return

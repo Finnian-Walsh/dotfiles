@@ -156,7 +156,8 @@ vim.keymap.set("n", discord_keymap, function()
     })
 
     if new_buffer then
-        vim.fn.termopen("discordo", {
+        vim.fn.jobstart("discordo", {
+            term = true,
             on_exit = function()
                 if vim.api.nvim_win_is_valid(discord_win) then
                     vim.api.nvim_win_close(discord_win, false)
@@ -213,7 +214,7 @@ local function wipe_other_wins_and_buffers()
 
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         if win ~= current_win then
-            vim.api.nvim_win_close(win, {})
+            vim.api.nvim_win_close(win, false)
         end
     end
 

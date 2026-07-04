@@ -1,10 +1,10 @@
-if select("#", vim.uv.cwd()) > 1 then
-    vim.notify("Invalid current directory", vim.log.levels.ERROR)
-    return
+local function get_cwd()
+    local cwd = assert(vim.uv.cwd(), "Expected cwd to exist")
+    return cwd
 end
 
 local mount_file_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "mount_points")
-local mount_file_path = vim.fs.joinpath(mount_file_dir, vim.fn.sha256(vim.uv.cwd()) .. ".txt")
+local mount_file_path = vim.fs.joinpath(mount_file_dir, vim.fn.sha256(get_cwd()) .. ".txt")
 
 local function read_and_close_mount_file(mount_file)
     local raw_contents = mount_file:read("*a")
@@ -21,7 +21,7 @@ local function mount()
 
     local mount_fs = read_and_close_mount_file(mount_file)
 
-    local cwd = vim.uv.cwd()
+    local cwd = get_cwd()
 
     vim.system({
         "sshfs",
@@ -47,7 +47,7 @@ local function mount()
 end
 
 local function unmount()
-    local cwd = vim.uv.cwd()
+    local cwd = get_cwd()
     local unwritten_files = {}
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -121,9 +121,9 @@ local function create_mount_point()
         mount_file:close()
 
         if default then
-            vim.notify("Successfully updated mount file for " .. vim.uv.cwd(), vim.log.levels.INFO)
+            vim.notify("Successfully updated mount file for " .. get_cwd(), vim.log.levels.INFO)
         else
-            vim.notify("Successfully created mount file for " .. vim.uv.cwd(), vim.log.levels.INFO)
+            vim.notify("Successfully created mount file for " .. get_cwd(), vim.log.levels.INFO)
         end
     end)
 end

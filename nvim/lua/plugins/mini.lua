@@ -47,13 +47,15 @@ require("lazy_loader")
 
                     vim.keymap.set("n", "<leader>.", function()
                         show_hidden_files = not show_hidden_files
-                        local state = MiniFiles.get_explorer_state()
+                        local state =
+                            assert(MiniFiles.get_explorer_state(), "Expected state to exist in mini.files buffer")
                         MiniFiles.close()
                         MiniFiles.open(state.anchor)
                     end, { desc = "Toggle hidden files", buffer = buf })
 
                     vim.keymap.set("n", "<leader>r", function()
-                        local state = MiniFiles.get_explorer_state()
+                        local state =
+                            assert(MiniFiles.get_explorer_state(), "Expected state to exist in mini.files buffer")
                         MiniFiles.close()
                         MiniFiles.open(state.anchor)
                     end, { desc = "Refresh mini.files", buffer = buf })
