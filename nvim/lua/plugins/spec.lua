@@ -18,11 +18,6 @@ add {
 }
 
 add {
-    "https://github.com/goolord/alpha-nvim",
-    "https://github.com/nvim-tree/nvim-web-devicons",
-}
-
-add {
     "https://github.com/akinsho/bufferline.nvim",
     "https://github.com/nvim-tree/nvim-web-devicons",
 }
