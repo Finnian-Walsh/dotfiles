@@ -52,6 +52,16 @@
 
   services.xserver.videoDrivers = [ "amdgpu" ];
 
+  programs.dconf.profiles.user.databases = [
+    {
+      settings = {
+        "org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+        };
+      };
+    }
+  ];
+
   services.desktopManager.gnome.enable = false;
   services.displayManager.gdm.enable = false;
   # Enable the Niri Window Manager
