@@ -1,10 +1,11 @@
 vim.lsp.enable {
     "asm_lsp",
+    "basedpyright",
     "cssls",
     "eslint",
     "jdtls",
     "lua_ls",
-    "basedpyright",
+    "nixd",
     "rust_analyzer",
     "vim-language-server",
 }
