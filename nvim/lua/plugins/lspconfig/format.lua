@@ -10,6 +10,8 @@ require("conform").setup {
             json = { "prettierd" },
 
             java = { "google-java-format" },
+
+            nix = { "nixfmt" },
         },
         format_on_save = {
             timeout_ms = 5000,
