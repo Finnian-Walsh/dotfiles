@@ -5,18 +5,30 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    nvf = {
+      url = "github:notashelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      flake-utils,
+      nvf,
+      ...
     }:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
-      laptopModules = [
+
+      nvfModules = [
+        nvf.nixosModules.default
+        ./modules/nvf.nix
+      ];
+
+      laptopModules = nvfModules ++ [
         ./modules/common.nix
         ./hosts/laptop/hardware-configuration.nix
       ];
