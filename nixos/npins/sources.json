@@ -1,0 +1,37 @@
+{
+  "pins": {
+    "blink-cmp": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "Saghen",
+        "repo": "blink.cmp"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "72d81f789f1ae5f8765a87a5a5fc3562ad687df7",
+      "url": "https://github.com/Saghen/blink.cmp/archive/72d81f789f1ae5f8765a87a5a5fc3562ad687df7.tar.gz",
+      "hash": "sha256-ANouEy3Oa0yjXsZPWmMaXq4kF0pjHlV1tV+MXsORg7g="
+    },
+    "blink-lib": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "Saghen",
+        "repo": "blink.lib"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "5876dd95deeb70aadbe9f1c0b7117a135061cdac",
+      "url": "https://github.com/Saghen/blink.lib/archive/5876dd95deeb70aadbe9f1c0b7117a135061cdac.tar.gz",
+      "hash": "sha256-FsDcgBiD3fl0EO1advAoQBbA2HY1p8Ja7lwhmpB++Zc="
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixpkgs-unstable",
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1028110.f205b5574fd0/nixexprs.tar.xz",
+      "hash": "sha256-2l8yOB5aYd+05Q9V9Y1YhgbSa1j1o5QX+nvYs5FL80A="
+    }
+  },
+  "version": 7
+}
