@@ -1,7 +1,7 @@
 # Background & Image
 # image=/path/to/your/wallpaper.png
 scaling=fill
-color=1f1f28
+color=000000
 
 # Indicator Settings
 indicator-radius=100
