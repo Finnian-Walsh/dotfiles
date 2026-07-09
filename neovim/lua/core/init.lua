@@ -1,0 +1,6 @@
+require("core.options")
+require("core.buffers")
+require("core.tabs")
+require("core.keymap_inspector")
+require("core.line_metadata")
+require("core.mount_points")
