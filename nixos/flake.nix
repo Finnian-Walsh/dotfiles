@@ -23,13 +23,9 @@
       lib = nixpkgs.lib;
       system = "x86_64-linux";
 
-      nvfModules = [
-        nvf.nixosModules.default
-        ./modules/nvf.nix
-      ];
-
-      laptopModules = nvfModules ++ [
-        ./modules/common.nix
+      laptopModules = [
+        ./modules/neovim.nix
+        ./hosts/laptop/configuration.nix
         ./hosts/laptop/hardware-configuration.nix
       ];
     in
