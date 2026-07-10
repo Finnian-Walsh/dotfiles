@@ -1,7 +1,5 @@
 local blink_cmp = require("blink.cmp")
 
-vim.print(blink_cmp)
-
 local build_task = blink_cmp.build()
 
 build_task:on_reject(function()
