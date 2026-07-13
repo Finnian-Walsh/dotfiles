@@ -1,8 +1,10 @@
 { pkgs, ... }:
 {
-  programs.neovim.enable = true;
+  # programs.neovim.enable = true;
 
   environment.systemPackages = with pkgs; [
+    neovim
+
     asm-lsp
     deno
     eslint
