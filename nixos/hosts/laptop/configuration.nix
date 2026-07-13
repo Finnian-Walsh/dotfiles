@@ -154,6 +154,7 @@
     curl
     discord
     discordo
+    fastfetch
     flatpak
     fuzzel
     git
@@ -165,6 +166,7 @@
     lolcat
     mako
     nerd-fonts.jetbrains-mono
+    netflix
     nh
     niri
     npins
@@ -179,6 +181,7 @@
     unzip
     tokei
     vim
+    waybar
     wev
     wget
     xdg-desktop-portal-gtk
