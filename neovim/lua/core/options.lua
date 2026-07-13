@@ -76,7 +76,7 @@ vim.keymap.set({ "n", "t" }, "<C-`>", "<cmd>wincmd =<CR>", { desc = "Equalize wi
 vim.keymap.set("n", "<leader>Q", function()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.bo[buf].modified then
-            vim.cmd("confirm bwipe" .. buf)
+            vim.cmd("confirm bwipe " .. buf)
         elseif vim.bo[buf].buftype == "terminal" then
             vim.api.nvim_buf_delete(buf, { force = true })
         end
