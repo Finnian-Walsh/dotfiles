@@ -146,48 +146,29 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    appimage-run
-    basedpyright
     bluetui
     chromium
-    cowsay
-    curl
     discord
     discordo
-    fastfetch
     flatpak
     fuzzel
-    git
     ghostty
     gnome-keyring
-    htop
+    kdePackages.kate
     kdePackages.polkit-kde-agent-1
-    lazygit
-    lolcat
     mako
     nerd-fonts.jetbrains-mono
     netflix
     nh
     niri
     npins
-    openssl
-    pkg-config
     prismlauncher
-    python3
-    rustup
-    ripgrep
     swaylock
-    tailscale
-    unzip
-    tokei
-    vim
     waybar
     wev
-    wget
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
     xwayland-satellite
-    zellij
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

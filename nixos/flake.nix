@@ -20,9 +20,17 @@
       system = "x86_64-linux";
 
       laptopModules = [
+        ./modules/common.nix
         ./modules/neovim.nix
-        ./hosts/laptop/configuration.nix
+        ./hosts/monolithic/configuration.nix
         ./hosts/laptop/hardware-configuration.nix
+      ];
+
+      desktopModules = [
+        ./modules/common.nix
+        ./modules/neovim.nix
+        ./hosts/monolithic/configuration.nix
+        ./hosts/desktop/hardware-configuration.nix
       ];
     in
     {
@@ -37,6 +45,12 @@
         modules = laptopModules ++ [
           ./modules/minecraft-server.nix
         ];
+        specialArgs = { inherit inputs; };
+      };
+
+      nixosConfigurations."desktop" = lib.nixosSystem {
+        system = "${system}";
+        modules = desktopModules;
         specialArgs = { inherit inputs; };
       };
     };
