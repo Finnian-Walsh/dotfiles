@@ -1,8 +1,17 @@
 {
-    "Lua.diagnostics.globals": [
-        "vim",
-        "Snacks",
-        "MiniFiles",
-        "MiniTest"
-    ]
+  "Lua": {
+    "workspace": {
+      "checkThirdParty": false,
+      "library": {
+        "$VIMRUNTIME/lua": true,
+        "$VIMRUNTIME/lua/vim": true
+      }
+    },
+    "runtime": {
+      "version": "LuaJIT"
+    },
+    "diagnostics": {
+      "globals": ["Snacks", "MiniFiles", "MiniTest"]
+    }
+  }
 }
