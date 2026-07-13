@@ -146,6 +146,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    alacritty
     bluetui
     chromium
     discord
@@ -156,6 +157,7 @@
     gnome-keyring
     kdePackages.kate
     kdePackages.polkit-kde-agent-1
+    kitty
     mako
     nerd-fonts.jetbrains-mono
     netflix
@@ -166,6 +168,7 @@
     swaylock
     waybar
     wev
+    wezterm
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
     xwayland-satellite
