@@ -6,19 +6,15 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-    nvf = {
-      url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      nvf,
       ...
-    }:
+    }@inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
@@ -33,6 +29,7 @@
       nixosConfigurations."laptop" = lib.nixosSystem {
         system = "${system}";
         modules = laptopModules;
+        specialArgs = { inherit inputs; };
       };
 
       nixosConfigurations."laptopServer" = lib.nixosSystem {
@@ -40,6 +37,7 @@
         modules = laptopModules ++ [
           ./modules/minecraft-server.nix
         ];
+        specialArgs = { inherit inputs; };
       };
     };
 }
