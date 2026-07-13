@@ -1,14 +1,14 @@
-local VIRTUAL_DIAGNOSTIC_MODE = {
-    VirtualText = {
+local VirtualDiagnosticMode = {
+    VIRTUAL_TEXT = {
         virtual_text = true,
     },
-    VirtualLines = {
+    VIRTUAL_LINES = {
         virtual_lines = true,
     },
-    None = {},
+    NONE = {},
 }
 
-local virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
+local virtual_diagnostic_mode = VirtualDiagnosticMode.VIRTUAL_TEXT
 local virtual_diagnostics_enabled = true
 local sign_diagnostics_enabled = true
 local underline_diagnostics_enabled = true
@@ -111,16 +111,16 @@ vim.keymap.set("n", "<leader>x", function()
 end, { desc = "Toggle line metadata" })
 
 vim.keymap.set("n", "<leader>vl", function() -- lines
-    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualLines
+    virtual_diagnostic_mode = VirtualDiagnosticMode.VIRTUAL_LINES
     set_diagnostic_config()
 end, { desc = "Separate line virtual diagnostics" })
 
 vim.keymap.set("n", "<leader>vi", function() -- inline
-    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.VirtualText
+    virtual_diagnostic_mode = VirtualDiagnosticMode.VIRTUAL_TEXT
     set_diagnostic_config()
 end, { desc = "Inline virtual diagnostics" })
 
 vim.keymap.set("n", "<leader>vn", function() -- none
-    virtual_diagnostic_mode = VIRTUAL_DIAGNOSTIC_MODE.None
+    virtual_diagnostic_mode = VirtualDiagnosticMode.NONE
     set_diagnostic_config()
 end, { desc = "No virtual diagnostics" })
