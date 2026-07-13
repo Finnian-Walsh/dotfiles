@@ -1,5 +1,3 @@
-print("RUnning init")
-
 local local_site = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
 vim.opt.packpath:prepend(local_site)
 
