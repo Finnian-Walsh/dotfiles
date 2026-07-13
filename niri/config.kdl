@@ -382,7 +382,7 @@ binds {
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Mod+B hotkey-overlay-title="Open a broser: firefox" { spawn "firefox"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
-    Mod+N hotkey-overlay-title="Clear notifications: mako" { spawn "makoctl dismiss -a"; }
+    Super+N hotkey-overlay-title="Clear notifications: mako" { spawn-sh "makoctl dismiss -a"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
