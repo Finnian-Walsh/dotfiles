@@ -38,8 +38,8 @@ add {
 }
 
 add {
-    "https://github.com/saghen/blink.cmp",
-    "https://github.com/saghen/blink.lib",
+    { src = "https://github.com/saghen/blink.cmp", version = "v1" },
+    -- "https://github.com/saghen/blink.lib",
     "https://github.com/rafamadriz/friendly-snippets",
     "https://github.com/saghen/blink.compat",
 }

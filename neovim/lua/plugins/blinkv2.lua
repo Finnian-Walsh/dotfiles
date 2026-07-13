@@ -9,9 +9,6 @@ end)
 build_task:on_resolve(function()
     vim.schedule(function()
         blink_cmp.setup {
-            appearance = {
-                use_nvim_cmp_as_default = true,
-            },
             keymap = {
                 preset = "none",
                 ["<Down>"] = { "insert_next", "fallback" },
@@ -47,7 +44,9 @@ build_task:on_resolve(function()
                     ["<C-e>"] = { "cancel" },
                 },
 
-                completion = { list = { selection = { preselect = false, auto_insert = true } } },
+                completion = {
+                    list = { selection = { preselect = false, auto_insert = true } },
+                },
             },
 
             term = {

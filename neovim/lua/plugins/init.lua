@@ -36,7 +36,7 @@ end
 load("plugins.lspconfig")
 load("plugins.snacks")
 load("plugins.autopairs")
-load("plugins.blink")
+load("plugins.blinkv1")
 load("plugins.bufferline")
 load("plugins.colorschemes")
 load("plugins.gitsigns")
