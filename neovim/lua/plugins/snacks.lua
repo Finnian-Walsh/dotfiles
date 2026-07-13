@@ -1,5 +1,8 @@
 require("snacks").setup {
-    bigfile = { enabled = true },
+    bigfile = {
+        enabled = true,
+        line_length = 100000,
+    },
     gitbrowse = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
@@ -20,6 +23,7 @@ require("snacks").setup {
     quickfile = { enabled = true },
     scope = { enabled = true },
     terminal = { enabled = true },
+    statuscolumn = { enabled = true },
     words = { enabled = true },
 }
 
