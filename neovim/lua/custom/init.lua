@@ -1,1 +1,1 @@
-require("snake")
+require("custom.snake")
