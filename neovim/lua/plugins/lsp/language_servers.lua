@@ -10,8 +10,8 @@ vim.lsp.enable {
     "vim-language-server",
 }
 
-local capabilities = require("blink-cmp").get_lsp_capabilities()
-vim.lsp.config("*", { capabilities = capabilities })
+-- local capabilities = require("blink-cmp").get_lsp_capabilities()
+-- vim.lsp.config("*", { capabilities = capabilities })
 
 vim.g.rustaceanvim = {
     server = {
@@ -29,11 +29,11 @@ vim.g.rustaceanvim = {
     },
 }
 
-local lua_library = vim.api.nvim_get_runtime_file("", true)
-
-table.insert(lua_library, "${3rd}/luv/library")
-table.insert(lua_library, "${3rd}/luassert/library")
-table.insert(lua_library, "${3rd}/busted/library")
+-- local lua_library = vim.api.nvim_get_runtime_file("", true)
+--
+-- table.insert(lua_library, "${3rd}/luv/library")
+-- table.insert(lua_library, "${3rd}/luassert/library")
+-- table.insert(lua_library, "${3rd}/busted/library")
 
 vim.lsp.config("lua_ls", {
     settings = {
@@ -41,9 +41,9 @@ vim.lsp.config("lua_ls", {
             runtime = {
                 version = "LuaJIT",
             },
-            workspace = {
-                library = lua_library,
-            },
+            -- workspace = {
+            --     library = lua_library,
+            -- },
             format = {
                 enable = false,
             },

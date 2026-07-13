@@ -1,4 +1,4 @@
-if vim.env.AUTO_MASON_INSTALL ~= "1" then
+if not vim.env.USE_MASON then
     return
 end
 

@@ -33,7 +33,7 @@ local function setup(plugin_name)
     err = err or result
 end
 
-load("plugins.lspconfig")
+load("plugins.lsp")
 load("plugins.snacks")
 load("plugins.autopairs")
 load("plugins.blinkv1")

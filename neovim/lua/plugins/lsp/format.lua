@@ -1,28 +1,30 @@
 local conform = require("conform")
 
 conform.setup {
-    options = {
-        formatters_by_ft = {
-            lua = { "stylua" },
-            -- Conform will run multiple formatters sequentially
-            python = { "ruff_format" },
-            -- You can customize some of the format options for the filetype (:help conform.format)
-            rust = { "rustfmt" },
+    formatters_by_ft = {
+        lua = { "stylua" },
+        -- Conform will run multiple formatters sequentially
+        python = { "ruff_format" },
+        -- You can customize some of the format options for the filetype (:help conform.format)
+        rust = { "rustfmt" },
 
-            json = { "prettierd" },
+        json = { "prettierd" },
 
-            java = { "google-java-format" },
+        java = { "google-java-format" },
 
-            nix = { "nixfmt" },
-        },
-        format_on_save = {
-            timeout_ms = 5000,
-        },
+        nix = { "nixfmt" },
+    },
+    default_format_opts = {
+        lsp_format = "fallback",
+    },
+    format_on_save = {
+        lsp_format = "fallback",
+        timeout_ms = 5000,
     },
 }
 
 vim.keymap.set("n", "<leader>lf", function()
-    vim.lsp.buf.format {
+    conform.format {
         async = true,
     }
 end, { desc = "Format the current file" })
@@ -101,7 +103,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("BufWritePre", {
     callback = function(args)
         if vim.bo[args.buf].modifiable then
-            vim.lsp.buf.format()
+            conform.format()
         end
     end,
 })
