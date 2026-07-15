@@ -38,6 +38,7 @@
         ./modules/neovim.nix
         ./hosts/mini-pc/configuration.nix
         ./hosts/mini-pc/hardware-configuration.nix
+        ./modules/minecraft-server.nix
       ];
     in
     {
