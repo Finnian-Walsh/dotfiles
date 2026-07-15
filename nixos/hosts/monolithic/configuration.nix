@@ -140,6 +140,11 @@
   # Install firefox.
   programs.firefox.enable = true;
 
+  programs.waybar = {
+    enable = true;
+    # settings = { };
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -147,6 +152,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     alacritty
+    awww
     bluetui
     chromium
     discord
@@ -159,6 +165,7 @@
     kdePackages.polkit-kde-agent-1
     kitty
     mako
+    nautilus
     nerd-fonts.jetbrains-mono
     netflix
     nh
