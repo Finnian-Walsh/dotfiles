@@ -16,6 +16,7 @@
     rustup
     tailscale
     tokei
+    tree
     unzip
     vim
     wget
