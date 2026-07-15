@@ -32,6 +32,13 @@
         ./hosts/monolithic/configuration.nix
         ./hosts/desktop/hardware-configuration.nix
       ];
+
+      mini-pcModules = [
+        ./modules/common.nix
+        ./modules/neovim.nix
+        ./hosts/mini-pc/configuration.nix
+        ./hosts/mini-pc/hardware-configuration.nix
+      ];
     in
     {
       nixosConfigurations."laptop" = lib.nixosSystem {
@@ -51,6 +58,12 @@
       nixosConfigurations."desktop" = lib.nixosSystem {
         system = "${system}";
         modules = desktopModules;
+        specialArgs = { inherit inputs; };
+      };
+
+      nixosConfigurations."mini-pc" = lib.nixosSystem {
+        system = "${system}";
+        modules = mini-pcModules;
         specialArgs = { inherit inputs; };
       };
     };
