@@ -90,6 +90,7 @@
     interactiveShellInit = ''
       export EDITOR=nvim
       set -o vi
+      export PATH=$PATH:/usr/local/
     '';
   };
 
