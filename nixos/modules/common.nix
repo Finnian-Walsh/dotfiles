@@ -10,6 +10,7 @@
     htop
     lolcat
     openssl
+    openssl.dev
     pkg-config
     python3
     ripgrep
