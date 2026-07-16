@@ -56,13 +56,9 @@
   # Configure console keymap
   console.keyMap = "uk";
 
-  users.groups.server = { };
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."server" = {
+  users.users."minecraft" = {
     isNormalUser = true;
-    # isSystemUser = true;
-    group = "server";
     description = "minecraft server";
     extraGroups = [
       "networkmanager"
