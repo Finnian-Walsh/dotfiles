@@ -22,4 +22,18 @@
     wget
     zellij
   ];
+
+  programs.bash = {
+    enable = true;
+
+    shellAliases = {
+      view = "nvim -RO";
+    };
+
+    interactiveShellInit = ''
+      export EDITOR=nvim
+      set -o vi
+      export PATH=$PATH:/usr/local/
+    '';
+  };
 }

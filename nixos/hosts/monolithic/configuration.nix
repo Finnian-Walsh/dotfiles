@@ -80,20 +80,6 @@
 
   services.tailscale.enable = true;
 
-  programs.bash = {
-    enable = true;
-
-    shellAliases = {
-      view = "nvim -RO";
-    };
-
-    interactiveShellInit = ''
-      export EDITOR=nvim
-      set -o vi
-      export PATH=$PATH:/usr/local/
-    '';
-  };
-
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "gb";
