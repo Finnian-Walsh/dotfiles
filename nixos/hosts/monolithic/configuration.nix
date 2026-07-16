@@ -124,6 +124,18 @@
     ];
   };
 
+  users.users."kian" = {
+    isNormalUser = true;
+    description = "Kian Walsh";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
+    packages = with pkgs; [
+      #  thunderbird
+    ];
+  };
+
   # Install firefox.
   programs.firefox.enable = true;
 
