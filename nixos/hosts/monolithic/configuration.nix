@@ -174,8 +174,8 @@
     waybar
     wev
     wezterm
-    xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
+    xdg-desktop-portal-gtk
     xwayland-satellite
     ydotool
   ];
