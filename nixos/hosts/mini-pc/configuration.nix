@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -75,6 +80,8 @@
   environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
+
+    lm_sensors
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -106,4 +113,8 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "26.05"; # Did you read the comment?
 
+  programs.bash.interactiveShellInit = ''
+    export TERM=xterm
+    export LD_LIBRARY_PATH=${lib.makeLibraryPath [ pkgs.udev ]}
+  '';
 }
