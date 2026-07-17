@@ -22,6 +22,7 @@
         ./hosts/monolithic/configuration.nix
         ./hosts/laptop/configuration.nix
         ./hosts/laptop/hardware-configuration.nix
+        ./modules/minecraft-server.nix
       ];
 
       desktopModules = [
@@ -43,14 +44,6 @@
       nixosConfigurations."laptop" = lib.nixosSystem {
         system = "${system}";
         modules = laptopModules;
-        specialArgs = { inherit inputs; };
-      };
-
-      nixosConfigurations."laptopServer" = lib.nixosSystem {
-        system = "${system}";
-        modules = laptopModules ++ [
-          ./modules/minecraft-server.nix
-        ];
         specialArgs = { inherit inputs; };
       };
 
