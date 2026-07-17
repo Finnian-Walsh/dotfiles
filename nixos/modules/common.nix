@@ -15,7 +15,6 @@
     python3
     ripgrep
     rustup
-    tailscale
     tokei
     tree
     unzip
@@ -37,4 +36,6 @@
       export PATH=$PATH:/usr/local/
     '';
   };
+
+  services.tailscale.enable = true;
 }
