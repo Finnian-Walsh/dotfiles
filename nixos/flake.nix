@@ -20,6 +20,7 @@
         ./modules/common.nix
         ./modules/neovim.nix
         ./hosts/monolithic/configuration.nix
+        ./hosts/laptop/configuration.nix
         ./hosts/laptop/hardware-configuration.nix
       ];
 
