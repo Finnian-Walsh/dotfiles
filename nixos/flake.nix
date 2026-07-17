@@ -20,9 +20,11 @@
         ./modules/common.nix
         ./modules/neovim.nix
         ./hosts/monolithic/configuration.nix
-        ./hosts/laptop/configuration.nix
         ./hosts/laptop/hardware-configuration.nix
         ./modules/minecraft-server.nix
+        {
+          networking.hostName = "nixos-laptop";
+        }
       ];
 
       desktopModules = [

@@ -177,6 +177,7 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
     xwayland-satellite
+    ydotool
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
