@@ -18,6 +18,7 @@
     nixfmt
     nodejs
     prettierd
+    rust-analyzer
     superhtml
     stylua
     vim-language-server
