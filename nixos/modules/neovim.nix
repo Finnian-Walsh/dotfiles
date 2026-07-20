@@ -18,6 +18,7 @@
     nixfmt
     nodejs
     prettierd
+    ruff
     superhtml
     stylua
     vim-language-server
