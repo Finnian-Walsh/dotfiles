@@ -1,11 +1,16 @@
 local plugin_view
 
-require("lazy_loader").new {
-    callback = function()
-        plugin_view = require("plugin-view")
-        plugin_view.setup {}
-    end,
-    keymaps = {
+return {
+    plugins = {
+        { src = "https://github.com/Finnian-Walsh/plugin-view.nvim", version = "feat/buffer-updation" },
+        -- { src = "https://github.com/Finnian-Walsh/plugin-testing.nvim", version = "✨" },
+    },
+
+    lazy = true,
+
+    opts = { plugin_view = {} },
+
+    keys = {
         {
             "n",
             "<leader>p",

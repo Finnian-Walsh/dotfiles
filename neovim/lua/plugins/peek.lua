@@ -8,8 +8,14 @@ local function find_peek()
     end
 end
 
-require("lazy_loader").new {
-    callback = function()
+return {
+    plugins = {
+        "https://github.com/toppair/peek.nvim",
+    },
+
+    lazy = true,
+
+    config = function()
         peek = require("peek")
         peek.setup {
             app = "browser",
@@ -23,7 +29,8 @@ require("lazy_loader").new {
             end
         end)
     end,
-    keymaps = {
+
+    keys = {
         {
             "n",
             "<localleader>p",

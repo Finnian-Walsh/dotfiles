@@ -1,35 +1,68 @@
--- vim.pack.add(require("plugins.spec"))
+local configuration_functions = {}
 
-local ok = true
 local err
 
-local function load(path)
-    local require_ok, result = pcall(require, path)
+local plugins = {}
 
-    if require_ok then
-        return result
+local function create_options_handler(opts)
+    return function()
+        for plugin, options in pairs(opts) do
+            require(plugin).setup(options)
+        end
     end
-
-    vim.notify(("Failed to require `%s` with error:\n%s"):format(path, result), vim.log.levels.ERROR)
-    ok = false
-    err = err or result
 end
 
-local function setup(plugin_name)
-    local plugin = load(plugin_name)
+local function load(path)
+    local ok, result = pcall(function()
+        local object = require(path)
 
-    if not plugin then
+        if not object then
+            return
+        end
+
+        if object.plugins then
+            vim.list_extend(plugins, object.plugins)
+        end
+
+        if object.lazy then
+            require("lazy_loader").new {
+                callback = function()
+                    if object.opts then
+                        create_options_handler(object.opts)()
+                    end
+
+                    if object.config then
+                        object.config()
+                    end
+                end,
+                keymaps = object.keys,
+                cmds = object.cmds,
+                autocmds = object.autocmds,
+            }
+        else
+            if object.opts then
+                configuration_functions[#configuration_functions + 1] = create_options_handler(object.opts)
+            end
+
+            if object.config then
+                configuration_functions[#configuration_functions + 1] = object.config
+            end
+        end
+
+        if object.modules then
+            for _, module in ipairs(object.modules) do
+                load(path .. "." .. module)
+            end
+        end
+    end)
+
+    if ok then
         return
     end
 
-    local setup_ok, result = pcall(plugin.setup, {})
+    vim.notify(("Failed to load `%s` with error:\n%s"):format(path, result), vim.log.levels.ERROR)
 
-    if setup_ok then
-        return result
-    end
-
-    vim.notify(("Failed to set up `%s` with error:\n%s"):format(plugin, result), vim.log.levels.ERROR)
-    ok = false
+    -- A dead configuration function shouldn't have been added should the pcall fail
     err = err or result
 end
 
@@ -42,8 +75,9 @@ load("plugins.colorschemes")
 load("plugins.gitsigns")
 load("plugins.hooker")
 load("plugins.let-it-snow")
-setup("lualine")
-load("plugins.mini")
+load("plugins.lualine")
+load("plugins.mini.files")
+load("plugins.mini.surround")
 load("plugins.neorg")
 load("plugins.nvim-dap")
 load("plugins.peek")
@@ -53,4 +87,15 @@ load("plugins.tohtml")
 load("plugins.which-key")
 load("plugins.winresize")
 
-return { ok = ok, err = err }
+vim.pack.add(plugins)
+
+for _, fn in ipairs(configuration_functions) do
+    local ok, result = pcall(fn)
+
+    if not ok then
+        err = err or result
+        vim.notify(result, vim.log.levels.ERROR)
+    end
+end
+
+return { ok = err == nil, err = err }

@@ -1,10 +1,10 @@
-vim.api.nvim_create_autocmd("UIEnter", {
-    once = true,
-    callback = function()
-        local gitsigns = require("gitsigns")
+return {
+    plugins = {
+        "https://github.com/lewis6991/gitsigns.nvim",
+    },
 
-        gitsigns.setup {
-
+    opts = {
+        gitsigns = {
             signs = {
                 add = { text = "┃" },
                 change = { text = "┃" },
@@ -52,7 +52,11 @@ vim.api.nvim_create_autocmd("UIEnter", {
                 row = 0,
                 col = 1,
             },
-        }
+        },
+    },
+
+    config = function()
+        local gitsigns = require("gitsigns")
 
         local map = vim.keymap.set
 
@@ -87,4 +91,4 @@ vim.api.nvim_create_autocmd("UIEnter", {
         nmap("<leader>bu", gitsigns.reset_buffer_index, { desc = "Unstage current buffer" })
         nmap("<leader>br", gitsigns.reset_buffer, { desc = "Reset current buffer" })
     end,
-})
+}

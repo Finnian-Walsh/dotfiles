@@ -1,26 +1,12 @@
-local unloaded = {
-    nightfall = function()
-        require("nightfall").setup {}
-    end,
+return {
+    plugins = {
+        "https://github.com/folke/tokyonight.nvim",
+        { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+        "https://github.com/ChaseRensberger/christmas.nvim",
+        "https://github.com/ellisonleao/gruvbox.nvim",
+        "https://github.com/rebelot/kanagawa.nvim",
+        "https://github.com/rose-pine/neovim",
+        "https://github.com/benjasper/nightfall.nvim",
+        "https://github.com/edeneast/nightfox.nvim",
+    },
 }
-
-local group = vim.api.nvim_create_augroup("ColorSchemeLazyLoading", {})
-
-vim.api.nvim_create_autocmd("ColorSchemePre", {
-    group = group,
-    callback = function(event)
-        local match = event.match
-        local corresponding = unloaded[match]
-
-        if corresponding then
-            unloaded[match] = nil
-
-            local iter, state, key = pairs(unloaded)
-            if not iter(state, key) then
-                vim.api.nvim_clear_autocmds { group = group }
-            end
-
-            corresponding()
-        end
-    end,
-})

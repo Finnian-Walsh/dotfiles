@@ -1,43 +1,44 @@
-if not vim.env.USE_MASON then
-    return
+if vim.env.USE_MASON ~= "1" then
+    return false
 end
 
-require("mason").setup {}
+return {
+    plugins = {
+        "https://github.com/mason-org/mason.nvim",
+        "https://github.com/mason-org/mason-lspconfig.nvim",
+    },
 
-vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Open Mason" })
+    opts = {
+        mason = {},
+        ["mason-lspconfig"] = {
+            ensure_installed = {
+                -- Vimscript
+                "vimls",
+                -- Lua
+                "stylua",
+                -- Rust
+                "rust_analyzer",
+                -- Lua
+                "lua_ls",
+                -- Python
+                "basedpyright",
+                "ruff",
+                -- Asm
+                "asm_lsp",
+                -- Web dev
+                "typescript-language-server",
+                "html",
+                "cssls",
+                "eslint",
+                -- Java
+                "jdtls",
 
-local ensure_installed = {
-    -- Vimscript
-    "vimls",
-    -- Lua
-    "stylua",
-    -- Rust
-    "rust_analyzer",
-    -- Lua
-    "lua_ls",
-    -- Python
-    "pyright",
-    "ruff",
-    -- Asm
-    "asm_lsp",
-    -- Web dev
-    "ts_ls",
-    "html",
-    "cssls",
-    "eslint",
-    -- Java
-    "jdtls",
-}
+                vim.env.NO_CLANGD ~= "1" and "clangd" or nil,
+            },
+        },
+    },
 
-if vim.uv.os_getenv("NO_CLANGD") ~= "1" then
-    table.insert(ensure_installed, "clangd")
-end
-
-vim.api.nvim_create_autocmd("UIEnter", {
-    once = true,
-    callback = function()
-        require("mason-lspconfig").setup {
-            ensure_installed = ensure_installed,
-        }
+    config = function()
+        vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Open Mason" })
     end,
-})
+}

@@ -14,34 +14,38 @@ local function toggle_bufferline()
     end
 end
 
-vim.keymap.set("n", "<leader>B", toggle_bufferline, { desc = "Toggle bufferline" })
+local function schedule_tabline_redraw()
+    vim.schedule(vim.cmd.redrawtabline)
+end
 
-vim.api.nvim_create_user_command("ToggleBufferline", toggle_bufferline, { desc = "Toggle bufferline" })
+return {
+    plugins = {
+        "https://github.com/akinsho/bufferline.nvim",
+        "https://github.com/nvim-tree/nvim-web-devicons",
+    },
 
-vim.api.nvim_create_autocmd("UIEnter", {
-    once = true,
-    callback = function()
+    lazy = true,
+
+    config = function()
         require("bufferline").setup {
             options = {
                 custom_filter = function(buf)
                     local buf_info = vim.bo[buf]
                     local filetype = buf_info.filetype
-                    local is_normal = filetype ~= "alpha" and filetype ~= "harpoon"
+                    local is_normal = filetype ~= "harpoon"
                     return is_normal and (vim.api.nvim_buf_get_name(buf) ~= "" or buf_info.modified)
                 end,
             },
         }
 
+        vim.keymap.set("n", "<leader>B", toggle_bufferline, { desc = "Toggle bufferline" })
+
         hide_tabline()
+        -- Automatic tabline updation
+        vim.api.nvim_create_autocmd("BufLeave", {
+            callback = schedule_tabline_redraw,
+        })
     end,
-})
 
--- Automatic tabline updation
-
-local function schedule_tabline_redraw()
-    vim.schedule(vim.cmd.redrawtabline)
-end
-
-vim.api.nvim_create_autocmd("BufLeave", {
-    callback = schedule_tabline_redraw,
-})
+    autocmds = { "UIEnter" },
+}

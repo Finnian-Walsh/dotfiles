@@ -4,12 +4,21 @@
 -- WARNING: something very bad
 -- NOTE: Neovim btw
 
-local todo_comments = require("todo-comments")
-todo_comments.setup {}
+return {
+    plugins = {
+        "https://github.com/folke/todo-comments.nvim",
+        "https://github.com/nvim-lua/plenary.nvim",
+    },
 
-vim.keymap.set("n", "[t", todo_comments.jump_prev, { desc = "Jump to the previous todo comment" })
-vim.keymap.set("n", "]t", todo_comments.jump_next, { desc = "Jump to the next todo comment" })
+    opts = { ["todo-comments"] = {} },
 
-_G.reset_todo_signs = todo_comments.reset
+    config = function()
+        local todo_comments = require("todo-comments")
+        vim.keymap.set("n", "[t", todo_comments.jump_prev, { desc = "Jump to the previous todo comment" })
+        vim.keymap.set("n", "]t", todo_comments.jump_next, { desc = "Jump to the next todo comment" })
 
-_G.disable_todo_signs = todo_comments.disable
+        _G.reset_todo_signs = todo_comments.reset
+
+        _G.disable_todo_signs = todo_comments.disable
+    end,
+}

@@ -1,34 +1,3 @@
-local conform = require("conform")
-
-conform.setup {
-    formatters_by_ft = {
-        lua = { "stylua" },
-        -- Conform will run multiple formatters sequentially
-        python = { "ruff_format" },
-        -- You can customize some of the format options for the filetype (:help conform.format)
-        rust = { "rustfmt" },
-
-        json = { "prettierd" },
-
-        java = { "google-java-format" },
-
-        nix = { "nixfmt" },
-    },
-    default_format_opts = {
-        lsp_format = "fallback",
-    },
-    format_on_save = {
-        lsp_format = "fallback",
-        timeout_ms = 5000,
-    },
-}
-
-vim.keymap.set("n", "<leader>lf", function()
-    conform.format {
-        async = true,
-    }
-end, { desc = "Format the current file" })
-
 local function assert_files_written()
     local file_changes = { "Open files have changes:" }
 
@@ -67,43 +36,84 @@ local function handle_format_command(proc)
     vim.notify("Failed to format files:\n" .. obj.stderr, vim.log.levels.ERROR)
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "rust",
-    callback = function(ev)
-        vim.keymap.set("n", "<leader>gf", function()
-            if assert_files_written() then
-                handle_format_command(vim.system { "cargo", "fmt" })
-            end
-        end, { desc = "Globally format files", buffer = ev.buf })
-    end,
-})
+return {
+    plugins = {
+        "https://github.com/stevearc/conform.nvim",
+    },
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "lua",
-    callback = function(ev)
-        vim.keymap.set("n", "<leader>gf", function()
-            if assert_files_written() then
-                handle_format_command(vim.system { "stylua", "." })
-            end
-        end, { desc = "Globally format files", buffer = ev.buf })
-    end,
-})
+    opts = {
+        conform = {
+            formatters_by_ft = {
+                lua = { "stylua" },
+                -- Conform will run multiple formatters sequentially
+                python = { "ruff_format" },
+                -- You can customize some of the format options for the filetype (:help conform.format)
+                rust = { "rustfmt" },
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "python",
-    callback = function(ev)
-        vim.keymap.set("n", "<leader>gf", function()
-            if assert_files_written() then
-                vim.notify("Not yet implemented", vim.log.levels.WARN)
-            end
-        end, { desc = "Globally format files", buf = ev.buf })
-    end,
-})
+                json = { "prettierd" },
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function(args)
-        if vim.bo[args.buf].modifiable then
-            conform.format()
-        end
+                java = { "google-java-format" },
+
+                nix = { "nixfmt" },
+            },
+            default_format_opts = {
+                lsp_format = "fallback",
+            },
+            format_on_save = {
+                lsp_format = "fallback",
+                timeout_ms = 5000,
+            },
+        },
+    },
+
+    config = function()
+        local conform = require("conform")
+
+        vim.keymap.set("n", "<leader>lf", function()
+            conform.format {
+                async = true,
+            }
+        end, { desc = "Format the current file" })
+
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "rust",
+            callback = function(ev)
+                vim.keymap.set("n", "<leader>gf", function()
+                    if assert_files_written() then
+                        handle_format_command(vim.system { "cargo", "fmt" })
+                    end
+                end, { desc = "Globally format files", buffer = ev.buf })
+            end,
+        })
+
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "lua",
+            callback = function(ev)
+                vim.keymap.set("n", "<leader>gf", function()
+                    if assert_files_written() then
+                        handle_format_command(vim.system { "stylua", "." })
+                    end
+                end, { desc = "Globally format files", buffer = ev.buf })
+            end,
+        })
+
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "python",
+            callback = function(ev)
+                vim.keymap.set("n", "<leader>gf", function()
+                    if assert_files_written() then
+                        vim.notify("Not yet implemented", vim.log.levels.WARN)
+                    end
+                end, { desc = "Globally format files", buf = ev.buf })
+            end,
+        })
+
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            callback = function(args)
+                if vim.bo[args.buf].modifiable then
+                    conform.format()
+                end
+            end,
+        })
     end,
-})
+}

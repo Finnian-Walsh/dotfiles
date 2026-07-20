@@ -1,6 +1,9 @@
-require("lazy_loader").new {
-    callback = function()
-        vim.cmd.packadd("nvim.tohtml")
-    end,
+return {
+    lazy = true,
+
+    config = {
+        vim.cmd.packadd("nvim.tohtml"),
+    },
+
     cmds = { "TOhtml" },
 }

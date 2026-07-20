@@ -1,57 +1,68 @@
-local blink_cmp = require("blink.cmp")
-
-blink_cmp.setup {
-    keymap = {
-        preset = "none",
-        ["<Down>"] = { "insert_next", "fallback" },
-        ["<Up>"] = { "insert_prev", "fallback" },
-
-        ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
-        ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
-
-        ["<CR>"] = { "select_and_accept", "fallback" },
-
-        ["<C-space>"] = { "show", "show_documentation", "fallback" },
-        ["<C-e>"] = { "hide", "fallback" },
-
-        ["<C-u>"] = { "scroll_documentation_up", "fallback" },
-        ["<C-d>"] = { "scroll_documentation_down", "fallback" },
-
-        ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
+return {
+    plugins = {
+        { src = "https://github.com/saghen/blink.cmp", version = "v1" },
+        -- "https://github.com/saghen/blink.lib",
+        "https://github.com/rafamadriz/friendly-snippets",
+        "https://github.com/saghen/blink.compat",
     },
 
-    cmdline = {
-        keymap = {
-            preset = "none",
-            ["<Tab>"] = { "show_and_insert_or_accept_single", "insert_next", "fallback" },
-            ["<S-Tab>"] = { "show_and_insert_or_accept_single", "insert_prev", "fallback" },
+    config = function()
+        local blink_cmp = require("blink.cmp")
 
-            ["<C-space>"] = { "show", "show_documentation", "fallback" },
-            ["<C-u>"] = { "scroll_documentation_up", "fallback" },
-            ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+        blink_cmp.setup {
+            keymap = {
+                preset = "none",
+                ["<Down>"] = { "insert_next", "fallback" },
+                ["<Up>"] = { "insert_prev", "fallback" },
 
-            ["<C-e>"] = { "cancel" },
-        },
+                ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
 
-        completion = {
-            list = { selection = { preselect = false, auto_insert = true } },
-        },
-    },
+                ["<CR>"] = { "select_and_accept", "fallback" },
 
-    term = {
-        enabled = true,
-        keymap = {
-            preset = "inherit",
-        },
-    },
+                ["<C-space>"] = { "show", "show_documentation", "fallback" },
+                ["<C-e>"] = { "hide", "fallback" },
 
-    completion = {
-        documentation = { auto_show = false },
-    },
+                ["<C-u>"] = { "scroll_documentation_up", "fallback" },
+                ["<C-d>"] = { "scroll_documentation_down", "fallback" },
 
-    sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-    },
+                ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
+            },
 
-    fuzzy = { implementation = "prefer_rust_with_warning" },
+            cmdline = {
+                keymap = {
+                    preset = "none",
+                    ["<Tab>"] = { "show_and_insert_or_accept_single", "insert_next", "fallback" },
+                    ["<S-Tab>"] = { "show_and_insert_or_accept_single", "insert_prev", "fallback" },
+
+                    ["<C-space>"] = { "show", "show_documentation", "fallback" },
+                    ["<C-u>"] = { "scroll_documentation_up", "fallback" },
+                    ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+
+                    ["<C-e>"] = { "cancel" },
+                },
+
+                completion = {
+                    list = { selection = { preselect = false, auto_insert = true } },
+                },
+            },
+
+            term = {
+                enabled = true,
+                keymap = {
+                    preset = "inherit",
+                },
+            },
+
+            completion = {
+                documentation = { auto_show = false },
+            },
+
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+        }
+    end,
 }

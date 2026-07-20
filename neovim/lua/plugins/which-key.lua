@@ -1,7 +1,11 @@
-local which_key = require("which-key")
+return {
+    plugins = {
+        "https://github.com/folke/which-key.nvim",
+    },
 
-which_key.setup {
-    preset = "helix",
+    opts = { ["which-key"] = { preset = "helix" } },
+
+    config = function()
+        vim.keymap.set("n", "<leader>?", require("which-key").show, { desc = "Buffer Local Keymaps (which-key)" })
+    end,
 }
-
-vim.keymap.set("n", "<leader>?", which_key.show, { desc = "Buffer Local Keymaps (which-key)" })
