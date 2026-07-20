@@ -5,6 +5,9 @@ M.__index = M
 ---@field callback function?
 ---@field keymaps any[][]?
 ---@field cmds string[]?
+---@field autocmds string[]?
+
+local plugin_number = 1
 
 ---@param opts LazyLoaderOptions? The options
 function M.new(opts)
@@ -12,9 +15,12 @@ function M.new(opts)
 
     local self = setmetatable({
         _keys = {},
+        _augroup = vim.api.nvim_create_augroup("lazy-loader-" .. plugin_number, {}),
         callback = opts.callback,
         setup_called = false,
     }, M)
+
+    plugin_number = plugin_number + 1
 
     if opts.keymaps then
         for _, keymap in ipairs(opts.keymaps) do
@@ -25,6 +31,19 @@ function M.new(opts)
     if opts.cmds then
         for _, cmd in ipairs(opts.cmds) do
             self:cmd(cmd)
+        end
+    end
+
+    if opts.autocmds then
+        local autocmd_group = self._augroup
+        for _, autocmd in ipairs(opts.autocmds) do
+            vim.api.nvim_create_autocmd(autocmd, {
+                once = true,
+                group = autocmd_group,
+                callback = function()
+                    self:setup()
+                end,
+            })
         end
     end
 
@@ -62,6 +81,8 @@ function M:setup(keymap_caller)
 
         vim.keymap.set(keymap.mode, keymap.key, callback, keymap.opts)
     end
+
+    vim.api.nvim_del_augroup_by_id(self._augroup)
 
     return target_callback
 end
