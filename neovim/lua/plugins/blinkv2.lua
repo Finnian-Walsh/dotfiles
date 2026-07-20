@@ -1,3 +1,7 @@
+if true then
+    return false
+end
+
 local blink_cmp = require("blink.cmp")
 
 local build_task = blink_cmp.build()
