@@ -1,9 +1,9 @@
 return {
     lazy = true,
 
-    config = {
-        vim.cmd.packadd("nvim.tohtml"),
-    },
+    config = function()
+        vim.cmd.packadd("nvim.tohtml")
+    end,
 
     cmds = { "TOhtml" },
 }
