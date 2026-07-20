@@ -1,6 +1,6 @@
 return {
     plugins = {
-        "allaman/emoji.nvim",
+        "https://github.com/allaman/emoji.nvim",
     },
 
     opts = {
@@ -9,7 +9,7 @@ return {
             enable_cmp_integration = true,
             -- optional if your plugin installation directory
             -- is not vim.fn.stdpath("data") .. "/lazy/
-            plugin_path = vim.fn.expand("$HOME/plugins/"),
+            plugin_path = vim.fs.joinpath(vim.fn.stdpath("data"), "site", "pack", "core", "opt"),
         },
     },
 

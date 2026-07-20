@@ -69,6 +69,7 @@ end
 load("plugins.lsp")
 load("plugins.snacks")
 load("plugins.autopairs")
+load("plugins.emoji")
 load("plugins.blinkv1")
 load("plugins.bufferline")
 load("plugins.colorschemes")
