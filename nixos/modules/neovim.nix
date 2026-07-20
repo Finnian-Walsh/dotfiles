@@ -21,6 +21,7 @@
     ruff
     superhtml
     stylua
+    typescript-language-server
     vim-language-server
   ];
 }
