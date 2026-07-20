@@ -90,14 +90,6 @@ vim.keymap.set("n", "<leader>x", function()
             end
         end
 
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.bo[buf].filetype == "alpha" then
-                local buf_t = { buf = buf }
-                vim.api.nvim_set_option_value("number", false, buf_t)
-                vim.api.nvim_set_option_value("relativenumber", false, buf_t)
-            end
-        end
-
         virtual_diagnostics_enabled = true
         sign_diagnostics_enabled = true
         underline_diagnostics_enabled = true
