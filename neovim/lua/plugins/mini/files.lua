@@ -98,7 +98,6 @@ return {
             "n",
             "<leader>t",
             function()
-                print("evaluating")
                 return function()
                     if vim.bo.filetype == "oil" then
                         MiniFiles.open(vim.api.nvim_buf_get_name(0):gsub("^oil://", ""))
