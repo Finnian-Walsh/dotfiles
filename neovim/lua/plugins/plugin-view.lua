@@ -1,5 +1,3 @@
-local plugin_view
-
 return {
     plugins = {
         { src = "https://github.com/Finnian-Walsh/plugin-view.nvim", version = "feat/buffer-updation" },
@@ -8,14 +6,14 @@ return {
 
     lazy = true,
 
-    opts = { plugin_view = {} },
+    opts = { ["plugin-view"] = {} },
 
     keys = {
         {
             "n",
             "<leader>p",
             function()
-                return plugin_view.open
+                return require("plugin-view").open
             end,
             { desc = "View and manage plugins" },
         },
