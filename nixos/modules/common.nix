@@ -9,6 +9,7 @@
     git
     htop
     lolcat
+    lua
     openssl
     openssl.dev
     pkg-config
