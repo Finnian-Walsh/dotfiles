@@ -9,7 +9,6 @@ A highly customized configuration for the highly extensible modal text editor, [
 <details>
 <summary>Plugin list</summary>
 
-- [alpha-nvim](https://github.com/goolord/alpha-nvim)
 - [blink.cmp](https://github.com/saghen/blink.cmp)
 - [blink.compat](https://github.com/saghen/blink.compat)
 - [blink.lib](https://github.com/saghen/blink.lib)
@@ -17,6 +16,7 @@ A highly customized configuration for the highly extensible modal text editor, [
 - [catppuccin](https://github.com/catppuccin/nvim)
 - [christmas.nvim](https://github.com/ChaseRensberger/christmas.nvim)
 - [conform.nvim](https://github.com/stevearc/conform.nvim)
+- [emoji.nvim](https://github.com/allaman/emoji.nvim)
 - [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
 - [gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim)
@@ -24,12 +24,8 @@ A highly customized configuration for the highly extensible modal text editor, [
 - [kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim)
 - [let-it-snow.nvim](https://github.com/marcussimonsen/let-it-snow.nvim)
 - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-- [mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim)
-- [mason.nvim](https://github.com/mason-org/mason.nvim)
 - [mini.files](https://github.com/nvim-mini/mini.files)
 - [mini.surround](https://github.com/nvim-mini/mini.surround)
-- [mini.test](https://github.com/nvim-mini/mini.test)
-- [neorg](https://github.com/nvim-neorg/neorg)
 - [neovim](https://github.com/rose-pine/neovim)
 - [nightfall.nvim](https://github.com/benjasper/nightfall.nvim)
 - [nightfox.nvim](https://github.com/edeneast/nightfox.nvim)
