@@ -1,7 +1,7 @@
 package.path = package.path .. ";deps/?.lua"
 local lunajson = require("lunajson")
 
-local lockfile = assert(io.open("nvim/nvim-pack-lock.json", "r"), "Failed to open nvim lockfile")
+local lockfile = assert(io.open("neovim/nvim-pack-lock.json", "r"), "Failed to open nvim lockfile")
 local plugins = lunajson.decode(lockfile:read("*a"))
 lockfile:close()
 
