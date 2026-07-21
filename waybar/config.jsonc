@@ -1,0 +1,34 @@
+{
+  "layer": "top",
+
+  "modules-left": ["sway/workspaces", "sway/mode"],
+
+  "modules-center": ["clock"],
+
+  "modules-right": ["cpu", "memory", "battery", "temperature"],
+
+  "clock": {
+    "format": "{:%H:%M}",
+  },
+
+  "battery": {
+    "format": "{capacity}% {icon}",
+
+    "format-icons": [],
+  },
+
+  "temperature": {
+    // "thermal-zone": 2,
+    // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+    "critical-threshold": 80,
+    // "format-critical": "{temperatureC}°C {icon}",
+    "format": "{temperatureC}°C {icon}",
+    "format-icons": ["󰉬", "", "󰉪"],
+  },
+
+  // "cpu": {
+  //     "format": "{}"
+  // }
+
+  "reload_style_on_change": true,
+}
