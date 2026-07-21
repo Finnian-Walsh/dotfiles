@@ -4,6 +4,7 @@ vim.lsp.enable {
     "cssls",
     "eslint",
     "jdtls",
+    "jsonls",
     "lua_ls",
     -- rust-analyzer will be enabled by rustaceanvim
     "nixd",

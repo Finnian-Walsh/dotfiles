@@ -52,6 +52,8 @@ return {
 
                 json = { "prettierd" },
 
+                jsonc = { "prettierd" },
+
                 java = { "google-java-format" },
 
                 nix = { "nixfmt" },
