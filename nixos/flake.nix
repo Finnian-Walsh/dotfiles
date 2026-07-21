@@ -22,6 +22,7 @@
         ./hosts/monolithic/configuration.nix
         ./hosts/laptop/hardware-configuration.nix
         ./modules/minecraft-server.nix
+        ./modules/vscodium.nix
         {
           networking.hostName = "nixos-laptop";
         }

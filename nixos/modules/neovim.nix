@@ -23,5 +23,6 @@
     stylua
     typescript-language-server
     vim-language-server
+    vscode-json-languageserver
   ];
 }
