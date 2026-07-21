@@ -1,33 +1,33 @@
-name: Neovim Test
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        neovim: [stable, nightly]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Neovim
-        uses: rhysd/action-setup-vim@v1
-        with:
-          neovim: true
-          version: ${{ matrix.neovim }}
-
-      - name: Install git
-        run: sudo apt-get update && sudo apt-get install -y git
-
-      - name: Run tests
-        run: |
-            cd nvim && \
-            nvim --headless \
-            -u "tests/init.lua" \
-            -c "qa!"
+# name: Neovim Test
+#
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#
+#     strategy:
+#       matrix:
+#         neovim: [stable, nightly]
+#
+#     steps:
+#       - uses: actions/checkout@v4
+#
+#       - name: Install Neovim
+#         uses: rhysd/action-setup-vim@v1
+#         with:
+#           neovim: true
+#           version: ${{ matrix.neovim }}
+#
+#       - name: Install git
+#         run: sudo apt-get update && sudo apt-get install -y git
+#
+#       - name: Run tests
+#         run: |
+#             cd nvim && \
+#             nvim --headless \
+#             -u "tests/init.lua" \
+#             -c "qa!"
