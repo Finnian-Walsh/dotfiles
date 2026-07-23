@@ -150,6 +150,7 @@
     alacritty
     awww
     bluetui
+    brightnessctl
     chromium
     discord
     discordo
@@ -167,6 +168,7 @@
     nh
     niri
     npins
+    playerctl
     prismlauncher
     swaylock
     waybar
